@@ -5,26 +5,32 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 
 namespace BNZApp
 {
     public class FileManagement
     {
-        public const string AccountFile = @"C:\Users\User\source\repos\BNZApp\Transactions.csv";
-        public static List<Transaction> LoadTransactions()
+        private const string TransactionsFile = @"CSVs\transactions.csv";
+        private const string ListOfExpensesFile = @"CSVs\list-of-expenses.csv";
+        private const string ListOfIncomeFile = @"CSVs\list-of-income.csv";
+        private const string ListOfSpendingFile = @"CSVs\list-of-spending.csv";
+
+        public static List<Transaction> ReadTransactions()
         {
-            if (!File.Exists(AccountFile)) // Handle the scenario where the account file is missing
+            if (!File.Exists(TransactionsFile)) // Handle the scenario where the account file is missing
             {
-                throw new FileNotFoundException("file not found.", AccountFile);
+                throw new FileNotFoundException("file not found.", TransactionsFile);
             }
 
-            List<string> rows = File.ReadAllLines(AccountFile).ToList();
+            List<string> rows = File.ReadAllLines(TransactionsFile).ToList();
             List<Transaction> transactions = new List<Transaction>();
 
-            if (!(rows.Count >= 2)) //incase file is empty
+            if (!(rows.Count > 1)) //incase file is empty
             {
-                throw new FormatException("file empty");
+                MessageBox.Show("No transactions in file");
+                return null;
             }
 
             foreach (string row in rows.Skip(1))
@@ -60,6 +66,99 @@ namespace BNZApp
                 transactions.Add(transaction);
             }
             return transactions;
+        }
+
+        public static List<string> ReadListOfIncome()
+        {
+            if (!File.Exists(ListOfIncomeFile)) // Handle the scenario where the account file is missing
+            {
+                throw new FileNotFoundException("file not found.", ListOfIncomeFile);
+            }
+
+            List<string> rows = File.ReadAllLines(ListOfIncomeFile).ToList();
+            List<string> listOfIncome = new List<string>();
+
+            if (!(rows.Count > 1)) //incase file is empty
+            {
+                Console.WriteLine("Income file empty");
+                return null;
+            }
+
+            foreach (string row in rows.Skip(1))
+            {
+                string[] split = row.Split(',');
+
+                if (split.Length < 1)
+                {
+                    throw new FormatException("row size greater than 1");
+                }
+
+                listOfIncome.Add(split[0]);
+            }
+
+            return listOfIncome;
+        }
+
+        public static List<string> ReadListOfSpending()
+        {
+            if (!File.Exists(ListOfSpendingFile)) // Handle the scenario where the account file is missing
+            {
+                throw new FileNotFoundException("file not found.", ListOfSpendingFile);
+            }
+
+            List<string> rows = File.ReadAllLines(ListOfSpendingFile).ToList();
+            List<string> listOfSpending = new List<string>();
+
+            if (!(rows.Count > 1)) //incase file is empty
+            {
+                Console.WriteLine("Spending file empty");
+                return null;
+            }
+
+            foreach (string row in rows.Skip(1))
+            {
+                string[] split = row.Split(',');
+
+                if (split.Length < 1)
+                {
+                    throw new FormatException("row size greater than 1");
+                }
+
+                listOfSpending.Add(split[0]);
+            }
+
+            return listOfSpending;
+        }
+
+        public static List<string> ReadListOfExpenses()
+        {
+            if (!File.Exists(ListOfExpensesFile)) // Handle the scenario where the account file is missing
+            {
+                throw new FileNotFoundException("file not found.", ListOfExpensesFile);
+            }
+
+            List<string> rows = File.ReadAllLines(ListOfExpensesFile).ToList();
+            List<string> listOfExpenses = new List<string>();
+
+            if (!(rows.Count > 1)) //incase file is empty
+            {
+                Console.WriteLine("Expenses file empty");
+                return null;
+            }
+
+            foreach (string row in rows.Skip(1))
+            {
+                string[] split = row.Split(',');
+
+                if (split.Length < 1)
+                {
+                    throw new FormatException("row size greater than 1");
+                }
+
+                listOfExpenses.Add(split[0]);
+            }
+
+            return listOfExpenses;
         }
     }
 }

@@ -95,11 +95,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="CSVs\list-of-expenses.csv" />
+    <None Include="CSVs\list-of-spending.csv" />
+    <None Include="CSVs\list-of-income.csv" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Transactions.csv" />
+    <None Include="CSVs\transactions.csv" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -95,20 +95,25 @@ namespace BNZApp
 
             DataContext = this;
 
-            InitializeData();
+            GetData();
 
             UpdateUI();
         }
-        private void InitializeData()
+        private void GetData()
         {
-            currentDate = DateTime.Now;
+            
 
-            listOfIncome = new List<string> { "MS I D SAGE", "I D SAGE" };
-            listOfSpending = new List<string> { "NEW WORLD", "COUNTDOWN", "MCDONALDS" };
-            listOfExpenses = new List<string> { "WHERE'S CHARLIE-THOR", "Mission", "SKINNY", "Petrol", "Cityfitness Group" };
+            transactions = FileManagement.ReadTransactions();
+            listOfIncome = FileManagement.ReadListOfIncome();
+            listOfSpending = FileManagement.ReadListOfSpending();
+            listOfExpenses = FileManagement.ReadListOfExpenses();
 
-            transactions = FileManagement.LoadTransactions();
-            groupedTransactions = transactions.GroupBy(transaction => GetWeekNumber(transaction.date));
+            currentDate = transactions.Max(transaction => transaction.date);
+
+            if (transactions != null)
+            {
+                groupedTransactions = transactions.GroupBy(transaction => GetWeekNumber(transaction.date));
+            }
         }
 
         private int GetWeekNumber(DateTime date)
@@ -118,19 +123,45 @@ namespace BNZApp
 
         private float GetTotal(List<Transaction> transactions, List<string> items)
         {
+            if (items is null)
+            {
+                return 0;
+            }
+
             List<Transaction> matchingTransactions = transactions.Where(transaction => items.Any(item => transaction.payee.Contains(item))).ToList();
             return matchingTransactions.Sum(transaction => transaction.amount);
         }
 
         private void ForwardButtonClick(object sender, RoutedEventArgs e)
         {
-            currentDate = currentDate.AddDays(7);
+            DateTime newDate = currentDate.AddDays(7);
+
+            bool hasTransactions = transactions.Any(transaction => transaction.date.Date == newDate.Date);
+
+            if (!hasTransactions)
+            {
+                MessageBox.Show("No transactions found for the selected week.", "No Transactions");
+                return;
+            }
+
+            currentDate = newDate;
             UpdateUI();
         }
 
+
         private void BackButtonClick(object sender, RoutedEventArgs e)
         {
-            currentDate = currentDate.AddDays(-7);
+            DateTime newDate = currentDate.AddDays(7);
+
+            bool hasTransactions = transactions.Any(transaction => transaction.date.Date == newDate.Date);
+
+            if (!hasTransactions)
+            {
+                MessageBox.Show("No transactions found for the selected week.", "No Transactions");
+                return;
+            }
+
+            currentDate = newDate;
             UpdateUI();
         }
 
@@ -150,29 +181,38 @@ namespace BNZApp
 
         private void UpdateCurrentWeekGroup()
         {
-            IGrouping<int, Transaction> currentWeekGroup = groupedTransactions.FirstOrDefault(group => group.Key == GetWeekNumber(currentDate));
-            currentWeekTransactions = currentWeekGroup?.ToList() ?? new List<Transaction>();
+            if (groupedTransactions != null)
+            {
+                IGrouping<int, Transaction> currentWeekGroup = groupedTransactions.FirstOrDefault(group => group.Key == GetWeekNumber(currentDate));
+                currentWeekTransactions = currentWeekGroup?.ToList() ?? new List<Transaction>();
+            }
         }
 
         private void UpdateTransactionGrid()
         {
-            TransactionGrid.ItemsSource = currentWeekTransactions;
+            if (currentWeekTransactions != null)
+            {
+                TransactionGrid.ItemsSource = currentWeekTransactions;
+            }
         }
 
         private void UpdateSummary()
         {
-            totalIncome = GetTotal(currentWeekTransactions, listOfIncome);
-            totalSpending = GetTotal(currentWeekTransactions, listOfSpending);
-            totalExpenses = GetTotal(currentWeekTransactions, listOfExpenses);
-            totalIncrease = totalIncome - (totalIncome / 10) + totalSpending + totalExpenses;
-            totalDecrease = currentWeekTransactions.Where(transaction => transaction.amount < 0).Sum(transaction => transaction.amount);
+            if (currentWeekTransactions != null)
+            {
+                totalIncome = GetTotal(currentWeekTransactions, listOfIncome);
+                totalSpending = GetTotal(currentWeekTransactions, listOfSpending);
+                totalExpenses = GetTotal(currentWeekTransactions, listOfExpenses);
+                totalIncrease = totalIncome - (totalIncome / 10) + totalSpending + totalExpenses;
+                totalDecrease = currentWeekTransactions.Where(transaction => transaction.amount < 0).Sum(transaction => transaction.amount);
 
-            FormattedTotalIncome = totalIncome.ToString("C");
-            FormattedTotalSpending = totalSpending.ToString("C");
-            FormattedTotalExpenses = totalExpenses.ToString("C");
-            FormattedTotalDecrease = totalDecrease.ToString("C");
-            FormattedTotalIncrease = totalIncrease.ToString("C");
-            Tithing.Text = (totalIncome / -10).ToString("C");
+                FormattedTotalIncome = totalIncome.ToString("C");
+                FormattedTotalSpending = totalSpending.ToString("C");
+                FormattedTotalExpenses = totalExpenses.ToString("C");
+                FormattedTotalDecrease = totalDecrease.ToString("C");
+                FormattedTotalIncrease = totalIncrease.ToString("C");
+                Tithing.Text = (totalIncome / -10).ToString("C");
+            }
         }
     }
 }
