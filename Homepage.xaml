@@ -10,15 +10,15 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"></RowDefinition>
-            <RowDefinition Height="150"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Background="Gray">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"></ColumnDefinition>
-                <ColumnDefinition Width="400"></ColumnDefinition>
-                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="400"/>
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Name="Month" Text="Example" FontSize="30" FontWeight="Black" Foreground="White"/>
@@ -42,21 +42,18 @@
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"></ColumnDefinition>
-                <ColumnDefinition Width="1*"></ColumnDefinition>
-                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="Total Increase: " FontSize="30" FontWeight="Black"/>
-                    <TextBlock Text="{Binding FormattedTotalIncrease}" FontSize="30" FontWeight="Black" Foreground="Green"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="Income: " FontSize="20" FontWeight="Medium"/>
-                    <TextBlock Text="{Binding FormattedTotalIncome}" FontSize="20" FontWeight="Bold" Foreground="Green"/>
-                </StackPanel>
-            </StackPanel>
             <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                <Button Grid.Column="0" Content="View" Background="LightGray" Foreground="Black" FontSize="20" FontWeight="Black" Width="100" Height="35" BorderThickness="0" Cursor="Hand" Click="ViewSpendingClick">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="10"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock Text="Total Spent: " FontSize="30" FontWeight="Black"/>
                     <TextBlock Text="{Binding FormattedTotalSpending}" FontSize="30" FontWeight="Black" Foreground="DarkRed"/>
@@ -66,7 +63,31 @@
                     <TextBlock Text="{Binding FormattedTotalDecrease}" FontSize="20" FontWeight="Bold" Foreground="DarkRed"/>
                 </StackPanel>
             </StackPanel>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <Button Grid.Column="0" Content="View" Background="LightGray" Foreground="Black" FontSize="20" FontWeight="Black" Width="100" Height="35" BorderThickness="0" Cursor="Hand" Click="ViewIncomeClick">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="10"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="Total Increase: " FontSize="30" FontWeight="Black"/>
+                    <TextBlock Text="{Binding FormattedTotalIncrease}" FontSize="30" FontWeight="Black" Foreground="Green"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="Income: " FontSize="20" FontWeight="Medium"/>
+                    <TextBlock Text="{Binding FormattedTotalIncome}" FontSize="20" FontWeight="Bold" Foreground="Green"/>
+                </StackPanel>
+            </StackPanel>
             <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                <Button Grid.Column="0" Content="View" Background="LightGray" Foreground="Black" FontSize="20" FontWeight="Black" Width="100" Height="35" BorderThickness="0" Cursor="Hand" Click="ViewExpensesClick">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="10"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock Text="Expenses: " FontSize="30" FontWeight="Black"/>
                     <TextBlock Text="{Binding FormattedTotalExpenses}" FontSize="30" FontWeight="Black" Foreground="Gray"/>
@@ -81,16 +102,10 @@
             <DataGrid Name="TransactionGrid"
                       AutoGenerateColumns="False"
                       IsReadOnly="True"
-                      AreRowDetailsFrozen="True"
-                      CanUserReorderColumns="False"
-                      CanUserResizeColumns="False" 
-                      CanUserSortColumns = "True"
-                      CanUserResizeRows="False"
-                      VerticalContentAlignment="Center" 
                       BorderThickness="0"
                       GridLinesVisibility="None" 
                       HorizontalScrollBarVisibility="Disabled"
-                      VirtualizingStackPanel.IsVirtualizing="False">
+                      HeadersVisibility="Column">
                 <DataGrid.Resources>
                     <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
                         <Setter Property="Background" Value="LightGray" />

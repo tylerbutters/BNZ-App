@@ -101,8 +101,6 @@ namespace BNZApp
         }
         private void GetData()
         {
-            
-
             transactions = FileManagement.ReadTransactions();
             listOfIncome = FileManagement.ReadListOfIncome();
             listOfSpending = FileManagement.ReadListOfSpending();
@@ -148,10 +146,9 @@ namespace BNZApp
             UpdateUI();
         }
 
-
         private void BackButtonClick(object sender, RoutedEventArgs e)
         {
-            DateTime newDate = currentDate.AddDays(7);
+            DateTime newDate = currentDate.AddDays(-7);
 
             bool hasTransactions = transactions.Any(transaction => transaction.date.Date == newDate.Date);
 
@@ -213,6 +210,21 @@ namespace BNZApp
                 FormattedTotalIncrease = totalIncrease.ToString("C");
                 Tithing.Text = (totalIncome / -10).ToString("C");
             }
+        }
+
+        private void ViewIncomeClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ViewSpendingClick(object sender, RoutedEventArgs e)
+        {
+            //PopUpWindow.Content = new ViewSpendingWindow(listOfSpending);
+        }
+
+        private void ViewExpensesClick(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

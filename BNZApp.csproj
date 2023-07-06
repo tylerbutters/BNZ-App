@@ -60,6 +60,9 @@
       <DependentUpon>Homepage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Transaction.cs" />
+    <Compile Include="ViewSpendingWindow.xaml.cs">
+      <DependentUpon>ViewSpendingWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="Homepage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -76,6 +79,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ViewSpendingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
