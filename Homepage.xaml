@@ -138,15 +138,24 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Amount" Binding="{Binding formattedAmount}" Foreground="Black" Width="1*">
+                    <DataGridTextColumn Header="Amount" Binding="{Binding formattedAmount}" Width="1*">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="FontWeight" Value="Bold"/>
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="Margin" Value="10 0 0 0"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding isNegative}" Value="true">
+                                        <Setter Property="Foreground" Value="DarkRed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding isNegative}" Value="false">
+                                        <Setter Property="Foreground" Value="Green"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
+
                     <DataGridTextColumn Header="Payee" Binding="{Binding payee}" Width="2*">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">

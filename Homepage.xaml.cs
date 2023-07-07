@@ -39,51 +39,12 @@ namespace BNZApp
         private float totalExpenses;
         private float totalIncrease;
         private float totalDecrease;
-        public string FormattedTotalIncome
-        {
-            get { return formattedTotalIncome; }
-            set
-            {
-                formattedTotalIncome = value;
-                OnPropertyChanged(nameof(FormattedTotalIncome));
-            }
-        }
-        public string FormattedTotalSpending
-        {
-            get { return formattedTotalSpending; }
-            set
-            {
-                formattedTotalSpending = value;
-                OnPropertyChanged(nameof(FormattedTotalSpending));
-            }
-        }
-        public string FormattedTotalExpenses
-        {
-            get { return formattedTotalExpenses; }
-            set
-            {
-                formattedTotalExpenses = value;
-                OnPropertyChanged(nameof(FormattedTotalExpenses));
-            }
-        }
-        public string FormattedTotalIncrease
-        {
-            get { return formattedTotalIncrease; }
-            set
-            {
-                formattedTotalIncrease = value;
-                OnPropertyChanged(nameof(FormattedTotalIncrease));
-            }
-        }
-        public string FormattedTotalDecrease
-        {
-            get { return formattedTotalDecrease; }
-            set
-            {
-                formattedTotalDecrease = value;
-                OnPropertyChanged(nameof(FormattedTotalDecrease));
-            }
-        }
+        public string FormattedTotalIncome { get => formattedTotalIncome; set { formattedTotalIncome = value; OnPropertyChanged(nameof(FormattedTotalIncome)); } }
+        public string FormattedTotalSpending { get => formattedTotalSpending; set { formattedTotalSpending = value; OnPropertyChanged(nameof(FormattedTotalSpending)); } }
+        public string FormattedTotalExpenses { get => formattedTotalExpenses; set { formattedTotalExpenses = value; OnPropertyChanged(nameof(FormattedTotalExpenses)); } }
+        public string FormattedTotalIncrease { get => formattedTotalIncrease; set { formattedTotalIncrease = value; OnPropertyChanged(nameof(FormattedTotalIncrease)); } }
+        public string FormattedTotalDecrease { get => formattedTotalDecrease; set { formattedTotalDecrease = value; OnPropertyChanged(nameof(FormattedTotalDecrease)); } }
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
         {

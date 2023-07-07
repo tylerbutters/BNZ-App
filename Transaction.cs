@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BNZApp
 {
-    public class Transaction
+    public class Transaction : INotifyPropertyChanged
     {
         public DateTime date { get; set; }
         public float amount { get; set; }
@@ -15,22 +16,7 @@ namespace BNZApp
         public string code { get; set; }
         public string reference { get; set; }
         public string transType { get; set; }
-        public string formattedAmount
-        {
-            get
-            {
-                string formattedAmount = Math.Abs(amount).ToString("C");
-
-                if (amount < 0)
-                {
-                    return "-" + formattedAmount.TrimStart('-');
-                }
-                else
-                {
-                    return formattedAmount;
-                }
-            }
-        }
+        public string formattedAmount { get => amount.ToString("C"); set { amount = float.Parse(value); OnPropertyChanged(nameof(formattedAmount)); } }
         public string formattedTransType
         {
             get
@@ -55,6 +41,16 @@ namespace BNZApp
                         throw new Exception("code is null or does not fit any options");
                 }
             }
+        }
+        public bool isNegative
+        {
+            get { return amount < 0; }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
