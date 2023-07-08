@@ -47,6 +47,21 @@ namespace BNZApp
             get { return amount < 0; }
         }
 
+        private bool isItemClicked;
+        public bool IsItemClicked
+        {
+            get { return isItemClicked; }
+            set
+            {
+                if (isItemClicked != value)
+                {
+                    isItemClicked = value;
+                    OnPropertyChanged(nameof(IsItemClicked));
+                }
+            }
+        }
+
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
         {

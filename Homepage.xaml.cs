@@ -47,6 +47,7 @@ namespace BNZApp
 
         public event PropertyChangedEventHandler PropertyChanged;
         public event Action<object, List<string>, TransItemType> OpenViewListWindow;
+        public event Action<object, Transaction, Transaction> OpenReimbursementWindow;
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -191,5 +192,31 @@ namespace BNZApp
         {
             OpenViewListWindow?.Invoke(sender, listOfExpenses, TransItemType.Expenses);
         }
+
+        private Transaction firstItemClicked;
+        private Transaction secondItemClicked;
+        
+        private void TransactionGridItemClick(object sender, SelectionChangedEventArgs e)
+        {
+            if(firstItemClicked is null)
+            {
+                firstItemClicked = TransactionGrid.SelectedItem as Transaction;
+                if(firstItemClicked is null)
+                {
+                    return;
+                }
+                firstItemClicked.IsItemClicked = true;
+                return;
+            }
+            else
+            {
+                secondItemClicked = TransactionGrid.SelectedItem as Transaction;
+                OpenReimbursementWindow?.Invoke(sender, firstItemClicked, secondItemClicked);
+                firstItemClicked.IsItemClicked = false;
+                firstItemClicked = null;
+                secondItemClicked = null;
+            }
+        }
+
     }
 }

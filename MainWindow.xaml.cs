@@ -34,6 +34,7 @@ namespace BNZApp
             homepage = new Homepage();
             MainFrame.Content = homepage;
             homepage.OpenViewListWindow += OpenViewListWindow;
+            homepage.OpenReimbursementWindow += OpenReimbursementWindow;
 
         }
 
@@ -43,6 +44,14 @@ namespace BNZApp
             PopUpWindow.Content = ViewListWindow;
 
             ViewListWindow.GoBack += BackToHomepage;
+        }
+
+        private void OpenReimbursementWindow(object sender, Transaction firstItem, Transaction secondItem)
+        {
+            ReimbursementWindow ReimbursementWindow = new ReimbursementWindow(firstItem, secondItem);
+            PopUpWindow.Content = ReimbursementWindow;
+
+            ReimbursementWindow.GoBack += BackToHomepage;
         }
 
         private void BackToHomepage(object sender, RoutedEventArgs e)

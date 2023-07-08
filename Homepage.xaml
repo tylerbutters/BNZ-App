@@ -107,7 +107,8 @@
                       BorderThickness="0"
                       GridLinesVisibility="None" 
                       HorizontalScrollBarVisibility="Disabled"
-                      HeadersVisibility="Column">
+                      HeadersVisibility="Column" 
+                      SelectionChanged="TransactionGridItemClick">
                 <DataGrid.Resources>
                     <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
                         <Setter Property="Background" Value="LightGray" />
@@ -123,14 +124,20 @@
                 <DataGrid.CellStyle>
                     <Style TargetType="DataGridCell">
                         <Setter Property="Background" Value="White"/>
-                        <Setter Property="Foreground" Value="black"/>
+                        <Setter Property="Foreground" Value="Black"/>
                         <Setter Property="FontWeight" Value="Medium"/>
                         <Setter Property="FontSize" Value="20"/>
                         <Setter Property="BorderBrush" Value="Gray"/>
                         <Setter Property="BorderThickness" Value="2"/>
                         <Setter Property="Height" Value="52"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsItemClicked}" Value="True">
+                                <Setter Property="Background" Value="LightGray"/>
+                            </DataTrigger>
+                        </Style.Triggers>
                     </Style>
                 </DataGrid.CellStyle>
+
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Date" Binding="{Binding date,StringFormat='{}{0:dd/MM/yyyy}'}" Width="150">
                         <DataGridTextColumn.ElementStyle>

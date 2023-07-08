@@ -19,19 +19,18 @@ namespace BNZApp
         {
             InitializeComponent();
 
-            type = _type;
-
             if(_list is null)
             {
                 throw new NullReferenceException();
-            }
+            }          
 
-            list = _list;
-
-            if (list.Count is 0 )
+            if (_list.Count is 0 )
             {
                 Console.Write("list of spending is empty");
             }
+
+            list = _list;
+            type = _type;
 
             switch (type)
             {
@@ -73,6 +72,5 @@ namespace BNZApp
             ListGrid.ItemsSource = null;
             ListGrid.ItemsSource = list;
         }
-
     }
 }

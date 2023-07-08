@@ -75,13 +75,13 @@ namespace BNZApp
             switch (type)
             {
                 case TransItemType.Income:
-                    filePath = nameof(ListOfIncomeFile);
+                    filePath = ListOfIncomeFile;
                     break;
                 case TransItemType.Spending:
-                    filePath = nameof(ListOfSpendingFile);
+                    filePath = ListOfSpendingFile;
                     break;
                 case TransItemType.Expenses:
-                    filePath = nameof(ListOfExpensesFile);
+                    filePath = ListOfExpensesFile;
                     break;
             }
 
@@ -126,13 +126,13 @@ namespace BNZApp
             switch (type)
             {
                 case TransItemType.Income:
-                    filePath = nameof(ListOfIncomeFile);
+                    filePath = ListOfIncomeFile;
                     break;
                 case TransItemType.Spending:
-                    filePath = nameof(ListOfSpendingFile);
+                    filePath = ListOfSpendingFile;
                     break;
                 case TransItemType.Expenses:
-                    filePath = nameof(ListOfExpensesFile);
+                    filePath = ListOfExpensesFile;
                     break;
             }
 

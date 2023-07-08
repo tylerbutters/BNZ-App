@@ -15,16 +15,16 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <TextBlock Grid.Column="2" Name="Title" FontSize="30" FontWeight="Black" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        </Grid>
-        <DataGrid Grid.Row="1" Name="ListGrid" Background="White"
+        <TextBlock Grid.Row="0" Name="Title" FontSize="30" FontWeight="Black" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <DataGrid Grid.Row="1" 
+                  Name="ListGrid" 
+                  Background="White"
                   AutoGenerateColumns="False"
-            IsReadOnly="True"
-            BorderThickness="0"
-            GridLinesVisibility="None" 
-            HorizontalScrollBarVisibility="Disabled"
-            HeadersVisibility="None"
+                    IsReadOnly="True"
+                    BorderThickness="0"
+                    GridLinesVisibility="None" 
+                    HorizontalScrollBarVisibility="Disabled"
+                    HeadersVisibility="None"
                   ItemsSource="{Binding listOfSpending}">
             <DataGrid.CellStyle>
                 <Style TargetType="DataGridCell">
@@ -90,14 +90,12 @@
                 </Button.Resources>
             </Button>
         </Grid>
-        <Grid Grid.Row="3">
-            <Button Content="Done" Background="White" Foreground="Black" FontSize="25" FontWeight="Black" Width="120" Height="50" BorderThickness="0" Cursor="Hand" Click="DoneButtonClick">
-                <Button.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="10"/>
-                    </Style>
-                </Button.Resources>
-            </Button>
-        </Grid>
+        <Button Grid.Row="3" Content="Done" Background="White" Foreground="Black" FontSize="25" FontWeight="Black" Width="120" Height="50" BorderThickness="0" Cursor="Hand" Click="DoneButtonClick">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="10"/>
+                </Style>
+            </Button.Resources>
+        </Button>
     </Grid>
 </Page>
