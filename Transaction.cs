@@ -9,6 +9,7 @@ namespace BNZApp
 {
     public class Transaction : INotifyPropertyChanged
     {
+        public string id { get; set; }
         public DateTime date { get; set; }
         public float amount { get; set; }
         public string payee { get; set; }
@@ -60,7 +61,24 @@ namespace BNZApp
                 }
             }
         }
+        private bool isReimbursement;
 
+        public bool IsReimbursement
+        {
+            get { return isReimbursement; }
+            set
+            {
+                if (isReimbursement != value)
+                {
+                    isReimbursement = value;
+                    OnPropertyChanged(nameof(IsReimbursement));
+                }
+            }
+        }
+        public override string ToString()
+        {
+            return $"{id},{date:dd/MM/yyyy},{amount},{payee},{particulars},{code},{reference},{transType}";
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)

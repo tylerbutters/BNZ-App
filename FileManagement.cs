@@ -13,6 +13,7 @@ namespace BNZApp
     public class FileManagement
     {
         private const string TransactionsFile = @"CSVs\transactions.csv";
+        private const string ReimbursementsFile = @"CSVs\reimbursements.csv";
         private const string ListOfExpensesFile = @"CSVs\list-of-expenses.csv";
         private const string ListOfIncomeFile = @"CSVs\list-of-income.csv";
         private const string ListOfSpendingFile = @"CSVs\list-of-spending.csv";
@@ -37,25 +38,26 @@ namespace BNZApp
             {
                 string[] split = row.Split(',');
 
-                if (split.Length != 7)
+                if (split.Length != 8)
                 {
                     throw new FormatException("row size greater or less than 7");
                 }
 
-                if (DateTime.Parse(split[0]).Year < 2023)
+                if (DateTime.Parse(split[1]).Year < 2023)
                 {
                     continue;
                 }
 
                 Transaction transaction = new Transaction
                 {
-                    date = DateTime.Parse(split[0]),
-                    amount = float.Parse(split[1]),
-                    payee = split[2],
-                    particulars = split[3],
-                    code = split[4],
-                    reference = split[5],
-                    transType = split[6],
+                    id = split[0],
+                    date = DateTime.Parse(split[1]),
+                    amount = float.Parse(split[2]),
+                    payee = split[3],
+                    particulars = split[4],
+                    code = split[5],
+                    reference = split[6],
+                    transType = split[7],
                 };
 
                 if (transaction.amount is 0)
@@ -65,7 +67,74 @@ namespace BNZApp
 
                 transactions.Add(transaction);
             }
+            CheckIsReimbursement(transactions);
+
             return transactions;
+        }
+        private static void CheckIsReimbursement(List<Transaction> transactions)
+        {
+            List<Reimbursement> reimbursements = ReadReimbursements();
+            foreach (Transaction transaction in transactions)
+            {
+                transaction.IsReimbursement = reimbursements.Any(reimbursement => reimbursement.transaction1 == transaction || reimbursement.transaction2 == transaction);
+            }
+        }
+
+
+        public static List<Reimbursement> ReadReimbursements()
+        {
+            if (!File.Exists(ReimbursementsFile))
+            {
+                throw new FileNotFoundException("File not found.", ReimbursementsFile);
+            }
+
+            List<string> rows = File.ReadAllLines(ReimbursementsFile).ToList();
+            List<Reimbursement> reimbursements = new List<Reimbursement>();
+
+            if (rows.Count <= 1)
+            {
+                return reimbursements;
+            }
+
+            foreach (string row in rows.Skip(1))
+            {
+                string[] split = row.Split(',');
+
+                if (split.Length != 16)
+                {
+                    throw new FormatException("Row size greater or less than 14");
+                }
+
+                Reimbursement reimbursement = new Reimbursement
+                (
+                    new Transaction //transaction 1
+                    {
+                        id = split[0],
+                        date = DateTime.Parse(split[1]),
+                        amount = float.Parse(split[2]),
+                        payee = split[3],
+                        particulars = split[4],
+                        code = split[5],
+                        reference = split[6],
+                        transType = split[7]
+                    },
+                    new Transaction //transaction 2
+                    {
+                        id = split[8],
+                        date = DateTime.Parse(split[9]),
+                        amount = float.Parse(split[10]),
+                        payee = split[11],
+                        particulars = split[12],
+                        code = split[13],
+                        reference = split[14],
+                        transType = split[15]
+                    }
+                );
+
+                reimbursements.Add(reimbursement);
+            }
+
+            return reimbursements;
         }
 
         public static List<string> ReadList(TransItemType type)
@@ -142,6 +211,47 @@ namespace BNZApp
             }
 
             File.WriteAllLines(filePath, newList);
+        }
+
+        public static void WriteNewReimbursement(Reimbursement newReimbursement)
+        {
+            if (newReimbursement is null)
+            {
+                throw new NullReferenceException();
+            }
+
+            if (!File.Exists(ReimbursementsFile)) // Handle the scenario where the account file is missing
+            {
+                throw new FileNotFoundException("file not found.", ReimbursementsFile);
+            }
+
+            List<string> currentRows = File.ReadAllLines(ReimbursementsFile).ToList();
+            currentRows.Add(newReimbursement.ToString());
+            File.WriteAllLines(ReimbursementsFile, currentRows);
+        }
+
+        public static void WriteTransactions(List<Transaction> transactions)
+        {
+            if (transactions is null)
+            {
+                throw new NullReferenceException();
+            }
+
+            if (!File.Exists(TransactionsFile)) // Handle the scenario where the account file is missing
+            {
+                throw new FileNotFoundException("file not found.", TransactionsFile);
+            }
+
+            List<string> rows = new List<string>
+            {
+                "ID,Date,Amount,Payee,Particulars,Code,Reference,Tran Type"
+            };
+            foreach (Transaction transaction in transactions)
+            {
+                rows.Add(transaction.ToString());
+            }
+
+            File.WriteAllLines(TransactionsFile, rows);
         }
     }
 }

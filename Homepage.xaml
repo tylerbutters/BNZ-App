@@ -108,7 +108,7 @@
                       GridLinesVisibility="None" 
                       HorizontalScrollBarVisibility="Disabled"
                       HeadersVisibility="Column" 
-                      SelectionChanged="TransactionGridItemClick">
+                      PreviewMouseDown="TransactionGridItemClick">
                 <DataGrid.Resources>
                     <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
                         <Setter Property="Background" Value="LightGray" />
@@ -123,6 +123,7 @@
                 </DataGrid.Resources>
                 <DataGrid.CellStyle>
                     <Style TargetType="DataGridCell">
+                        <Setter Property="IsHitTestVisible" Value="False"/>
                         <Setter Property="Background" Value="White"/>
                         <Setter Property="Foreground" Value="Black"/>
                         <Setter Property="FontWeight" Value="Medium"/>
@@ -133,6 +134,9 @@
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsItemClicked}" Value="True">
                                 <Setter Property="Background" Value="LightGray"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsReimbursement}" Value="True">
+                                <Setter Property="Background" Value="Gray"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>

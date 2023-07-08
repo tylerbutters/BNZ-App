@@ -3,17 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace BNZApp
 {
@@ -26,6 +17,7 @@ namespace BNZApp
         private List<string> listOfIncome;
         private List<string> listOfSpending;
         private List<string> listOfExpenses;
+        private List<Reimbursement> reimbursements;
         private List<Transaction> transactions;
         private List<Transaction> currentWeekTransactions;
         private IEnumerable<IGrouping<int, Transaction>> groupedTransactions;
@@ -57,7 +49,8 @@ namespace BNZApp
             InitializeComponent();
 
             DataContext = this;
-
+            transactions = FileManagement.ReadTransactions();
+            currentDate = transactions.Max(transaction => transaction.date);
             LoadPage();
         }
         public void LoadPage()
@@ -67,12 +60,10 @@ namespace BNZApp
         }
         private void GetData()
         {
-            transactions = FileManagement.ReadTransactions();
+            reimbursements = FileManagement.ReadReimbursements();
             listOfIncome = FileManagement.ReadList(TransItemType.Income);
             listOfSpending = FileManagement.ReadList(TransItemType.Spending);
             listOfExpenses = FileManagement.ReadList(TransItemType.Expenses);
-
-            currentDate = transactions.Max(transaction => transaction.date);
 
             if (transactions != null)
             {
@@ -93,7 +84,22 @@ namespace BNZApp
             }
 
             List<Transaction> matchingTransactions = transactions.Where(transaction => items.Any(item => transaction.payee.Contains(item))).ToList();
-            return matchingTransactions.Sum(transaction => transaction.amount);
+            float sum = matchingTransactions.Sum(transaction => transaction.amount);
+
+            // Subtract the amounts of negative reimbursement transactions
+            foreach (Reimbursement reimbursement in reimbursements)
+            {
+                if (matchingTransactions.Any(transaction => transaction.id == reimbursement.transaction1.id && transaction.amount < 0))
+                {
+                    sum -= reimbursement.transaction1.amount;
+                }
+                else if (matchingTransactions.Any(transaction => transaction.id == reimbursement.transaction2.id && transaction.amount < 0))
+                {
+                    sum -= reimbursement.transaction2.amount;
+                }
+            }
+
+            return sum;
         }
 
         private void ForwardButtonClick(object sender, RoutedEventArgs e)
@@ -158,15 +164,14 @@ namespace BNZApp
                 TransactionGrid.ItemsSource = currentWeekTransactions;
             }
         }
-
         private void UpdateSummary()
         {
             if (currentWeekTransactions != null)
             {
                 totalIncome = GetTotal(currentWeekTransactions, listOfIncome);
                 totalSpending = GetTotal(currentWeekTransactions, listOfSpending);
-                totalExpenses = GetTotal(currentWeekTransactions, listOfExpenses);
-                totalIncrease = totalIncome - (totalIncome / 10) + totalSpending + totalExpenses;
+                totalExpenses = GetTotal(currentWeekTransactions, listOfExpenses) + (totalIncome / -10);
+                totalIncrease = totalIncome + totalSpending + totalExpenses;
                 totalDecrease = currentWeekTransactions.Where(transaction => transaction.amount < 0).Sum(transaction => transaction.amount);
 
                 FormattedTotalIncome = totalIncome.ToString("C");
@@ -195,22 +200,37 @@ namespace BNZApp
 
         private Transaction firstItemClicked;
         private Transaction secondItemClicked;
-        
-        private void TransactionGridItemClick(object sender, SelectionChangedEventArgs e)
+
+        private void TransactionGridItemClick(object sender, RoutedEventArgs e)
         {
-            if(firstItemClicked is null)
+            Transaction selectedItem = (e.OriginalSource as FrameworkElement)?.DataContext as Transaction;
+
+            if (selectedItem is null)
             {
-                firstItemClicked = TransactionGrid.SelectedItem as Transaction;
-                if(firstItemClicked is null)
+                throw new NullReferenceException();
+            }
+
+            if (firstItemClicked is null)
+            {
+                selectedItem.IsItemClicked = true;
+                firstItemClicked = selectedItem;
+            }
+            else if (firstItemClicked == selectedItem)
+            {
+                selectedItem.IsItemClicked = false;
+                firstItemClicked = null;
+            }
+            else if (secondItemClicked is null && firstItemClicked != null)
+            {
+                secondItemClicked = selectedItem;
+                bool isValidReimbursement = (secondItemClicked.amount > 0 && firstItemClicked.amount < 0) || (secondItemClicked.amount < 0 && firstItemClicked.amount > 0);
+                if (!isValidReimbursement)
                 {
+                    MessageBox.Show("One transaction needs to be positive, and the other needs to be negative.");
+                    secondItemClicked = null;
                     return;
                 }
-                firstItemClicked.IsItemClicked = true;
-                return;
-            }
-            else
-            {
-                secondItemClicked = TransactionGrid.SelectedItem as Transaction;
+
                 OpenReimbursementWindow?.Invoke(sender, firstItemClicked, secondItemClicked);
                 firstItemClicked.IsItemClicked = false;
                 firstItemClicked = null;

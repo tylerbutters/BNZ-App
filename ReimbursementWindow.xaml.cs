@@ -13,14 +13,24 @@ namespace BNZApp
     {
         public event EventHandler<RoutedEventArgs> GoBack;
         private List<Transaction> items;
-        public ReimbursementWindow(Transaction _firstItem, Transaction _secondItem)
+        private Transaction firstItem;
+        private Transaction secondItem;
+        public ReimbursementWindow(Transaction firstItem, Transaction secondItem)
         {
             InitializeComponent();
 
+            if( firstItem is null || secondItem is null ) 
+            {
+                throw new NullReferenceException();
+            }
+
+            this.firstItem = firstItem;
+            this.secondItem = secondItem;
+
             items = new List<Transaction>
             {
-                _firstItem,
-                _secondItem
+                firstItem,
+                secondItem
             };
 
             ComparisonGrid.ItemsSource = items;
@@ -28,6 +38,8 @@ namespace BNZApp
 
         private void ConfirmButtonClick(object sender, RoutedEventArgs e)
         {
+            Reimbursement newReimbursement = new Reimbursement(firstItem, secondItem);
+            FileManagement.WriteNewReimbursement(newReimbursement);
             GoBack?.Invoke(sender, e);
         }
 

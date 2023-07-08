@@ -59,6 +59,7 @@
     <Compile Include="Homepage.xaml.cs">
       <DependentUpon>Homepage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Reimbursement.cs" />
     <Compile Include="ReimbursementWindow.xaml.cs">
       <DependentUpon>ReimbursementWindow.xaml</DependentUpon>
     </Compile>
@@ -112,6 +113,9 @@
     <None Include="CSVs\list-of-expenses.csv" />
     <None Include="CSVs\list-of-spending.csv" />
     <None Include="CSVs\list-of-income.csv" />
+    <None Include="CSVs\reimbursements.csv">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

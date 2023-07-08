@@ -15,22 +15,22 @@ namespace BNZApp
         private bool isDeleteButtonClicked;
         private List<string> list;
         private TransItemType type;
-        public ViewListWindow(List<string> _list, TransItemType _type)
+        public ViewListWindow(List<string> list, TransItemType type)
         {
             InitializeComponent();
 
-            if(_list is null)
+            if(list is null)
             {
                 throw new NullReferenceException();
             }          
 
-            if (_list.Count is 0 )
+            if (list.Count is 0 )
             {
                 Console.Write("list of spending is empty");
             }
 
-            list = _list;
-            type = _type;
+            this.list = list;
+            this.type = type;
 
             switch (type)
             {
