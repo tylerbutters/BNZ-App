@@ -7,99 +7,101 @@
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="1200"
       Title="Homepage" Background="White">
-
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
-            <RowDefinition Height="150"/>
-            <RowDefinition Height="1*"/>
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Background="Gray">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="400"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock Name="Month" Text="Example" FontSize="30" FontWeight="Black" Foreground="White"/>
-                <TextBlock Text=", Week " FontSize="30" FontWeight="Black" Foreground="White"/>
-                <TextBlock Name="WeekNumber" Text="0" FontSize="30" FontWeight="Black" Foreground="White"/>
-            </StackPanel>
-            <Button Grid.Column="0" Content="Back" Background="White" Foreground="Black" FontSize="25" FontWeight="Black" Width="150" Height="50" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Right" Click="BackButtonClick">
-                <Button.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="10"/>
-                    </Style>
-                </Button.Resources>
-            </Button>
-            <Button Grid.Column="2" Content="Forward" Background="White" Foreground="Black" FontSize="25" FontWeight="Black" Width="150" Height="50" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Left" Click="ForwardButtonClick">
-                <Button.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="10"/>
-                    </Style>
-                </Button.Resources>
-            </Button>
-        </Grid>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                <Button Grid.Column="0" Content="View" Background="LightGray" Foreground="Black" FontSize="20" FontWeight="Black" Width="100" Height="35" BorderThickness="0" Cursor="Hand" Click="ViewSpendingClick">
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Background="Gray">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="400"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Name="Month" Text="Example" FontSize="30" FontWeight="Black" Foreground="White"/>
+                    <TextBlock Text=", Week " FontSize="30" FontWeight="Black" Foreground="White"/>
+                    <TextBlock Name="WeekNumber" Text="0" FontSize="30" FontWeight="Black" Foreground="White"/>
+                </StackPanel>
+                <Button Grid.Column="0" Content="Back" Background="White" Foreground="Black" FontSize="25" FontWeight="Black" Width="150" Height="50" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Right" Click="BackButtonClick">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="10"/>
                         </Style>
                     </Button.Resources>
                 </Button>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="Total Spent: " FontSize="30" FontWeight="Black"/>
-                    <TextBlock Text="{Binding FormattedTotalSpending}" FontSize="30" FontWeight="Black" Foreground="DarkRed"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="Total Decrease: " FontSize="20" FontWeight="Medium"/>
-                    <TextBlock Text="{Binding FormattedTotalDecrease}" FontSize="20" FontWeight="Bold" Foreground="DarkRed"/>
-                </StackPanel>
-            </StackPanel>
-            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                <Button Grid.Column="0" Content="View" Background="LightGray" Foreground="Black" FontSize="20" FontWeight="Black" Width="100" Height="35" BorderThickness="0" Cursor="Hand" Click="ViewIncomeClick">
+                <Button Grid.Column="2" Content="Forward" Background="White" Foreground="Black" FontSize="25" FontWeight="Black" Width="150" Height="50" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Left" Click="ForwardButtonClick">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="10"/>
                         </Style>
                     </Button.Resources>
                 </Button>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="Total Increase: " FontSize="30" FontWeight="Black"/>
-                    <TextBlock Text="{Binding FormattedTotalIncrease}" FontSize="30" FontWeight="Black" Foreground="Green"/>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <Button Grid.Column="0" Content="View" Background="LightGray" Foreground="Black" FontSize="20" FontWeight="Black" Width="100" Height="35" BorderThickness="0" Cursor="Hand" Click="ViewSpendingClick">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="10"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Total Spent: " FontSize="30" FontWeight="Black"/>
+                        <TextBlock Text="{Binding FormattedTotalSpending}" FontSize="30" FontWeight="Black" Foreground="DarkRed"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Total Decrease: " FontSize="20" FontWeight="Medium"/>
+                        <TextBlock Text="{Binding FormattedTotalDecrease}" FontSize="20" FontWeight="Bold" Foreground="DarkRed"/>
+                    </StackPanel>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="Income: " FontSize="20" FontWeight="Medium"/>
-                    <TextBlock Text="{Binding FormattedTotalIncome}" FontSize="20" FontWeight="Bold" Foreground="Green"/>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <Button Grid.Column="0" Content="View" Background="LightGray" Foreground="Black" FontSize="20" FontWeight="Black" Width="100" Height="35" BorderThickness="0" Cursor="Hand" Click="ViewIncomeClick">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="10"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Total Increase: " FontSize="30" FontWeight="Black"/>
+                        <TextBlock Text="{Binding FormattedTotalIncrease}" FontSize="30" FontWeight="Black" Foreground="Green"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Income: " FontSize="20" FontWeight="Medium"/>
+                        <TextBlock Text="{Binding FormattedTotalIncome}" FontSize="20" FontWeight="Bold" Foreground="Green"/>
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
-            <StackPanel Grid.Column="2" VerticalAlignment="Center">
-                <Button Grid.Column="0" Content="View" Background="LightGray" Foreground="Black" FontSize="20" FontWeight="Black" Width="100" Height="35" BorderThickness="0" Cursor="Hand" Click="ViewExpensesClick">
-                    <Button.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="10"/>
-                        </Style>
-                    </Button.Resources>
-                </Button>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="Expenses: " FontSize="30" FontWeight="Black"/>
-                    <TextBlock Text="{Binding FormattedTotalExpenses}" FontSize="30" FontWeight="Black" Foreground="Gray"/>
+                <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                    <Button Grid.Column="0" Content="View" Background="LightGray" Foreground="Black" FontSize="20" FontWeight="Black" Width="100" Height="35" BorderThickness="0" Cursor="Hand" Click="ViewExpensesClick">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="10"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Expenses: " FontSize="30" FontWeight="Black"/>
+                        <TextBlock Text="{Binding FormattedTotalExpenses}" FontSize="30" FontWeight="Black" Foreground="Gray"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Tithing: " FontSize="20" FontWeight="Medium"/>
+                        <TextBlock Name="Tithing" FontSize="20" FontWeight="Bold" Foreground="Gray"/>
+                    </StackPanel>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="Tithing: " FontSize="20" FontWeight="Medium"/>
-                    <TextBlock Name="Tithing" FontSize="20" FontWeight="Bold" Foreground="Gray"/>
-                </StackPanel>
-            </StackPanel>
-        </Grid>
-        <Grid Grid.Row="2" Width="1000">
-            <DataGrid Name="TransactionGrid"
+            </Grid>
+            <DataGrid Grid.Row="2" 
+                      Width="1000" 
+                      Name="TransactionGrid"
                       AutoGenerateColumns="False"
                       IsReadOnly="True"
                       BorderThickness="0"

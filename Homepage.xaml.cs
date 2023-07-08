@@ -46,6 +46,9 @@ namespace BNZApp
         public string FormattedTotalDecrease { get => formattedTotalDecrease; set { formattedTotalDecrease = value; OnPropertyChanged(nameof(FormattedTotalDecrease)); } }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler<List<string>> OpenSpendingPopup;
+        public event EventHandler<List<string>> OpenIncomePopup;
+        public event EventHandler<List<string>> OpenExpensesPopup;
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -56,8 +59,11 @@ namespace BNZApp
 
             DataContext = this;
 
+            LoadPage();
+        }
+        public void LoadPage()
+        {
             GetData();
-
             UpdateUI();
         }
         private void GetData()
@@ -175,17 +181,17 @@ namespace BNZApp
 
         private void ViewIncomeClick(object sender, RoutedEventArgs e)
         {
-
+            OpenIncomePopup?.Invoke(sender, listOfIncome);
         }
 
         private void ViewSpendingClick(object sender, RoutedEventArgs e)
         {
-            //PopUpWindow.Content = new ViewSpendingWindow(listOfSpending);
+            OpenSpendingPopup?.Invoke(sender, listOfSpending);
         }
 
         private void ViewExpensesClick(object sender, RoutedEventArgs e)
         {
-
+            OpenExpensesPopup?.Invoke(sender, listOfExpenses);
         }
     }
 }

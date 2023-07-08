@@ -27,7 +27,7 @@ namespace BNZApp
             List<string> rows = File.ReadAllLines(TransactionsFile).ToList();
             List<Transaction> transactions = new List<Transaction>();
 
-            if (!(rows.Count > 1)) //incase file is empty
+            if (rows.Count is 1) //incase file is empty
             {
                 MessageBox.Show("No transactions in file");
                 return null;
@@ -78,13 +78,13 @@ namespace BNZApp
             List<string> rows = File.ReadAllLines(ListOfIncomeFile).ToList();
             List<string> listOfIncome = new List<string>();
 
-            if (!(rows.Count > 1)) //incase file is empty
+            if (rows.Count is 0) //incase file is empty
             {
                 Console.WriteLine("Income file empty");
                 return null;
             }
 
-            foreach (string row in rows.Skip(1))
+            foreach (string row in rows)
             {
                 string[] split = row.Split(',');
 
@@ -109,13 +109,13 @@ namespace BNZApp
             List<string> rows = File.ReadAllLines(ListOfSpendingFile).ToList();
             List<string> listOfSpending = new List<string>();
 
-            if (!(rows.Count > 1)) //incase file is empty
+            if (rows.Count is 0) //incase file is empty
             {
                 Console.WriteLine("Spending file empty");
                 return null;
             }
 
-            foreach (string row in rows.Skip(1))
+            foreach (string row in rows)
             {
                 string[] split = row.Split(',');
 
@@ -140,13 +140,13 @@ namespace BNZApp
             List<string> rows = File.ReadAllLines(ListOfExpensesFile).ToList();
             List<string> listOfExpenses = new List<string>();
 
-            if (!(rows.Count > 1)) //incase file is empty
+            if (rows.Count is 0) //incase file is empty
             {
                 Console.WriteLine("Expenses file empty");
                 return null;
             }
 
-            foreach (string row in rows.Skip(1))
+            foreach (string row in rows)
             {
                 string[] split = row.Split(',');
 
@@ -160,5 +160,34 @@ namespace BNZApp
 
             return listOfExpenses;
         }
+
+        public static void WriteListOfSpending(List<string> newListOfSpending)
+        {
+            if (newListOfSpending is null)
+            {
+                throw new NullReferenceException();
+            }
+
+            File.WriteAllLines(ListOfSpendingFile, newListOfSpending);
+        }
+        public static void WriteListOfIncome(List<string> newListOfIncome)
+        {
+            if (newListOfIncome is null)
+            {
+                throw new NullReferenceException();
+            }
+
+            File.WriteAllLines(ListOfIncomeFile, newListOfIncome);
+        }
+        public static void WriteListOfExpenses(List<string> newListOfExpenses)
+        {
+            if (newListOfExpenses is null)
+            {
+                throw new NullReferenceException();
+            }
+
+            File.WriteAllLines(ListOfExpensesFile, newListOfExpenses);
+        }
+
     }
 }

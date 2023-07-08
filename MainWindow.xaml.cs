@@ -20,12 +20,39 @@ namespace BNZApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Homepage homepage = new Homepage();
+        private Homepage homepage;
         public MainWindow()
         {
             InitializeComponent();
 
+            homepage = new Homepage();
             MainFrame.Content = homepage;
+            homepage.OpenSpendingPopup += OpenSpendingWindow;
+            homepage.OpenIncomePopup += OpenIncomeWindow;
+            homepage.OpenExpensesPopup += OpenExpensesWindow;
+        }
+
+        private void OpenSpendingWindow(object sender, List<string> listOfSpending)
+        {
+            SpendingWindow spendingWindow = new SpendingWindow(listOfSpending);
+            PopUpWindow.Content = spendingWindow;
+
+            spendingWindow.GoBack += BackToHomepage;
+        }
+
+        private void OpenIncomeWindow(object sender, List<string> listOfSpending)
+        {
+
+        }
+        private void OpenExpensesWindow(object sender, List<string> listOfSpending)
+        {
+
+        }
+
+        private void BackToHomepage(object sender, RoutedEventArgs e)
+        {
+            homepage.LoadPage();
+            PopUpWindow.Content = null;
         }
     }
 }
