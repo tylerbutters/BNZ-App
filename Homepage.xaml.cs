@@ -46,9 +46,7 @@ namespace BNZApp
         public string FormattedTotalDecrease { get => formattedTotalDecrease; set { formattedTotalDecrease = value; OnPropertyChanged(nameof(FormattedTotalDecrease)); } }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public event EventHandler<List<string>> OpenSpendingPopup;
-        public event EventHandler<List<string>> OpenIncomePopup;
-        public event EventHandler<List<string>> OpenExpensesPopup;
+        public event Action<object, List<string>, TransItemType> OpenViewListWindow;
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -69,9 +67,9 @@ namespace BNZApp
         private void GetData()
         {
             transactions = FileManagement.ReadTransactions();
-            listOfIncome = FileManagement.ReadListOfIncome();
-            listOfSpending = FileManagement.ReadListOfSpending();
-            listOfExpenses = FileManagement.ReadListOfExpenses();
+            listOfIncome = FileManagement.ReadList(TransItemType.Income);
+            listOfSpending = FileManagement.ReadList(TransItemType.Spending);
+            listOfExpenses = FileManagement.ReadList(TransItemType.Expenses);
 
             currentDate = transactions.Max(transaction => transaction.date);
 
@@ -181,17 +179,17 @@ namespace BNZApp
 
         private void ViewIncomeClick(object sender, RoutedEventArgs e)
         {
-            OpenIncomePopup?.Invoke(sender, listOfIncome);
+            OpenViewListWindow?.Invoke(sender, listOfIncome, TransItemType.Income);
         }
 
         private void ViewSpendingClick(object sender, RoutedEventArgs e)
         {
-            OpenSpendingPopup?.Invoke(sender, listOfSpending);
+            OpenViewListWindow?.Invoke(sender, listOfSpending, TransItemType.Spending);
         }
 
         private void ViewExpensesClick(object sender, RoutedEventArgs e)
         {
-            OpenExpensesPopup?.Invoke(sender, listOfExpenses);
+            OpenViewListWindow?.Invoke(sender, listOfExpenses, TransItemType.Expenses);
         }
     }
 }

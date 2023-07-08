@@ -18,6 +18,12 @@ namespace BNZApp
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    public enum TransItemType
+    {
+        Income,
+        Spending,
+        Expenses
+    }
     public partial class MainWindow : Window
     {
         private Homepage homepage;
@@ -27,26 +33,16 @@ namespace BNZApp
 
             homepage = new Homepage();
             MainFrame.Content = homepage;
-            homepage.OpenSpendingPopup += OpenSpendingWindow;
-            homepage.OpenIncomePopup += OpenIncomeWindow;
-            homepage.OpenExpensesPopup += OpenExpensesWindow;
-        }
-
-        private void OpenSpendingWindow(object sender, List<string> listOfSpending)
-        {
-            SpendingWindow spendingWindow = new SpendingWindow(listOfSpending);
-            PopUpWindow.Content = spendingWindow;
-
-            spendingWindow.GoBack += BackToHomepage;
-        }
-
-        private void OpenIncomeWindow(object sender, List<string> listOfSpending)
-        {
+            homepage.OpenViewListWindow += OpenViewListWindow;
 
         }
-        private void OpenExpensesWindow(object sender, List<string> listOfSpending)
-        {
 
+        private void OpenViewListWindow(object sender, List<string> list, TransItemType type)
+        {
+            ViewListWindow ViewListWindow = new ViewListWindow(list, type);
+            PopUpWindow.Content = ViewListWindow;
+
+            ViewListWindow.GoBack += BackToHomepage;
         }
 
         private void BackToHomepage(object sender, RoutedEventArgs e)

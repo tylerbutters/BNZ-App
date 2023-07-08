@@ -58,7 +58,7 @@ namespace BNZApp
                     transType = split[6],
                 };
 
-                if (transaction.amount == 0)
+                if (transaction.amount is 0)
                 {
                     throw new Exception("Amount = 0, this should never happen\nDate: " + transaction.date + "\nPayee: " + transaction.payee);
                 }
@@ -68,19 +68,34 @@ namespace BNZApp
             return transactions;
         }
 
-        public static List<string> ReadListOfIncome()
+        public static List<string> ReadList(TransItemType type)
         {
-            if (!File.Exists(ListOfIncomeFile)) // Handle the scenario where the account file is missing
+            string filePath = null;
+
+            switch (type)
             {
-                throw new FileNotFoundException("file not found.", ListOfIncomeFile);
+                case TransItemType.Income:
+                    filePath = nameof(ListOfIncomeFile);
+                    break;
+                case TransItemType.Spending:
+                    filePath = nameof(ListOfSpendingFile);
+                    break;
+                case TransItemType.Expenses:
+                    filePath = nameof(ListOfExpensesFile);
+                    break;
             }
 
-            List<string> rows = File.ReadAllLines(ListOfIncomeFile).ToList();
-            List<string> listOfIncome = new List<string>();
+            if (!File.Exists(filePath)) // Handle the scenario where the account file is missing
+            {
+                throw new FileNotFoundException("file not found.", filePath);
+            }
+
+            List<string> rows = File.ReadAllLines(filePath).ToList();
+            List<string> list = new List<string>();
 
             if (rows.Count is 0) //incase file is empty
             {
-                Console.WriteLine("Income file empty");
+                Console.WriteLine("file empty");
                 return null;
             }
 
@@ -93,101 +108,40 @@ namespace BNZApp
                     throw new FormatException("row size greater than 1");
                 }
 
-                listOfIncome.Add(split[0]);
+                list.Add(split[0]);
             }
 
-            return listOfIncome;
+            return list;
         }
 
-        public static List<string> ReadListOfSpending()
+        public static void WriteList(List<string> newList, TransItemType type)
         {
-            if (!File.Exists(ListOfSpendingFile)) // Handle the scenario where the account file is missing
-            {
-                throw new FileNotFoundException("file not found.", ListOfSpendingFile);
-            }
-
-            List<string> rows = File.ReadAllLines(ListOfSpendingFile).ToList();
-            List<string> listOfSpending = new List<string>();
-
-            if (rows.Count is 0) //incase file is empty
-            {
-                Console.WriteLine("Spending file empty");
-                return null;
-            }
-
-            foreach (string row in rows)
-            {
-                string[] split = row.Split(',');
-
-                if (split.Length < 1)
-                {
-                    throw new FormatException("row size greater than 1");
-                }
-
-                listOfSpending.Add(split[0]);
-            }
-
-            return listOfSpending;
-        }
-
-        public static List<string> ReadListOfExpenses()
-        {
-            if (!File.Exists(ListOfExpensesFile)) // Handle the scenario where the account file is missing
-            {
-                throw new FileNotFoundException("file not found.", ListOfExpensesFile);
-            }
-
-            List<string> rows = File.ReadAllLines(ListOfExpensesFile).ToList();
-            List<string> listOfExpenses = new List<string>();
-
-            if (rows.Count is 0) //incase file is empty
-            {
-                Console.WriteLine("Expenses file empty");
-                return null;
-            }
-
-            foreach (string row in rows)
-            {
-                string[] split = row.Split(',');
-
-                if (split.Length < 1)
-                {
-                    throw new FormatException("row size greater than 1");
-                }
-
-                listOfExpenses.Add(split[0]);
-            }
-
-            return listOfExpenses;
-        }
-
-        public static void WriteListOfSpending(List<string> newListOfSpending)
-        {
-            if (newListOfSpending is null)
+            if (newList is null)
             {
                 throw new NullReferenceException();
             }
 
-            File.WriteAllLines(ListOfSpendingFile, newListOfSpending);
-        }
-        public static void WriteListOfIncome(List<string> newListOfIncome)
-        {
-            if (newListOfIncome is null)
+            string filePath = null;
+
+            switch (type)
             {
-                throw new NullReferenceException();
+                case TransItemType.Income:
+                    filePath = nameof(ListOfIncomeFile);
+                    break;
+                case TransItemType.Spending:
+                    filePath = nameof(ListOfSpendingFile);
+                    break;
+                case TransItemType.Expenses:
+                    filePath = nameof(ListOfExpensesFile);
+                    break;
             }
 
-            File.WriteAllLines(ListOfIncomeFile, newListOfIncome);
-        }
-        public static void WriteListOfExpenses(List<string> newListOfExpenses)
-        {
-            if (newListOfExpenses is null)
+            if (!File.Exists(filePath)) // Handle the scenario where the account file is missing
             {
-                throw new NullReferenceException();
+                throw new FileNotFoundException("file not found.", filePath);
             }
 
-            File.WriteAllLines(ListOfExpensesFile, newListOfExpenses);
+            File.WriteAllLines(filePath, newList);
         }
-
     }
 }
