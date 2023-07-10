@@ -21,12 +21,12 @@ namespace BNZApp
 
             if (list is null)
             {
-                throw new ArgumentNullException(nameof(list));
+                throw new ArgumentNullException(nameof(list), "The list parameter cannot be null.");
             }
 
-            if (list.Count is 0)
+            if (list.Count == 0)
             {
-                Console.Write("list of spending is empty");
+                Console.Write($"The list of {type.ToString()} is empty.");
             }
 
             this.list = list;
@@ -50,13 +50,14 @@ namespace BNZApp
 
         private void DoneButtonClick(object sender, RoutedEventArgs e)
         {
-            if (isAddButtonClicked || isDeleteButtonClicked)
+            if (isAddButtonClicked || isDeleteButtonClicked) //items have been edited
             {
                 FileManagement.WriteList(list, type);
             }
 
             GoBack?.Invoke(sender, isAddButtonClicked || isDeleteButtonClicked);
         }
+
         private void AddButtonClick(object sender, RoutedEventArgs e)
         {
             string newItem = NewItemInput.Text;
@@ -68,6 +69,7 @@ namespace BNZApp
                 isAddButtonClicked = true;
             }
         }
+
         private void DeleteButtonClick(object sender, RoutedEventArgs e)
         {
             string item = (sender as Button)?.DataContext as string;
@@ -79,5 +81,6 @@ namespace BNZApp
                 isDeleteButtonClicked = true;
             }
         }
+
     }
 }

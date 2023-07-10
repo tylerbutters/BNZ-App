@@ -30,9 +30,9 @@ namespace BNZApp
 
             reimbursements = FileManagement.ReadReimbursements();
 
-            if (reimbursements.Count is 0)
+            if (reimbursements.Count == 0)
             {
-                Console.Write("list of spending is empty");
+                Console.WriteLine("The list of reimbursements is empty.");
             }
 
             ListGrid.ItemsSource = reimbursements;
@@ -47,17 +47,20 @@ namespace BNZApp
 
             GoBack?.Invoke(sender, isDeleteButtonClicked);
         }
+
         private void DeleteButtonClick(object sender, RoutedEventArgs e)
         {
             Reimbursement selectedReimbursement = (sender as Button)?.DataContext as Reimbursement;
             if (selectedReimbursement is null)
             {
-                throw new NullReferenceException(nameof(selectedReimbursement));
+                throw new ArgumentNullException(nameof(selectedReimbursement), "The selected reimbursement is null.");
             }
-                reimbursements.Remove(selectedReimbursement);
-                ListGrid.ItemsSource = null;
-                ListGrid.ItemsSource = reimbursements;
-                isDeleteButtonClicked = true;
+
+            reimbursements.Remove(selectedReimbursement);
+            ListGrid.ItemsSource = null;
+            ListGrid.ItemsSource = reimbursements;
+            isDeleteButtonClicked = true;
         }
+
     }
 }

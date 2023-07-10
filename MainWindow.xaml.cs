@@ -2,9 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Windows;
-using System.Windows.Media.Imaging;
 
 namespace BNZApp
 {
@@ -29,6 +27,11 @@ namespace BNZApp
 
         private void OpenViewListWindow(object sender, List<string> list, TransItemType type)
         {
+            if (list is null)
+            {
+                throw new ArgumentNullException(nameof(list));
+            }
+
             ViewListWindow viewListWindow = new ViewListWindow(list, type);
             PopUpWindow.Content = viewListWindow;
 
@@ -37,6 +40,16 @@ namespace BNZApp
 
         private void OpenReimbursementWindow_Add(object sender, Transaction firstItem, Transaction secondItem)
         {
+            if (firstItem is null)
+            {
+                throw new ArgumentNullException(nameof(firstItem));
+            }
+
+            if (secondItem is null)
+            {
+                throw new ArgumentNullException(nameof(secondItem));
+            }
+
             ReimbursementWindow reimbursementWindow = new ReimbursementWindow(firstItem, secondItem);
             PopUpWindow.Content = reimbursementWindow;
 
@@ -45,6 +58,11 @@ namespace BNZApp
 
         private void OpenReimbursementWindow_Remove(object sender, Transaction item)
         {
+            if (item is null)
+            {
+                throw new ArgumentNullException(nameof(item));
+            }
+
             ReimbursementWindow reimbursementWindow = new ReimbursementWindow(item);
             PopUpWindow.Content = reimbursementWindow;
 
@@ -68,20 +86,15 @@ namespace BNZApp
                 Title = "Select a CSV file"
             };
 
-            bool? result = openFileDialog.ShowDialog();
-
-            if (result is true) //if user selected a file
+            if (openFileDialog.ShowDialog() is true) //if user selected a file
             {
                 string selectedFilePath = openFileDialog.FileName;
                 File.Copy(selectedFilePath, FileManagement.TransactionsFile, true);
                 List<Transaction> newTransactions = FileManagement.ReadNewTransactions();
-                if(newTransactions is null)
+                if (newTransactions is null)
                 {
-                    return;
+                    throw new InvalidOperationException("Failed to read new transactions from the selected file.");
                 }
-
-                
-                
                 FileManagement.WriteTransactions(newTransactions);
 
                 BackToHomepage(sender, true);
@@ -108,6 +121,7 @@ namespace BNZApp
         {
             homepage = new Homepage();
             MainFrame.Content = homepage;
+            PopUpWindow.Content = null;
             homepage.OpenViewListWindow += OpenViewListWindow;
             homepage.OpenReimbursementWindow_Add += OpenReimbursementWindow_Add;
             homepage.OpenReimbursementWindow_Remove += OpenReimbursementWindow_Remove;
@@ -115,5 +129,6 @@ namespace BNZApp
             homepage.ViewReimbursementsWindow += OpenViewReimbursementsWindow;
             homepage.ClearData += ClearData;
         }
+
     }
 }

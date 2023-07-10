@@ -22,9 +22,14 @@ namespace BNZApp
         {
             InitializeComponent();
 
-            if (firstItem is null || secondItem is null)
+            if (firstItem is null)
             {
-                throw new ArgumentNullException(nameof(firstItem), nameof(secondItem));
+                throw new ArgumentNullException(nameof(firstItem), "First item cannot be null.");
+            }
+
+            if (secondItem is null)
+            {
+                throw new ArgumentNullException(nameof(secondItem), "Second item cannot be null.");
             }
 
             this.firstItem = firstItem;
@@ -36,13 +41,14 @@ namespace BNZApp
             Title.Text = "Confirm Reimbursement?";
             ComparisonGrid.ItemsSource = items;
         }
+
         public ReimbursementWindow(Transaction item)
         {
             InitializeComponent();
 
             if (item is null)
             {
-                throw new NullReferenceException();
+                throw new ArgumentNullException(nameof(item), "Item cannot be null.");
             }
 
             List<Reimbursement> reimbursements = FileManagement.ReadReimbursements();
@@ -50,7 +56,7 @@ namespace BNZApp
 
             if (reimbursement is null)
             {
-                throw new NullReferenceException();
+                throw new NullReferenceException("Reimbursement not found for the given item.");
             }
 
             isAdding = false;
@@ -59,6 +65,7 @@ namespace BNZApp
             Title.Text = "Remove Reimbursement?";
             ComparisonGrid.ItemsSource = items;
         }
+
         private Reimbursement FindReimbursement(List<Reimbursement> reimbursements, Transaction item)
         {
             return reimbursements.FirstOrDefault(r => r.transaction1.id == item.id || r.transaction2.id == item.id);
@@ -89,5 +96,6 @@ namespace BNZApp
         {
             GoBack?.Invoke(sender, false);
         }
+
     }
 }

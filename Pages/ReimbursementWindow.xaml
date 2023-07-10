@@ -5,123 +5,119 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:BNZApp"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="800" d:DesignWidth="1000"
       Title="ReimbursementWindow" Height="800" Width="1200" Background="#90000000">
-    
-    <Grid Width="800" Height="300" Background="gray">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="70"/>
-            <RowDefinition Height="140"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Name="Title" FontSize="25" Foreground="White" FontWeight="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <DataGrid Grid.Row="1" 
+    <Border Background="#1D3461" Margin="200 0 200 0" Height="300" CornerRadius="15">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="80"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Name="Title" FontSize="25" Foreground="White" FontWeight="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Grid Grid.Row="1" Background="#2e5282">
+                <DataGrid  Background="Transparent" Margin="4 0 4 0" VerticalAlignment="Center"
                       Name="ComparisonGrid"
                       AutoGenerateColumns="False"
                       IsReadOnly="True"
                       BorderThickness="0"
                       GridLinesVisibility="None" 
+                      VerticalScrollBarVisibility="Disabled"
                       HorizontalScrollBarVisibility="Disabled"
                       HeadersVisibility="Column">
-            <DataGrid.Resources>
-                <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
-                    <Setter Property="Background" Value="LightGray" />
-                    <Setter Property="Foreground" Value="Black"/>
-                    <Setter Property="FontWeight" Value="Black"/>
-                    <Setter Property="FontSize" Value="20"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="BorderThickness" Value="2"/>
-                    <Setter Property="Height" Value="40"/>
-                </Style>
-            </DataGrid.Resources>
-            <DataGrid.CellStyle>
-                <Style TargetType="DataGridCell">
-                    <Setter Property="Background" Value="White"/>
-                    <Setter Property="Foreground" Value="Black"/>
-                    <Setter Property="FontWeight" Value="Medium"/>
-                    <Setter Property="FontSize" Value="20"/>
-                    <Setter Property="BorderBrush" Value="Gray"/>
-                    <Setter Property="BorderThickness" Value="2"/>
-                    <Setter Property="Height" Value="50"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsFirstItemClicked}" Value="True">
-                            <Setter Property="Background" Value="Green"/>
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="IsHitTestVisible" Value="False" />
+                            <Setter Property="Background" Value="#1D3461" />
                             <Setter Property="Foreground" Value="White"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding IsFirstItemClicked}" Value="False">
-                            <Setter Property="Background" Value="Red"/>
-                            <Setter Property="Foreground" Value="White"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.CellStyle>
+                            <Setter Property="FontWeight" Value="Black"/>
+                            <Setter Property="FontSize" Value="20"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="BorderBrush" Value="#2e5282"/>
+                            <Setter Property="BorderThickness" Value="4"/>
+                            <Setter Property="Height" Value="45"/>
+                            <Setter Property="IsHitTestVisible" Value="False"/>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="IsHitTestVisible" Value="False"/>
+                            <Setter Property="Background" Value="White"/>
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="FontWeight" Value="Medium"/>
+                            <Setter Property="FontSize" Value="20"/>
+                            <Setter Property="BorderBrush" Value="#2e5282"/>
+                            <Setter Property="BorderThickness" Value="4"/>
+                            <Setter Property="Height" Value="50"/>
+                        </Style>
+                    </DataGrid.CellStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Date" Binding="{Binding formattedDate}" Width="120">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Margin" Value="10 0 0 0"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Amount" Binding="{Binding formattedAmount}" Width="1*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Margin" Value="10 0 0 0"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding isNegative}" Value="true">
+                                            <Setter Property="Foreground" Value="DarkRed"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding isNegative}" Value="false">
+                                            <Setter Property="Foreground" Value="Green"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Date" Binding="{Binding date,StringFormat='{}{0:dd/MM/yyyy}'}" Width="150">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="Margin" Value="10 0 0 0"/>
+                        <DataGridTextColumn Header="Payee" Binding="{Binding payee}" Width="2*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Margin" Value="10 0 0 0"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Type" Binding="{Binding formattedTransType}" Width="1.5*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Margin" Value="10 0 0 0"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+            <Grid Grid.Row="2" Width="400">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="Cancel" Background="#1F487E" Foreground="White" FontSize="25" FontWeight="Black" Width="140" Height="50" BorderThickness="0" Cursor="Hand" Click="CancelButtonClick">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="10"/>
                         </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="Amount" Binding="{Binding formattedAmount}" Width="1*">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="FontWeight" Value="Bold"/>
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="Margin" Value="10 0 0 0"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding isNegative}" Value="true">
-                                    <Setter Property="Foreground" Value="DarkRed"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding isNegative}" Value="false">
-                                    <Setter Property="Foreground" Value="Green"/>
-                                </DataTrigger>
-                            </Style.Triggers>
+                    </Button.Resources>
+                </Button>
+                <Button Grid.Column="1" Content="Confirm" Background="#1F487E" Foreground="White" FontSize="25" FontWeight="Black" Width="140" Height="50" BorderThickness="0" Cursor="Hand" Click="ConfirmButtonClick">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="10"/>
                         </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+                    </Button.Resources>
+                </Button>
+            </Grid>
 
-                <DataGridTextColumn Header="Payee" Binding="{Binding payee}" Width="2*">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="Margin" Value="10 0 0 0"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="Type" Binding="{Binding formattedTransType}" Width="1*">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="Margin" Value="10 0 0 0"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-        <Grid Grid.Row="2" Width="400">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Cancel" Background="White" Foreground="Black" FontSize="25" FontWeight="Black" Width="120" Height="50" BorderThickness="0" Cursor="Hand" Click="CancelButtonClick">
-                <Button.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="10"/>
-                    </Style>
-                </Button.Resources>
-            </Button>
-            <Button Grid.Column="1" Content="Confirm" Background="White" Foreground="Black" FontSize="25" FontWeight="Black" Width="120" Height="50" BorderThickness="0" Cursor="Hand" Click="ConfirmButtonClick">
-                <Button.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="10"/>
-                    </Style>
-                </Button.Resources>
-            </Button>
         </Grid>
-        
-    </Grid>
+    </Border>
 </Page>
