@@ -90,14 +90,15 @@ namespace BNZApp
             {
                 string selectedFilePath = openFileDialog.FileName;
                 File.Copy(selectedFilePath, FileManagement.TransactionsFile, true);
-                List<Transaction> newTransactions = FileManagement.ReadNewTransactions();
+                List<Transaction> newTransactions = FileManagement.ReadNewFile(); //for release
+                //List<Transaction> newTransactions = FileManagement.ReadTransactions(); //for debugging
                 if (newTransactions is null)
                 {
                     throw new InvalidOperationException("Failed to read new transactions from the selected file.");
                 }
                 FileManagement.WriteTransactions(newTransactions);
 
-                BackToHomepage(sender, true);
+                CreateHomepage();
             }
         }
 

@@ -21,7 +21,7 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Margin="20 0 20 0" Content="Upload Account" Background="#1F487E" Foreground="White" FontSize="25" FontWeight="Black" Height="50" BorderThickness="0" Cursor="Hand" Click="UploadFileButtonClick">
+            <Button Grid.Column="0" Margin="20 0 20 0" Content="Upload File" Background="#1F487E" Foreground="White" FontSize="25" FontWeight="Black" Height="50" BorderThickness="0" Cursor="Hand" Click="UploadFileButtonClick">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="10"/>
@@ -142,7 +142,9 @@
                 </StackPanel>
             </Grid>
         </Grid>
-        <DataGrid Grid.Row="3" Background="Transparent" Margin="50 0 50 0"
+        <Grid Grid.Row="3">
+            <TextBlock Name="NoResultsText" Text="No Transactions in File" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="30" FontWeight="Bold" Visibility="Hidden"/>
+            <DataGrid  Background="Transparent" Margin="50 0 50 0"
                       Name="TransactionGrid"
                       AutoGenerateColumns="False"
                       IsReadOnly="True"
@@ -234,5 +236,6 @@
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
+        </Grid>
     </Grid>
 </Page>

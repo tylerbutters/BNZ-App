@@ -13,7 +13,7 @@ namespace BNZApp
         private const string ListOfIncomeFile = @"CSVs\list-of-income.csv";
         private const string ListOfSpendingFile = @"CSVs\list-of-spending.csv";
 
-        public static List<Transaction> ReadNewTransactions()
+        public static List<Transaction> ReadNewFile()
         {
             if (!File.Exists(TransactionsFile))
             {
@@ -74,14 +74,14 @@ namespace BNZApp
             List<string> rows = File.ReadAllLines(TransactionsFile).ToList();
             List<Transaction> transactions = new List<Transaction>();
 
-            if (rows.Count == 0)
+            if (rows.Count is 0)
             {
                 throw new FormatException("File is empty");
             }
 
-            if (rows.Count == 1)
+            if (rows.Count is 1)
             {
-                return null;
+                return transactions;
             }
 
             foreach (string row in rows.Skip(1))

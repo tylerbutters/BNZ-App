@@ -60,13 +60,18 @@ namespace BNZApp
 
             if (transactions is null)
             {
-                MessageBox.Show("No transactions in file");
+                throw new NullReferenceException("Failed to load transactions data.");
+            }
+
+            if (transactions.Count == 0)
+            {
+                NoResultsText.Visibility = Visibility.Visible;
                 return;
             }
 
             currentDate = transactions.Max(transaction => transaction.date);
             LoadPage();
-            UpdateUI(); 
+            UpdateUI();
         }
 
         public void LoadPage()
@@ -104,10 +109,16 @@ namespace BNZApp
         {
             if (groupedTransactions is null)
             {
-                throw new NullReferenceException(nameof(groupedTransactions));
+                throw new NullReferenceException("Grouped transactions is null.");
             }
 
             var currentWeekGroup = groupedTransactions.FirstOrDefault(group => group.Key == GetWeekNumber(currentDate));
+
+            if (currentWeekGroup is null)
+            {
+                throw new Exception("Current week group not found.");
+            }
+
             currentWeekTransactions = currentWeekGroup.ToList();
         }
 
@@ -120,7 +131,7 @@ namespace BNZApp
         {
             if (currentWeekTransactions is null)
             {
-                throw new NullReferenceException(nameof(currentWeekTransactions));
+                throw new NullReferenceException("Current week transactions is null.");
             }
 
             totalIncome = GetTotal(currentWeekTransactions, listOfIncome);
@@ -148,7 +159,7 @@ namespace BNZApp
                 case TransItemType.Expenses:
                     return listOfExpenses;
                 default:
-                    return null;
+                    throw new ArgumentException($"Invalid transaction type: {type}");
             }
         }
 
@@ -238,8 +249,8 @@ namespace BNZApp
 
         private void ViewListClick(object sender, RoutedEventArgs e)
         {
-            var button = (Button)sender;
-            TransItemType type = new TransItemType();
+            var button = (sender as Button);
+            TransItemType type;
             switch (button.Tag)
             {
                 case "Income":
@@ -251,6 +262,8 @@ namespace BNZApp
                 case "Expenses":
                     type = TransItemType.Expenses;
                     break;
+                default:
+                    throw new ArgumentException("Invalid button tag.");
             }
             var list = GetListForType(type);
             OpenViewListWindow?.Invoke(sender, list, type);
@@ -258,11 +271,11 @@ namespace BNZApp
 
         private void TransactionGridItemClick(object sender, RoutedEventArgs e)
         {
-            Transaction selectedItem = (e.OriginalSource as FrameworkElement)?.DataContext as Transaction;
+            Transaction selectedItem = (sender as FrameworkElement)?.DataContext as Transaction;
 
             if (selectedItem is null)
             {
-                throw new NullReferenceException();
+                throw new NullReferenceException("Selected item is null.");
             }
 
             if (selectedItem.IsReimbursement)
