@@ -20,7 +20,7 @@
                 <Grid Margin="4 4 4 0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="515"/>
+                        <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
                     <Border BorderBrush="#2e5282" Background="#1D3461" Grid.Column="0" BorderThickness="4">
                         <TextBlock Text="Transaction 1" FontSize="25" FontWeight="Black" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -65,7 +65,7 @@
                         </Style>
                     </DataGrid.CellStyle>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Date" Binding="{Binding transaction1.formattedDate}" Width="0.8*">
+                        <DataGridTextColumn Header="Date" Binding="{Binding transaction1.formattedDate}" Width="120">
                             <DataGridTextColumn.ElementStyle >
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center"/>
@@ -73,7 +73,7 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Payee" Binding="{Binding transaction1.payee}" Width="1.5*">
+                        <DataGridTextColumn Header="Payee" Binding="{Binding transaction1.payee}" Width="1*">
                             <DataGridTextColumn.ElementStyle >
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center"/>
@@ -81,7 +81,7 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Amount" Binding="{Binding transaction1.formattedAmount}" Width="0.8*">
+                        <DataGridTextColumn Header="Amount" Binding="{Binding transaction1.formattedAmount}" Width="1*">
                             <DataGridTextColumn.ElementStyle >
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center"/>
@@ -98,7 +98,7 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Date" Binding="{Binding transaction2.formattedDate}" Width="0.8*">
+                        <DataGridTextColumn Header="Date" Binding="{Binding transaction2.formattedDate}" Width="120">
                             <DataGridTextColumn.ElementStyle >
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center"/>
@@ -106,7 +106,7 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Payee" Binding="{Binding transaction2.payee}" Width="1.5*">
+                        <DataGridTextColumn Header="Payee" Binding="{Binding transaction2.payee}" Width="1*">
                             <DataGridTextColumn.ElementStyle >
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center"/>
@@ -114,31 +114,29 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Amount" Binding="{Binding transaction2.formattedAmount}" Width="0.8*">
-                            <DataGridTextColumn.ElementStyle >
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="FontWeight" Value="Bold"/>
-                                    <Setter Property="Margin" Value="10 0 0 0"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding transaction2.isNegative}" Value="true">
-                                            <Setter Property="Foreground" Value="DarkRed"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding transaction2.isNegative}" Value="false">
-                                            <Setter Property="Foreground" Value="Green"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                        <DataGridTemplateColumn Width="50">
+
+                        <DataGridTemplateColumn Header="Amount" Width="1*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Grid Background="#1D3461">
-                                        <Button Content="X" FontSize="20" Foreground="White" FontWeight="Black" Width="40" Height="40" BorderThickness="0" Cursor="Hand" Click="DeleteButtonClick">
+                                    <Grid>
+                                        <TextBlock Text="{Binding transaction2.formattedAmount}" VerticalAlignment="Center" Margin="10 0 0 0" FontWeight="Bold">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding transaction2.isNegative}" Value="true">
+                                                            <Setter Property="Foreground" Value="DarkRed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding transaction2.isNegative}" Value="false">
+                                                            <Setter Property="Foreground" Value="Green"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                        <Button Content="X" FontSize="20" Background="Transparent" FontWeight="Black" Width="40" Height="40" HorizontalAlignment="Right" Margin="0 0 10 0" BorderThickness="0" Cursor="Hand" Click="DeleteButtonClick">
                                             <Button.Style>
                                                 <Style TargetType="Button">
-                                                    <Setter Property="Background" Value="Transparent"/>
+                                                    <Setter Property="Foreground" Value="Black"/>
                                                     <Setter Property="Template">
                                                         <Setter.Value>
                                                             <ControlTemplate TargetType="{x:Type Button}">

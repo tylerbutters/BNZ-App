@@ -65,13 +65,14 @@ namespace BNZApp
 
             if (transactions.Count == 0)
             {
+                MessageBox.Show("No transactions in file.\nFeatures will be limited.");
                 NoResultsText.Visibility = Visibility.Visible;
+                GetData();
                 return;
             }
 
             currentDate = transactions.Max(transaction => transaction.date);
             LoadPage();
-            UpdateUI();
         }
 
         public void LoadPage()
@@ -83,10 +84,11 @@ namespace BNZApp
         private void GetData()
         {
             transactions = FileManagement.ReadTransactions();
-            reimbursements = FileManagement.ReadReimbursements();
-            listOfIncome = FileManagement.ReadList(TransItemType.Income);
-            listOfSpending = FileManagement.ReadList(TransItemType.Spending);
-            listOfExpenses = FileManagement.ReadList(TransItemType.Expenses);
+            reimbursements = FileManagement.ReadReimbursements() ?? new List<Reimbursement>();
+            listOfIncome = FileManagement.ReadList(TransItemType.Income) ?? new List<string>();
+            listOfSpending = FileManagement.ReadList(TransItemType.Spending) ?? new List<string>();
+            listOfExpenses = FileManagement.ReadList(TransItemType.Expenses) ?? new List<string>();
+
 
             groupedTransactions = transactions.GroupBy(transaction => GetWeekNumber(transaction.date));
         }
@@ -101,8 +103,12 @@ namespace BNZApp
 
         private void UpdateWeekNumberDisplay()
         {
-            WeekNumber.Text = GetWeekNumber(currentDate).ToString();
-            Month.Text = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(currentDate.Month);
+            string startDate = GetStartDateOfWeek(currentDate).ToString("dd/MM/yy");
+            string endDate = DateTime.Parse(startDate).AddDays(7).ToString("dd/MM/yy");
+            string month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(currentDate.Month);
+            string weekNumber = GetWeekNumber(currentDate).ToString();
+            WeekAndMonth.Text = month + ", Week " + weekNumber;
+            Dates.Text = startDate + " - " + endDate;
         }
 
         private void UpdateCurrentWeekGroup()
@@ -166,6 +172,13 @@ namespace BNZApp
         private int GetWeekNumber(DateTime date)
         {
             return CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+        }
+
+        private DateTime GetStartDateOfWeek(DateTime currentDate)
+        {
+            DayOfWeek firstDayOfWeek = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
+            int diff = (currentDate.DayOfWeek - firstDayOfWeek + 7) % 7;
+            return currentDate.AddDays(-1 * diff).Date;
         }
 
         private float GetTotal(List<Transaction> transactions, List<string> items)
@@ -258,9 +271,14 @@ namespace BNZApp
 
         private void ViewListClick(object sender, RoutedEventArgs e)
         {
-            var button = (sender as Button);
+            if(transactions.Count is 0)
+            {
+                MessageBox.Show("Please upload transactions file first");
+                return;
+            }
+            var border = (sender as Border);
             TransItemType type;
-            switch (button.Tag)
+            switch (border.Tag)
             {
                 case "Income":
                     type = TransItemType.Income;
