@@ -51,6 +51,8 @@ namespace BNZApp
                 throw new ArgumentNullException(nameof(item), "Item cannot be null.");
             }
 
+            firstItem = item;
+
             List<Reimbursement> reimbursements = FileManagement.ReadReimbursements();
             reimbursement = FindReimbursement(reimbursements, item);
 
@@ -68,7 +70,11 @@ namespace BNZApp
 
         private Reimbursement FindReimbursement(List<Reimbursement> reimbursements, Transaction item)
         {
-            return reimbursements.FirstOrDefault(r => r.transaction1.id == item.id || r.transaction2.id == item.id);
+            if(item is null)
+            {
+                throw new ArgumentNullException("Item is null", nameof(item));
+            }
+            return reimbursements.FirstOrDefault(reimbursement => reimbursement.transaction1.id == item.id || reimbursement.transaction2.id == item.id);
         }
 
         private void ConfirmButtonClick(object sender, RoutedEventArgs e)

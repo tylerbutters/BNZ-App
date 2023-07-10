@@ -192,7 +192,32 @@ namespace BNZApp
 
         private void ForwardButtonClick(object sender, RoutedEventArgs e)
         {
+            if (transactions.Count is 0) 
+            {
+                MessageBox.Show("No transactions found for the selected week.", "No Transactions");
+                return;
+            }
             DateTime newDate = currentDate.AddDays(7);
+            firstItemClicked = null;
+            bool hasTransactions = transactions.Any(transaction => transaction.date.Date == newDate.Date);
+
+            if (!hasTransactions)
+            {
+                MessageBox.Show("No transactions found for the selected week.", "No Transactions");
+                return;
+            }
+
+            currentDate = newDate;
+            UpdateUI();
+        }
+        private void BackButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (transactions.Count is 0)
+            {
+                MessageBox.Show("No transactions found for the selected week.", "No Transactions");
+                return;
+            }
+            DateTime newDate = currentDate.AddDays(-7);
             firstItemClicked = null;
             bool hasTransactions = transactions.Any(transaction => transaction.date.Date == newDate.Date);
 
@@ -229,22 +254,6 @@ namespace BNZApp
         private void UploadFileButtonClick(object sender, RoutedEventArgs e)
         {
             UploadFile?.Invoke(sender, e);
-        }
-
-        private void BackButtonClick(object sender, RoutedEventArgs e)
-        {
-            DateTime newDate = currentDate.AddDays(-7);
-            firstItemClicked = null;
-            bool hasTransactions = transactions.Any(transaction => transaction.date.Date == newDate.Date);
-
-            if (!hasTransactions)
-            {
-                MessageBox.Show("No transactions found for the selected week.", "No Transactions");
-                return;
-            }
-
-            currentDate = newDate;
-            UpdateUI();
         }
 
         private void ViewListClick(object sender, RoutedEventArgs e)
