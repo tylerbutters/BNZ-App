@@ -24,8 +24,7 @@
                     BorderThickness="0"
                     GridLinesVisibility="None" 
                     HorizontalScrollBarVisibility="Disabled"
-                    HeadersVisibility="None"
-                  ItemsSource="{Binding listOfSpending}">
+                    HeadersVisibility="None">
             <DataGrid.CellStyle>
                 <Style TargetType="DataGridCell">
                     <Setter Property="Background" Value="White"/>

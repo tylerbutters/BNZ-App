@@ -10,7 +10,7 @@ namespace BNZApp
     /// </summary>
     public partial class ViewListWindow : Page
     {
-        public event EventHandler<RoutedEventArgs> GoBack;
+        public event EventHandler<bool> GoBack;
         private bool isAddButtonClicked;
         private bool isDeleteButtonClicked;
         private List<string> list;
@@ -19,12 +19,12 @@ namespace BNZApp
         {
             InitializeComponent();
 
-            if(list is null)
+            if (list is null)
             {
-                throw new NullReferenceException();
-            }          
+                throw new ArgumentNullException(nameof(list));
+            }
 
-            if (list.Count is 0 )
+            if (list.Count is 0)
             {
                 Console.Write("list of spending is empty");
             }
@@ -44,7 +44,7 @@ namespace BNZApp
                     Title.Text = "Transactions Classified as Expenses";
                     break;
             }
-            
+
             ListGrid.ItemsSource = list;
         }
 
@@ -54,23 +54,30 @@ namespace BNZApp
             {
                 FileManagement.WriteList(list, type);
             }
-            GoBack?.Invoke(sender,e);
+
+            GoBack?.Invoke(sender, isAddButtonClicked || isDeleteButtonClicked);
         }
         private void AddButtonClick(object sender, RoutedEventArgs e)
         {
-            isAddButtonClicked = true;
-            list.Add(NewItemInput.Text); 
-            ListGrid.ItemsSource = null;
-            ListGrid.ItemsSource = list;
+            string newItem = NewItemInput.Text;
+            if (!string.IsNullOrWhiteSpace(newItem))
+            {
+                list.Add(newItem);
+                ListGrid.ItemsSource = null;
+                ListGrid.ItemsSource = list;
+                isAddButtonClicked = true;
+            }
         }
         private void DeleteButtonClick(object sender, RoutedEventArgs e)
         {
-            isDeleteButtonClicked = true;
-            string item = (sender as Button).DataContext as string;
-
-            list.Remove(item);
-            ListGrid.ItemsSource = null;
-            ListGrid.ItemsSource = list;
+            string item = (sender as Button)?.DataContext as string;
+            if (!string.IsNullOrWhiteSpace(item))
+            {
+                list.Remove(item);
+                ListGrid.ItemsSource = null;
+                ListGrid.ItemsSource = list;
+                isDeleteButtonClicked = true;
+            }
         }
     }
 }

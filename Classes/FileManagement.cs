@@ -12,11 +12,64 @@ namespace BNZApp
 {
     public class FileManagement
     {
-        private const string TransactionsFile = @"CSVs\transactions.csv";
+        public const string TransactionsFile = @"CSVs\transactions.csv";
         private const string ReimbursementsFile = @"CSVs\reimbursements.csv";
         private const string ListOfExpensesFile = @"CSVs\list-of-expenses.csv";
         private const string ListOfIncomeFile = @"CSVs\list-of-income.csv";
         private const string ListOfSpendingFile = @"CSVs\list-of-spending.csv";
+
+        public static List<Transaction> ReadNewTransactions()
+        {
+            if (!File.Exists(TransactionsFile)) // Handle the scenario where the account file is missing
+            {
+                throw new FileNotFoundException("file not found.", TransactionsFile);
+            }
+
+            List<string> rows = File.ReadAllLines(TransactionsFile).ToList();
+            List<Transaction> transactions = new List<Transaction>();
+
+            if (rows.Count is 0) //incase file is empty
+            {
+                MessageBox.Show("File is empty");
+                return null;
+            }
+
+            foreach (string row in rows.Skip(1))
+            {
+                string[] split = row.Split(',');
+
+                if (split.Length != 7)
+                {
+                    MessageBox.Show("File is invalid");
+                    return null;
+                }
+
+                if (DateTime.Parse(split[1]).Year < 2023)
+                {
+                    continue;
+                }
+
+                Transaction transaction = new Transaction
+                {
+                    date = DateTime.Parse(split[0]),
+                    amount = float.Parse(split[1]),
+                    payee = split[2],
+                    particulars = split[3],
+                    code = split[4],
+                    reference = split[5],
+                    transType = split[6],
+                };
+
+                if (transaction.amount is 0)
+                {
+                    throw new Exception("Amount = 0, this should never happen\nDate: " + transaction.date + "\nPayee: " + transaction.payee);
+                }
+
+                transactions.Add(transaction);
+            }
+
+            return transactions;
+        }
 
         public static List<Transaction> ReadTransactions()
         {
@@ -28,9 +81,13 @@ namespace BNZApp
             List<string> rows = File.ReadAllLines(TransactionsFile).ToList();
             List<Transaction> transactions = new List<Transaction>();
 
+            if (rows.Count is 0)
+            {
+                throw new FormatException("File format is invalid");
+            }
+
             if (rows.Count is 1) //incase file is empty
             {
-                MessageBox.Show("No transactions in file");
                 return null;
             }
 
@@ -40,7 +97,7 @@ namespace BNZApp
 
                 if (split.Length != 8)
                 {
-                    throw new FormatException("row size greater or less than 7");
+                    throw new FormatException("row size greater or less than 8");
                 }
 
                 if (DateTime.Parse(split[1]).Year < 2023)
@@ -76,7 +133,7 @@ namespace BNZApp
             List<Reimbursement> reimbursements = ReadReimbursements();
             foreach (Transaction transaction in transactions)
             {
-                transaction.IsReimbursement = reimbursements.Any(reimbursement => reimbursement.transaction1 == transaction || reimbursement.transaction2 == transaction);
+                transaction.IsReimbursement = reimbursements.Any(reimbursement => reimbursement.transaction1.id == transaction.id || reimbursement.transaction2.id == transaction.id);
             }
         }
 
@@ -165,7 +222,7 @@ namespace BNZApp
             if (rows.Count is 0) //incase file is empty
             {
                 Console.WriteLine("file empty");
-                return null;
+                return list;
             }
 
             foreach (string row in rows)
@@ -252,6 +309,37 @@ namespace BNZApp
             }
 
             File.WriteAllLines(TransactionsFile, rows);
+        }
+        public static void WriteReimbursements(List<Reimbursement> reimbursements)
+        {
+            if (reimbursements is null)
+            {
+                throw new NullReferenceException();
+            }
+
+            if (!File.Exists(ReimbursementsFile)) // Handle the scenario where the account file is missing
+            {
+                throw new FileNotFoundException("file not found.", ReimbursementsFile);
+            }
+
+            List<string> rows = new List<string>
+            {
+                "ID,Date,Amount,Payee,Particulars,Code,Reference,Tran Type,ID,Date,Amount,Payee,Particulars,Code,Reference,Tran Type"
+            };
+            foreach (Reimbursement reimbursement in reimbursements)
+            {
+                rows.Add(reimbursement.ToString());
+            }
+
+            File.WriteAllLines(ReimbursementsFile, rows);
+        }
+        public static void ClearData()
+        {
+            WriteList(new List<string>(), TransItemType.Income);
+            WriteList(new List<string>(), TransItemType.Spending);
+            WriteList(new List<string>(), TransItemType.Expenses);
+            WriteTransactions(new List<Transaction>());
+            WriteReimbursements(new List<Reimbursement>());
         }
     }
 }

@@ -55,19 +55,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="FileManagement.cs" />
-    <Compile Include="Homepage.xaml.cs">
+    <Compile Include="Classes\FileManagement.cs" />
+    <Compile Include="Pages\Homepage.xaml.cs">
       <DependentUpon>Homepage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Reimbursement.cs" />
-    <Compile Include="ReimbursementWindow.xaml.cs">
+    <Compile Include="Classes\Reimbursement.cs" />
+    <Compile Include="Pages\ReimbursementWindow.xaml.cs">
       <DependentUpon>ReimbursementWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Transaction.cs" />
-    <Compile Include="ViewListWindow.xaml.cs">
+    <Compile Include="Classes\Transaction.cs" />
+    <Compile Include="Pages\ViewListWindow.xaml.cs">
       <DependentUpon>ViewListWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Homepage.xaml">
+    <Compile Include="Pages\ViewReimbursementsWindow.xaml.cs">
+      <DependentUpon>ViewReimbursementsWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Pages\Homepage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -83,11 +86,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="ReimbursementWindow.xaml">
+    <Page Include="Pages\ReimbursementWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ViewListWindow.xaml">
+    <Page Include="Pages\ViewListWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ViewReimbursementsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -125,5 +132,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

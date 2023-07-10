@@ -14,7 +14,7 @@
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="Confirm Reimbursement?" FontSize="25" Foreground="White" FontWeight="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock Grid.Row="0" Name="Title" FontSize="25" Foreground="White" FontWeight="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <DataGrid Grid.Row="1" 
                       Name="ComparisonGrid"
                       AutoGenerateColumns="False"

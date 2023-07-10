@@ -17,6 +17,10 @@ namespace BNZApp
         public string code { get; set; }
         public string reference { get; set; }
         public string transType { get; set; }
+        public string formattedDate { get
+            {
+                return date.ToString("dd/MM/yy");
+            } }
         public string formattedAmount { get => amount.ToString("C"); set { amount = float.Parse(value); OnPropertyChanged(nameof(formattedAmount)); } }
         public string formattedTransType
         {

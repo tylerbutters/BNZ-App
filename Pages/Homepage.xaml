@@ -1,0 +1,227 @@
+﻿<Page x:Class="BNZApp.Homepage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BNZApp"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="1200"
+      Title="Homepage" Background="White">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="DarkGray" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="Upload Account" Background="Gray" Foreground="White" FontSize="25" FontWeight="Black" Width="250" Height="50" BorderThickness="0" Cursor="Hand" Click="UploadFileButtonClick">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="10"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <Button Grid.Column="1" Content="Reimbursements" Background="Gray" Foreground="White" FontSize="25" FontWeight="Black" Width="250" Height="50" BorderThickness="0" Cursor="Hand" Click="ReimbursementsButtonClick">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="10"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <Button Grid.Column="3" Content="Exit Applicaiton" Background="DarkRed" Foreground="White" FontSize="25" FontWeight="Black" Width="250" Height="50" BorderThickness="0" Cursor="Hand" Click="ExitButtonClick">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="10"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <Button Grid.Column="2" Content="Clear All Data" Background="Black" Foreground="White" FontSize="25" FontWeight="Black" Width="250" Height="50" BorderThickness="0" Cursor="Hand" Click="ClearDataButtonClick">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="10"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+        </Grid>
+        <Grid Grid.Row="1" Background="Gray">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Name="Month" Text="Example" FontSize="30" FontWeight="Black" Foreground="White"/>
+                <TextBlock Text=", Week " FontSize="30" FontWeight="Black" Foreground="White"/>
+                <TextBlock Name="WeekNumber" Text="0" FontSize="30" FontWeight="Black" Foreground="White"/>
+            </StackPanel>
+            <Button Grid.Column="0" Content="Back" Background="White" Foreground="Black" FontSize="25" FontWeight="Black" Width="140" Height="40" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Right" Click="BackButtonClick">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="10"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <Button Grid.Column="2" Content="Forward" Background="White" Foreground="Black" FontSize="25" FontWeight="Black" Width="140" Height="40" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Left" Click="ForwardButtonClick">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="10"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                <Button Content="View"  Tag="Spending" Background="LightGray" Foreground="Black" FontSize="20" FontWeight="Black" Width="100" Height="35" BorderThickness="0" Cursor="Hand" Click="ViewListClick">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="10"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="Total Spent: " FontSize="30" FontWeight="Black"/>
+                    <TextBlock Text="{Binding FormattedTotalSpending}" FontSize="30" FontWeight="Black" Foreground="DarkRed"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="Total Decrease: " FontSize="20" FontWeight="Medium"/>
+                    <TextBlock Text="{Binding FormattedTotalDecrease}" FontSize="20" FontWeight="Bold" Foreground="DarkRed"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <Button Content="View" Tag="Income" Background="LightGray" Foreground="Black" FontSize="20" FontWeight="Black" Width="100" Height="35" BorderThickness="0" Cursor="Hand" Click="ViewListClick">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="10"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="Total Increase: " FontSize="30" FontWeight="Black"/>
+                    <TextBlock Text="{Binding FormattedTotalIncrease}" FontSize="30" FontWeight="Black" Foreground="Green"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="Income: " FontSize="20" FontWeight="Medium"/>
+                    <TextBlock Text="{Binding FormattedTotalIncome}" FontSize="20" FontWeight="Bold" Foreground="Green"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                <Button Content="View" Tag="Expenses" Background="LightGray" Foreground="Black" FontSize="20" FontWeight="Black" Width="100" Height="35" BorderThickness="0" Cursor="Hand" Click="ViewListClick">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="10"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="Expenses: " FontSize="30" FontWeight="Black"/>
+                    <TextBlock Text="{Binding FormattedTotalExpenses}" FontSize="30" FontWeight="Black" Foreground="Gray"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="Tithing: " FontSize="20" FontWeight="Medium"/>
+                    <TextBlock Name="Tithing" FontSize="20" FontWeight="Bold" Foreground="Gray"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        <DataGrid Grid.Row="3" 
+                      Width="1000" 
+                      Name="TransactionGrid"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      BorderThickness="0"
+                      GridLinesVisibility="None" 
+                      HorizontalScrollBarVisibility="Disabled"
+                      HeadersVisibility="Column" 
+                      PreviewMouseDown="TransactionGridItemClick">
+            <DataGrid.Resources>
+                <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
+                    <Setter Property="Background" Value="LightGray" />
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="FontWeight" Value="Black"/>
+                    <Setter Property="FontSize" Value="25"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                    <Setter Property="Height" Value="45"/>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="IsHitTestVisible" Value="False"/>
+                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="FontWeight" Value="Medium"/>
+                    <Setter Property="FontSize" Value="20"/>
+                    <Setter Property="BorderBrush" Value="Gray"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                    <Setter Property="Height" Value="52"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsItemClicked}" Value="True">
+                            <Setter Property="Background" Value="LightGray"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsReimbursement}" Value="True">
+                            <Setter Property="Background" Value="LightGray"/>
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="BorderBrush" Value="Black"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Date" Binding="{Binding formattedDate}" Width="150">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Margin" Value="10 0 0 0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Amount" Binding="{Binding formattedAmount}" Width="1*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Margin" Value="10 0 0 0"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding isNegative}" Value="true">
+                                    <Setter Property="Foreground" Value="DarkRed"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding isNegative}" Value="false">
+                                    <Setter Property="Foreground" Value="Green"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn Header="Payee" Binding="{Binding payee}" Width="2*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Margin" Value="10 0 0 0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Type" Binding="{Binding formattedTransType}" Width="1*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Margin" Value="10 0 0 0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>

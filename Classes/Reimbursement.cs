@@ -14,7 +14,18 @@ namespace BNZApp
         {
             return $"{transaction1},{transaction2}";
         }
-
+        public float ExcludeFromTotal(List<Transaction> transactions)
+        {
+            if (transactions.Any(transaction => transaction.id == transaction1.id && transaction.amount < 0))
+            {
+                return transaction1.amount;
+            }
+            else if (transactions.Any(transaction => transaction.id == transaction2.id && transaction.amount < 0))
+            {
+                return transaction2.amount;
+            }
+            return 0;
+        }
         public Reimbursement(Transaction transaction1, Transaction transaction2)
         {
             this.transaction1 = transaction1;
