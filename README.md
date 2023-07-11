@@ -1,2 +1,2 @@
 # BNZ App
-Download Release file
+Download Release folder
