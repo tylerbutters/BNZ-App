@@ -18,6 +18,7 @@ namespace BNZApp
         private Transaction firstItem;
         private Transaction secondItem;
         private Reimbursement reimbursement;
+        private List<Reimbursement> reimbursements = FileManagement.ReadReimbursements();
         public ReimbursementWindow(Transaction firstItem, Transaction secondItem)
         {
             InitializeComponent();
@@ -53,7 +54,6 @@ namespace BNZApp
 
             firstItem = item;
 
-            List<Reimbursement> reimbursements = FileManagement.ReadReimbursements();
             reimbursement = FindReimbursement(reimbursements, item);
 
             if (reimbursement is null)
@@ -81,12 +81,11 @@ namespace BNZApp
         {
             if (isAdding)
             {
-                Reimbursement reimbursement = new Reimbursement(firstItem, secondItem);
-                FileManagement.WriteNewReimbursement(reimbursement);
+                reimbursements.Add(new Reimbursement(firstItem, secondItem));
+                FileManagement.WriteReimbursements(reimbursements);
             }
             else
             {
-                List<Reimbursement> reimbursements = FileManagement.ReadReimbursements();
                 Reimbursement reimbursement = FindReimbursement(reimbursements, firstItem);
                 if (reimbursement != null)
                 {

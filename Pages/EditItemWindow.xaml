@@ -1,0 +1,63 @@
+﻿<Page x:Class="BNZApp.EditItemWindow"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BNZApp"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="1200"
+      Title="EditItemWindow" Background="#90000000">
+    <Border Background="#1D3461" Width="550" Height="200" CornerRadius="15">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="80"/>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" Background="#2e5282" CornerRadius="15 15 0 0">
+                <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Edit Item Details" HorizontalAlignment="Center" FontWeight="Medium" VerticalAlignment="Bottom" FontSize="18" Foreground="White"/>
+                <Grid Grid.Row="1" Margin="30 0 30 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+                    <ComboBox Grid.Column="0" Margin="5 0 5 0" Name="DropdownBox" BorderThickness="0" Height="40" FontSize="20" SelectedItem="{Binding SelectedOption}" IsReadOnly="True" IsEditable="True" FontWeight="Medium" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                        <ComboBox.Items>
+                            <ComboBoxItem Content="Payee"/>
+                            <ComboBoxItem Content="Particulars"/>
+                            <ComboBoxItem Content="Code"/>
+                            <ComboBoxItem Content="Reference"/>
+                        </ComboBox.Items>
+                    </ComboBox>
+                        <TextBox Grid.Column="1" Name="NameInput" TextAlignment="Center" FontWeight="Medium" Height="40" Margin="5 0 5 0" Background="White" BorderThickness="0" VerticalContentAlignment="Center" FontSize="20" Padding="10 0 0 0"/>
+                    </Grid>
+            </Grid>
+            </Border>
+            <Grid Grid.Row="2" Width="400">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="Cancel" Background="#1F487E" Foreground="White" FontSize="25" FontWeight="Black" Width="140" Height="50" BorderThickness="0" Cursor="Hand" Click="CancelButtonClick">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="10"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button Grid.Column="1" Content="Confirm" Background="#1F487E" Foreground="White" FontSize="25" FontWeight="Black" Width="140" Height="50" BorderThickness="0" Cursor="Hand" Click="ConfirmButtonClick">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="10"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+
+        </Grid>
+    </Border>
+</Page>

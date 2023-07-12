@@ -28,8 +28,17 @@ namespace BNZApp
         }
         public Reimbursement(Transaction transaction1, Transaction transaction2)
         {
-            this.transaction1 = transaction1;
-            this.transaction2 = transaction2;
+            if (transaction1.amount > 0) //if transaction 1 is positive
+            {
+                this.transaction1 = transaction1;
+                this.transaction2 = transaction2;
+            }
+            else //if transaction 2 is positive
+            {
+                this.transaction1 = transaction2;
+                this.transaction2 = transaction1;
+            }
         }
+
     }
 }

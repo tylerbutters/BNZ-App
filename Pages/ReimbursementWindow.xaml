@@ -5,9 +5,9 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:BNZApp"
       mc:Ignorable="d" 
-      d:DesignHeight="800" d:DesignWidth="1000"
-      Title="ReimbursementWindow" Height="800" Width="1200" Background="#90000000">
-    <Border Background="#1D3461" Margin="200 0 200 0" Height="300" CornerRadius="15">
+      d:DesignHeight="800" d:DesignWidth="1200"
+      Title="ReimbursementWindow" Background="#90000000">
+    <Border Background="#1D3461" Width="800" Height="300" CornerRadius="15">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="70"/>
@@ -115,7 +115,6 @@
                     </Button.Resources>
                 </Button>
             </Grid>
-
         </Grid>
     </Border>
 </Page>

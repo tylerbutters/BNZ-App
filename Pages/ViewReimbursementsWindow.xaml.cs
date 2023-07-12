@@ -21,16 +21,14 @@ namespace BNZApp
     public partial class ViewReimbursementsWindow : Page
     {
         private bool isDeleteButtonClicked;
-        private List<Reimbursement> reimbursements;
+        private List<Reimbursement> reimbursements = FileManagement.ReadReimbursements();
         public event EventHandler<bool> GoBack;
 
         public ViewReimbursementsWindow()
         {
             InitializeComponent();
 
-            reimbursements = FileManagement.ReadReimbursements();
-
-            if (reimbursements.Count == 0)
+            if (reimbursements.Count is 0)
             {
                 Console.WriteLine("The list of reimbursements is empty.");
             }

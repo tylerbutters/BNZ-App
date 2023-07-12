@@ -14,49 +14,46 @@ namespace BNZApp
     /// </summary>
     public partial class Homepage : Page, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        public static float taxPercentage = 0.105f;
+        public string formattedTotalIncome { get => totalIncome.ToString("C"); set { totalIncome = float.Parse(value); OnPropertyChanged(nameof(totalIncome)); } }
+        public string formattedTotalSpending { get => totalSpending.ToString("C"); set { totalSpending = float.Parse(value); OnPropertyChanged(nameof(totalSpending)); } }
+        public string formattedTotalExpenses { get => totalExpenses.ToString("C"); set { totalExpenses = float.Parse(value); OnPropertyChanged(nameof(totalExpenses)); } }
+        public string formattedTotalDecrease { get => totalDecrease.ToString("C"); set { totalDecrease = float.Parse(value); OnPropertyChanged(nameof(totalDecrease)); } }
+        public string formattedTotal { get => total.ToString("C"); set { total = float.Parse(value); OnPropertyChanged(nameof(total)); } }
+        private bool TotalIsNegative;
+        public bool totalIsNegative { get => total < 0; set { TotalIsNegative = value; OnPropertyChanged(nameof(TotalIsNegative)); } }
+        private float totalIncome;
+        private float totalSpending;
+        private float totalExpenses;
+        private float totalDecrease;
+        private float total;
+
         private DateTime currentDate;
-        private List<string> listOfIncome;
-        private List<string> listOfSpending;
-        private List<string> listOfExpenses;
+        private DateTime latestDate;
+        private List<ListItem> listOfItems;
         private List<Reimbursement> reimbursements;
-        private List<Transaction> transactions;
+        private List<Transaction> transactions = FileManagement.ReadTransactions();
         private List<Transaction> currentWeekTransactions;
         private Transaction firstItemClicked;
         private Transaction secondItemClicked;
         private IEnumerable<IGrouping<int, Transaction>> groupedTransactions;
-        private string formattedTotalIncome;
-        private string formattedTotalSpending;
-        private string formattedTotalExpenses;
-        private string formattedTotalIncrease;
-        private string formattedTotalDecrease;
-        private float totalIncome;
-        private float totalSpending;
-        private float totalExpenses;
-        private float totalIncrease;
-        private float totalDecrease;
-        public string FormattedTotalIncome { get => formattedTotalIncome; set { formattedTotalIncome = value; OnPropertyChanged(nameof(FormattedTotalIncome)); } }
-        public string FormattedTotalSpending { get => formattedTotalSpending; set { formattedTotalSpending = value; OnPropertyChanged(nameof(FormattedTotalSpending)); } }
-        public string FormattedTotalExpenses { get => formattedTotalExpenses; set { formattedTotalExpenses = value; OnPropertyChanged(nameof(FormattedTotalExpenses)); } }
-        public string FormattedTotalIncrease { get => formattedTotalIncrease; set { formattedTotalIncrease = value; OnPropertyChanged(nameof(FormattedTotalIncrease)); } }
-        public string FormattedTotalDecrease { get => formattedTotalDecrease; set { formattedTotalDecrease = value; OnPropertyChanged(nameof(FormattedTotalDecrease)); } }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public event Action<object, List<string>, TransItemType> OpenViewListWindow;
+        public event Action<object, List<ListItem>, ListType> OpenViewListWindow;
         public event Action<object, Transaction, Transaction> OpenReimbursementWindow_Add;
         public event EventHandler<Transaction> OpenReimbursementWindow_Remove;
         public event EventHandler<RoutedEventArgs> ViewReimbursementsWindow;
         public event EventHandler<RoutedEventArgs> UploadFile;
         public event EventHandler<RoutedEventArgs> ClearData;
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
         public Homepage()
         {
             InitializeComponent();
 
             DataContext = this;
-            transactions = FileManagement.ReadTransactions();
 
             if (transactions is null)
             {
@@ -67,11 +64,10 @@ namespace BNZApp
             {
                 MessageBox.Show("No transactions in file.\nFeatures will be limited.");
                 NoResultsText.Visibility = Visibility.Visible;
-                GetData();
                 return;
             }
-
-            currentDate = transactions.Max(transaction => transaction.date);
+            latestDate = transactions.Max(transaction => transaction.date);
+            currentDate = latestDate;
             LoadPage();
         }
 
@@ -84,17 +80,23 @@ namespace BNZApp
         private void GetData()
         {
             transactions = FileManagement.ReadTransactions();
-            reimbursements = FileManagement.ReadReimbursements() ?? new List<Reimbursement>();
-            listOfIncome = FileManagement.ReadList(TransItemType.Income) ?? new List<string>();
-            listOfSpending = FileManagement.ReadList(TransItemType.Spending) ?? new List<string>();
-            listOfExpenses = FileManagement.ReadList(TransItemType.Expenses) ?? new List<string>();
-
+            reimbursements = FileManagement.ReadReimbursements();
+            listOfItems = FileManagement.ReadList();
 
             groupedTransactions = transactions.GroupBy(transaction => GetWeekNumber(transaction.date));
         }
 
         private void UpdateUI()
         {
+            if(currentDate == latestDate)
+            {
+                LatestButton.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                LatestButton.Visibility = Visibility.Visible;
+            }
+
             UpdateWeekNumberDisplay();
             UpdateCurrentWeekGroup();
             UpdateTransactionGrid();
@@ -140,33 +142,15 @@ namespace BNZApp
                 throw new NullReferenceException("Current week transactions is null.");
             }
 
-            totalIncome = GetTotal(currentWeekTransactions, listOfIncome);
-            totalSpending = GetTotal(currentWeekTransactions, listOfSpending);
-            totalExpenses = GetTotal(currentWeekTransactions, listOfExpenses) + (totalIncome / -10);
-            totalIncrease = totalIncome + totalSpending + totalExpenses;
+            totalIncome = GetTotal(currentWeekTransactions, listOfItems, ListType.Income);
+            totalSpending = GetTotal(currentWeekTransactions, listOfItems, ListType.Spending);
+            totalExpenses = GetTotal(currentWeekTransactions, listOfItems, ListType.Expenses) + (totalIncome * taxPercentage);
+            total = totalIncome + totalSpending + totalExpenses;
             totalDecrease = currentWeekTransactions.Where(transaction => transaction.amount < 0).Sum(transaction => transaction.amount);
+            Tax.Text = (totalIncome * taxPercentage).ToString("C");
 
-            FormattedTotalIncome = totalIncome.ToString("C");
-            FormattedTotalSpending = totalSpending.ToString("C");
-            FormattedTotalExpenses = totalExpenses.ToString("C");
-            FormattedTotalDecrease = totalDecrease.ToString("C");
-            FormattedTotalIncrease = totalIncrease.ToString("C");
-            Tithing.Text = (totalIncome / -10).ToString("C");
-        }
-
-        private List<string> GetListForType(TransItemType type)
-        {
-            switch (type)
-            {
-                case TransItemType.Income:
-                    return listOfIncome;
-                case TransItemType.Spending:
-                    return listOfSpending;
-                case TransItemType.Expenses:
-                    return listOfExpenses;
-                default:
-                    throw new ArgumentException($"Invalid transaction type: {type}");
-            }
+            DataContext = null;
+            DataContext = this;
         }
 
         private int GetWeekNumber(DateTime date)
@@ -181,23 +165,59 @@ namespace BNZApp
             return currentDate.AddDays(-1 * diff).Date;
         }
 
-        private float GetTotal(List<Transaction> transactions, List<string> items)
+        private float GetTotal(List<Transaction> transactions, List<ListItem> items, ListType itemType)
         {
             if (items is null)
             {
                 return 0;
             }
 
-            List<Transaction> matchingTransactions = transactions
-                .Where(transaction => items.Any(item => transaction.payee.Contains(item)))
-                .ToList();
+            List<Transaction> matchingTransactions = GetMatchingTransactions(transactions, items, itemType);
 
-            float sum = matchingTransactions.Sum(transaction => transaction.amount);
+            if (matchingTransactions.Count is 0)
+            {
+                return 0;
+            }
 
-            // Subtract the amounts of negative reimbursement transactions
+            return CalculateSum(matchingTransactions);
+        }
+
+        private List<Transaction> GetMatchingTransactions(List<Transaction> transactions, List<ListItem> items, ListType itemType)
+        {
+            List<Transaction> matchingTransactions = new List<Transaction>();
+            foreach (ListItem item in items)
+            {
+                if (item.listType == itemType)
+                {
+                    switch (item.category.ToLower())
+                    {
+                        case "payee":
+                            matchingTransactions.AddRange(transactions.Where(transaction => transaction.payee.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0));
+                            break;
+                        case "particulars":
+                            matchingTransactions.AddRange(transactions.Where(transaction => transaction.particulars.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0));
+                            break;
+                        case "code":
+                            matchingTransactions.AddRange(transactions.Where(transaction => transaction.code.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0));
+                            break;
+                        case "reference":
+                            matchingTransactions.AddRange(transactions.Where(transaction => transaction.reference.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0));
+                            break;
+                        default:
+                            throw new ArgumentException("Item type is not valid", nameof(item.category));
+                    }
+                }
+            }
+
+            return matchingTransactions;
+        }
+        private float CalculateSum(List<Transaction> transactions)
+        {
+            float sum = transactions.Sum(transaction => transaction.amount);
+
             foreach (Reimbursement reimbursement in reimbursements)
             {
-                sum -= reimbursement.ExcludeFromTotal(matchingTransactions);
+                sum -= reimbursement.ExcludeFromTotal(transactions);
             }
 
             return sum;
@@ -205,7 +225,7 @@ namespace BNZApp
 
         private void ForwardButtonClick(object sender, RoutedEventArgs e)
         {
-            if (transactions.Count is 0) 
+            if (transactions.Count is 0)
             {
                 MessageBox.Show("No transactions found for the selected week.", "No Transactions");
                 return;
@@ -244,6 +264,12 @@ namespace BNZApp
             UpdateUI();
         }
 
+        private void LatestButtonClick(object sender, RoutedEventArgs e)
+        {
+            currentDate = latestDate;
+            UpdateUI();
+        }
+
         private void ExitButtonClick(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
@@ -271,29 +297,28 @@ namespace BNZApp
 
         private void ViewListClick(object sender, RoutedEventArgs e)
         {
-            if(transactions.Count is 0)
+            if (transactions.Count is 0)
             {
                 MessageBox.Show("Please upload transactions file first");
                 return;
             }
             var border = (sender as Border);
-            TransItemType type;
+            ListType type;
             switch (border.Tag)
             {
                 case "Income":
-                    type = TransItemType.Income;
+                    type = ListType.Income;
                     break;
                 case "Spending":
-                    type = TransItemType.Spending;
+                    type = ListType.Spending;
                     break;
                 case "Expenses":
-                    type = TransItemType.Expenses;
+                    type = ListType.Expenses;
                     break;
                 default:
                     throw new ArgumentException("Invalid button tag.");
             }
-            var list = GetListForType(type);
-            OpenViewListWindow?.Invoke(sender, list, type);
+            OpenViewListWindow?.Invoke(sender, listOfItems, type);
         }
 
         private void TransactionGridItemClick(object sender, RoutedEventArgs e)

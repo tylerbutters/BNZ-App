@@ -9,7 +9,7 @@ namespace BNZApp
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public enum TransItemType
+    public enum ListType
     {
         Income,
         Spending,
@@ -25,7 +25,7 @@ namespace BNZApp
             CreateHomepage();
         }
 
-        private void OpenViewListWindow(object sender, List<string> list, TransItemType type)
+        private void OpenViewListWindow(object sender, List<ListItem> list, ListType type)
         {
             if (list is null)
             {
@@ -90,8 +90,8 @@ namespace BNZApp
             {
                 string selectedFilePath = openFileDialog.FileName;
                 File.Copy(selectedFilePath, FileManagement.TransactionsFile, true);
-                //List<Transaction> newTransactions = FileManagement.ReadNewFile(); //for release
-                List<Transaction> newTransactions = FileManagement.ReadTransactions(); //for debugging
+                List<Transaction> newTransactions = FileManagement.ReadNewFile(); //for release
+                //List<Transaction> newTransactions = FileManagement.ReadTransactions(); //for debugging
                 if (newTransactions is null)
                 {
                     throw new InvalidOperationException("Failed to read new transactions from the selected file.");

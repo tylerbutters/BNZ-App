@@ -9,9 +9,7 @@ namespace BNZApp
     {
         public const string TransactionsFile = @"CSVs\transactions.csv";
         private const string ReimbursementsFile = @"CSVs\reimbursements.csv";
-        private const string ListOfExpensesFile = @"CSVs\list-of-expenses.csv";
-        private const string ListOfIncomeFile = @"CSVs\list-of-income.csv";
-        private const string ListOfSpendingFile = @"CSVs\list-of-spending.csv";
+        private const string ListOfItemsFile = @"CSVs\list-of-items.csv";
 
         public static List<Transaction> ReadNewFile()
         {
@@ -20,15 +18,15 @@ namespace BNZApp
                 throw new FileNotFoundException("Transactions file not found.", TransactionsFile);
             }
 
-            List<string> rows = File.ReadAllLines(TransactionsFile).ToList();
+            List<string> lines = File.ReadAllLines(TransactionsFile).ToList();
             List<Transaction> transactions = new List<Transaction>();
 
-            if (rows.Count == 0)
+            if (lines.Count == 0)
             {
                 throw new FormatException("File is empty");
             }
 
-            foreach (string row in rows.Skip(1))
+            foreach (string row in lines.Skip(1))
             {
                 string[] split = row.Split(',');
 
@@ -71,20 +69,20 @@ namespace BNZApp
                 throw new FileNotFoundException("Transactions file not found.", TransactionsFile);
             }
 
-            List<string> rows = File.ReadAllLines(TransactionsFile).ToList();
+            List<string> lines = File.ReadAllLines(TransactionsFile).ToList();
             List<Transaction> transactions = new List<Transaction>();
 
-            if (rows.Count is 0)
+            if (lines.Count is 0)
             {
                 throw new FormatException("File is empty");
             }
 
-            if (rows.Count is 1)
+            if (lines.Count is 1)
             {
                 return transactions;
             }
 
-            foreach (string row in rows.Skip(1))
+            foreach (string row in lines.Skip(1))
             {
                 string[] split = row.Split(',');
 
@@ -138,15 +136,15 @@ namespace BNZApp
                 throw new FileNotFoundException("Reimbursements file not found.", ReimbursementsFile);
             }
 
-            List<string> rows = File.ReadAllLines(ReimbursementsFile).ToList();
+            List<string> lines = File.ReadAllLines(ReimbursementsFile).ToList();
             List<Reimbursement> reimbursements = new List<Reimbursement>();
 
-            if (rows.Count <= 1)
+            if (lines.Count <= 1)
             {
                 return reimbursements;
             }
 
-            foreach (string row in rows.Skip(1))
+            foreach (string row in lines.Skip(1))
             {
                 string[] split = row.Split(',');
 
@@ -185,38 +183,23 @@ namespace BNZApp
             return reimbursements;
         }
 
-        public static List<string> ReadList(TransItemType type)
+        public static List<ListItem> ReadList()
         {
-            string filePath = null;
-
-            switch (type)
+            if (!File.Exists(ListOfItemsFile))
             {
-                case TransItemType.Income:
-                    filePath = ListOfIncomeFile;
-                    break;
-                case TransItemType.Spending:
-                    filePath = ListOfSpendingFile;
-                    break;
-                case TransItemType.Expenses:
-                    filePath = ListOfExpensesFile;
-                    break;
+                throw new FileNotFoundException("List file not found.", ListOfItemsFile);
             }
 
-            if (!File.Exists(filePath))
-            {
-                throw new FileNotFoundException("List file not found.", filePath);
-            }
+            List<string> lines = File.ReadAllLines(ListOfItemsFile).ToList();
+            List<ListItem> list = new List<ListItem>();
 
-            List<string> rows = File.ReadAllLines(filePath).ToList();
-            List<string> list = new List<string>();
-
-            if (rows.Count == 0)
+            if (lines.Count == 0)
             {
                 Console.WriteLine("File is empty");
                 return list;
             }
 
-            foreach (string row in rows)
+            foreach (string row in lines.Skip(1))
             {
                 string[] split = row.Split(',');
 
@@ -225,57 +208,32 @@ namespace BNZApp
                     throw new FormatException("Row size is greater than 1");
                 }
 
-                list.Add(split[0]);
+                list.Add(new ListItem((ListType)Enum.Parse(typeof(ListType), split[0]), split[1], split[2]));
+
             }
 
             return list;
         }
 
-        public static void WriteList(List<string> newList, TransItemType type)
+        public static void WriteList(List<ListItem> list)
         {
-            if (newList is null)
+            if (list is null)
             {
                 throw new NullReferenceException("New list is null");
             }
 
-            string filePath = null;
-
-            switch (type)
+            if (!File.Exists(ListOfItemsFile))
             {
-                case TransItemType.Income:
-                    filePath = ListOfIncomeFile;
-                    break;
-                case TransItemType.Spending:
-                    filePath = ListOfSpendingFile;
-                    break;
-                case TransItemType.Expenses:
-                    filePath = ListOfExpensesFile;
-                    break;
+                throw new FileNotFoundException("List file not found.", ListOfItemsFile);
             }
 
-            if (!File.Exists(filePath))
+            List<string> lines = new List<string> { "List Type,Category,Name" };
+            foreach (ListItem item in list)
             {
-                throw new FileNotFoundException("List file not found.", filePath);
+                lines.Add(item.ToString());
             }
 
-            File.WriteAllLines(filePath, newList);
-        }
-
-        public static void WriteNewReimbursement(Reimbursement newReimbursement)
-        {
-            if (newReimbursement is null)
-            {
-                throw new NullReferenceException("New reimbursement is null");
-            }
-
-            if (!File.Exists(ReimbursementsFile))
-            {
-                throw new FileNotFoundException("Reimbursements file not found.", ReimbursementsFile);
-            }
-
-            List<string> currentRows = File.ReadAllLines(ReimbursementsFile).ToList();
-            currentRows.Add(newReimbursement.ToString());
-            File.WriteAllLines(ReimbursementsFile, currentRows);
+            File.WriteAllLines(ListOfItemsFile, lines);
         }
 
         public static void WriteTransactions(List<Transaction> transactions)
@@ -290,13 +248,13 @@ namespace BNZApp
                 throw new FileNotFoundException("Transactions file not found.", TransactionsFile);
             }
 
-            List<string> rows = new List<string>{"ID,Date,Amount,Payee,Particulars,Code,Reference,Tran Type"};
+            List<string> lines = new List<string> { "ID,Date,Amount,Payee,Particulars,Code,Reference,Transaction Type" };
             foreach (Transaction transaction in transactions)
             {
-                rows.Add(transaction.ToString());
+                lines.Add(transaction.ToString());
             }
 
-            File.WriteAllLines(TransactionsFile, rows);
+            File.WriteAllLines(TransactionsFile, lines);
         }
 
         public static void WriteReimbursements(List<Reimbursement> reimbursements)
@@ -311,20 +269,18 @@ namespace BNZApp
                 throw new FileNotFoundException("Reimbursements file not found.", ReimbursementsFile);
             }
 
-            List<string> rows = new List<string>{"ID,Date,Amount,Payee,Particulars,Code,Reference,Tran Type,ID,Date,Amount,Payee,Particulars,Code,Reference,Tran Type"};
+            List<string> lines = new List<string> { "ID,Date,Amount,Payee,Particulars,Code,Reference,Tran Type,ID,Date,Amount,Payee,Particulars,Code,Reference,Tran Type" };
             foreach (Reimbursement reimbursement in reimbursements)
             {
-                rows.Add(reimbursement.ToString());
+                lines.Add(reimbursement.ToString());
             }
 
-            File.WriteAllLines(ReimbursementsFile, rows);
+            File.WriteAllLines(ReimbursementsFile, lines);
         }
 
         public static void ClearData()
         {
-            WriteList(new List<string>(), TransItemType.Income);
-            WriteList(new List<string>(), TransItemType.Spending);
-            WriteList(new List<string>(), TransItemType.Expenses);
+            WriteList(new List<ListItem>());
             WriteTransactions(new List<Transaction>());
             WriteReimbursements(new List<Reimbursement>());
         }

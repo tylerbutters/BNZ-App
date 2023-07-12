@@ -7,87 +7,138 @@
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="1200"
       Title="ViewListWindow" Background="#90000000">
-    <Border Background="#1D3461" Margin="300 100 300 100" CornerRadius="15">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="5*"/>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <TextBlock Grid.Row="0" Name="Title" FontSize="30" FontWeight="Black" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            </Grid>
-            <Grid Grid.Row="1" Background="#2e5282">
-                <DataGrid  
-                  Name="ListGrid" Margin="30 20 30 20"
+    <Grid>
+        <Frame x:Name="EditPopup" Panel.ZIndex="999"/>
+        <Border Background="#1D3461" Name="TaxInputBox" CornerRadius="10" Width="200" Height="60" VerticalAlignment="Top" Margin="0 100 80 0" HorizontalAlignment="Right" Visibility="Collapsed">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Margin="0 0 20 0" Text="Tax:" HorizontalAlignment="Center" FontWeight="Medium" VerticalAlignment="Center" FontSize="25" Foreground="White"/>
+                <TextBox  Name="TaxInput" FontWeight="Medium" Height="40" Width="100" Background="White" VerticalAlignment="Center" BorderThickness="0" VerticalContentAlignment="Center" FontSize="20" Padding="10 0 0 0" GotFocus="TaxInputGotFocus" LostFocus="TaxInputLostFocus"/>
+            </StackPanel>
+        </Border>
+        <Border Background="#1D3461" Margin="0 100 0 100" Width="600" CornerRadius="15">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="90"/>
+                    <RowDefinition Height="80"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <TextBlock Grid.Row="0" Name="Title" FontSize="30" FontWeight="Black" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Grid>
+                <Grid Grid.Row="1" Background="#2e5282">
+                    <DataGrid  
+                  Name="ListGrid" Margin="20"
                   Background="Transparent"
                   AutoGenerateColumns="False"
                     IsReadOnly="True"
                     BorderThickness="0"
                     GridLinesVisibility="None" 
                     HorizontalScrollBarVisibility="Disabled"
-                    HeadersVisibility="None">
-                    <DataGrid.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="#f4f5f0"/>
-                            <Setter Property="Foreground" Value="Black"/>
-                            <Setter Property="FontWeight" Value="Medium"/>
-                            <Setter Property="FontSize" Value="20"/>
-                            <Setter Property="BorderBrush" Value="#2e5282"/>
-                            <Setter Property="BorderThickness" Value="4"/>
-                            <Setter Property="Height" Value="50"/>
-                        </Style>
-                    </DataGrid.CellStyle>
-                    <DataGrid.Columns>
-                        <DataGridTemplateColumn Width="*">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"/>
-                                        <Button Content="X" FontSize="20" Background="Transparent" FontWeight="Black" Width="40" Height="40" HorizontalAlignment="Right" Margin="0 0 10 0" BorderThickness="0" Cursor="Hand" Click="DeleteButtonClick">
-                                            <Button.Style>
-                                                <Style TargetType="Button">
-                                                    <Setter Property="Foreground" Value="Black"/>
-                                                    <Setter Property="Template">
-                                                        <Setter.Value>
-                                                            <ControlTemplate TargetType="{x:Type Button}">
-                                                                <Border Background="{TemplateBinding Background}">
-                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                                </Border>
-                                                            </ControlTemplate>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                    <Style.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter Property="Foreground" Value="DarkRed"/>
-                                                        </Trigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Button.Style>
-                                        </Button>
-                                    </Grid>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </Grid>
-            <Grid Grid.Row="2" Background="#2e5282">
-                <Grid HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="300"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBox Grid.Column="0" Name="NewItemInput" Height="40" Margin="0 0 10 0" Background="White" BorderThickness="0" VerticalContentAlignment="Center" FontSize="20" Padding="10 0 0 0">
-                        <TextBox.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="10"/>
+                    HeadersVisibility="Column">
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="IsHitTestVisible" Value="False" />
+                                <Setter Property="Background" Value="#1D3461" />
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="FontWeight" Value="Black"/>
+                                <Setter Property="FontSize" Value="20"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                <Setter Property="BorderBrush" Value="#2e5282"/>
+                                <Setter Property="BorderThickness" Value="4"/>
+                                <Setter Property="Height" Value="45"/>
                             </Style>
-                        </TextBox.Resources>
-                    </TextBox>
-                    <Button Grid.Column="1" Content="Add" Background="#1D3461" Foreground="White" FontSize="25" FontWeight="Black" Width="80" Height="40" BorderThickness="0" Cursor="Hand" Click="AddButtonClick">
+                        </DataGrid.Resources>
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Background" Value="#f4f5f0"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                                <Setter Property="FontWeight" Value="Medium"/>
+                                <Setter Property="FontSize" Value="20"/>
+                                <Setter Property="BorderBrush" Value="#2e5282"/>
+                                <Setter Property="BorderThickness" Value="4"/>
+                                <Setter Property="Height" Value="50"/>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListGridItemClick" />
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Category" Width="1*" Binding="{Binding formattedCategory}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTemplateColumn Header="Name" Width="3*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <TextBlock Text="{Binding formattedName}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"/>
+                                            <Button Content="X" FontSize="20" Background="Transparent" FontWeight="Black" Width="40" Height="40" HorizontalAlignment="Right" Margin="0 0 10 0" BorderThickness="0" Cursor="Hand" Click="DeleteButtonClick">
+                                                <Button.Style>
+                                                    <Style TargetType="Button">
+                                                        <Setter Property="Foreground" Value="Black"/>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="{x:Type Button}">
+                                                                    <Border Background="{TemplateBinding Background}">
+                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Foreground" Value="DarkRed"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+                <Grid Grid.Row="2" Background="#2e5282">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="3*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Enter Details of Transaction" HorizontalAlignment="Center" FontWeight="Medium" VerticalAlignment="Top" FontSize="18" Foreground="White"/>
+                    <Grid Grid.Row="1" Margin="30 0 30 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox Grid.Column="0" Margin="5 0 5 0" Name="DropdownBox" BorderThickness="0" Height="40" FontSize="20" SelectedItem="{Binding SelectedOption}" IsReadOnly="True" IsEditable="True" Foreground="Gray" FontWeight="Medium" Text="Category" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectionChanged="DropdownBoxGotFocus">
+                            <ComboBox.Items>
+                                <ComboBoxItem Content="Payee" Foreground="Black"/>
+                                <ComboBoxItem Content="Particulars" Foreground="Black"/>
+                                <ComboBoxItem Content="Code" Foreground="Black"/>
+                                <ComboBoxItem Content="Reference" Foreground="Black"/>
+                            </ComboBox.Items>
+                        </ComboBox>
+                        <TextBox Grid.Column="1" Name="NameInput" Text="Name" Foreground="Gray" FontWeight="Medium" Height="40" Margin="5 0 5 0" Background="White" BorderThickness="0" VerticalContentAlignment="Center" FontSize="20" Padding="10 0 0 0" GotFocus="NameInputGotFocus"/>
+                        <Button Grid.Column="2" Content="Add" Margin="5 0 5 0" Background="#1D3461" Foreground="White" FontSize="25" FontWeight="Black" Height="40" BorderThickness="0" Cursor="Hand" Click="AddButtonClick">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="10"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="3">
+                    <Button  Content="Done" Background="#1F487E" Foreground="White" FontSize="25" FontWeight="Black" Width="140" Height="50" BorderThickness="0" Cursor="Hand" Click="DoneButtonClick">
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="10"/>
@@ -95,18 +146,7 @@
                         </Button.Resources>
                     </Button>
                 </Grid>
-
             </Grid>
-
-            <Grid Grid.Row="3">
-                <Button  Content="Done" Background="#1F487E" Foreground="White" FontSize="25" FontWeight="Black" Width="140" Height="50" BorderThickness="0" Cursor="Hand" Click="DoneButtonClick">
-                    <Button.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="10"/>
-                        </Style>
-                    </Button.Resources>
-                </Button>
-            </Grid>
-        </Grid>
-    </Border>
+        </Border>
+    </Grid>
 </Page>
