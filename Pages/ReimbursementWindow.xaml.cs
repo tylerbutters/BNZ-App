@@ -54,7 +54,7 @@ namespace BNZApp
 
             firstItem = item;
 
-            reimbursement = FindReimbursement(reimbursements, item);
+            reimbursement = FindReimbursement(reimbursements, firstItem);
 
             if (reimbursement is null)
             {
@@ -74,7 +74,7 @@ namespace BNZApp
             {
                 throw new ArgumentNullException("Item is null", nameof(item));
             }
-            return reimbursements.FirstOrDefault(reimbursement => reimbursement.transaction1.id == item.id || reimbursement.transaction2.id == item.id);
+            return reimbursements.FirstOrDefault(reimbursement => item.Equals(reimbursement.transaction1) || item.Equals(reimbursement.transaction2));
         }
 
         private void ConfirmButtonClick(object sender, RoutedEventArgs e)
@@ -86,7 +86,6 @@ namespace BNZApp
             }
             else
             {
-                Reimbursement reimbursement = FindReimbursement(reimbursements, firstItem);
                 if (reimbursement != null)
                 {
                     reimbursements.Remove(reimbursement);

@@ -24,7 +24,6 @@ namespace BNZApp
 
             CreateHomepage();
         }
-
         private void OpenViewListWindow(object sender, List<ListItem> list, ListType type)
         {
             if (list is null)
@@ -89,13 +88,13 @@ namespace BNZApp
             if (openFileDialog.ShowDialog() is true) //if user selected a file
             {
                 string selectedFilePath = openFileDialog.FileName;
-                File.Copy(selectedFilePath, FileManagement.TransactionsFile, true);
-                List<Transaction> newTransactions = FileManagement.ReadNewFile(); //for release
-                //List<Transaction> newTransactions = FileManagement.ReadTransactions(); //for debugging
+                List<Transaction> newTransactions = FileManagement.ReadNewFile(selectedFilePath);
                 if (newTransactions is null)
                 {
-                    throw new InvalidOperationException("Failed to read new transactions from the selected file.");
+                    return;
                 }
+                
+                File.Copy(selectedFilePath, FileManagement.TransactionsFile, true);
                 FileManagement.WriteTransactions(newTransactions);
 
                 CreateHomepage();

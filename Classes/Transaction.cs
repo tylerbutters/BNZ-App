@@ -4,12 +4,12 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Markup;
 
 namespace BNZApp
 {
     public class Transaction : INotifyPropertyChanged
     {
-        public string id { get; set; }
         public DateTime date { get; set; }
         public float amount { get; set; }
         public string payee { get; set; }
@@ -18,7 +18,7 @@ namespace BNZApp
         public string reference { get; set; }
         public string transType { get; set; }
         public string formattedDate { get { return date.ToString("dd/MM/yy"); } }
-        public string formattedAmount { get => amount.ToString("C"); set { amount = float.Parse(value); OnPropertyChanged(nameof(formattedAmount)); } }
+        public string formattedAmount { get => amount.ToString("C"); set { amount = float.Parse(value);  } }
         public string formattedTransType
         {
             get
@@ -77,8 +77,25 @@ namespace BNZApp
         }
         public override string ToString()
         {
-            return $"{id},{date:dd/MM/yyyy},{amount},{payee},{particulars},{code},{reference},{transType}";
+            return $"{date:dd/MM/yyyy},{amount},{payee},{particulars},{code},{reference},{transType}";
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null || !(obj is Transaction other))
+            {
+                return false;
+            }
+
+            return date == other.date
+                && amount == other.amount
+                && payee == other.payee
+                && particulars == other.particulars
+                && code == other.code
+                && reference == other.reference
+                && transType == other.transType;
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)

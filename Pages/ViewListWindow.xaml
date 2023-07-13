@@ -28,14 +28,15 @@
                 </Grid>
                 <Grid Grid.Row="1" Background="#2e5282">
                     <DataGrid  
-                  Name="ListGrid" Margin="20"
-                  Background="Transparent"
-                  AutoGenerateColumns="False"
-                    IsReadOnly="True"
-                    BorderThickness="0"
-                    GridLinesVisibility="None" 
-                    HorizontalScrollBarVisibility="Disabled"
-                    HeadersVisibility="Column">
+                        Name="ListGrid" Margin="20"
+                        Background="Transparent"
+                        AutoGenerateColumns="False"
+                        IsReadOnly="True"
+                        BorderThickness="0"
+                        GridLinesVisibility="None" 
+                        HorizontalScrollBarVisibility="Disabled"
+                        HeadersVisibility="Column"
+                        >
                         <DataGrid.Resources>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="IsHitTestVisible" Value="False" />
@@ -62,7 +63,7 @@
                         </DataGrid.CellStyle>
                         <DataGrid.RowStyle>
                             <Style TargetType="DataGridRow">
-                                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListGridItemClick" />
+                                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListItemClick" />
                             </Style>
                         </DataGrid.RowStyle>
                         <DataGrid.Columns>
@@ -79,7 +80,7 @@
                                     <DataTemplate>
                                         <Grid>
                                             <TextBlock Text="{Binding formattedName}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"/>
-                                            <Button Content="X" FontSize="20" Background="Transparent" FontWeight="Black" Width="40" Height="40" HorizontalAlignment="Right" Margin="0 0 10 0" BorderThickness="0" Cursor="Hand" Click="DeleteButtonClick">
+                                            <Button Tag="Delete" Content="X" FontSize="20" Background="Transparent" FontWeight="Black" Width="40" Height="40" HorizontalAlignment="Right" Margin="0 0 10 0" BorderThickness="0" Cursor="Hand" Click="DeleteButtonClick">
                                                 <Button.Style>
                                                     <Style TargetType="Button">
                                                         <Setter Property="Foreground" Value="Black"/>

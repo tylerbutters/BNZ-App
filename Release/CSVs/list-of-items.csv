@@ -1,11 +1,11 @@
 List Type,Category,Name
-Expenses,payee,mission
-Expenses,payee,petrol
 Expenses,payee,skinny
 Expenses,payee,where's charlie
 Income,particulars,ingrid
 Income,payee,deposit
-Spending,payee,temu
 Spending,payee,new world
 Spending,code,name
-Spending,payee,countdown
+Spending,code,gkl
+Spending,payee,temu
+Expenses,payee,petrol
+Expenses,payee,mission

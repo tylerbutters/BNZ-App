@@ -57,15 +57,10 @@ namespace BNZApp
 
             if (transactions is null)
             {
-                throw new NullReferenceException("Failed to load transactions data.");
-            }
-
-            if (transactions.Count == 0)
-            {
-                MessageBox.Show("No transactions in file.\nFeatures will be limited.");
                 NoResultsText.Visibility = Visibility.Visible;
                 return;
             }
+
             latestDate = transactions.Max(transaction => transaction.date);
             currentDate = latestDate;
             LoadPage();
@@ -88,7 +83,7 @@ namespace BNZApp
 
         private void UpdateUI()
         {
-            if(currentDate == latestDate)
+            if (currentDate == latestDate)
             {
                 LatestButton.Visibility = Visibility.Collapsed;
             }
@@ -143,8 +138,9 @@ namespace BNZApp
             }
 
             totalIncome = GetTotal(currentWeekTransactions, listOfItems, ListType.Income);
+            float tax = totalIncome * taxPercentage;
             totalSpending = GetTotal(currentWeekTransactions, listOfItems, ListType.Spending);
-            totalExpenses = GetTotal(currentWeekTransactions, listOfItems, ListType.Expenses) + (totalIncome * taxPercentage);
+            totalExpenses = GetTotal(currentWeekTransactions, listOfItems, ListType.Expenses) - tax;
             total = totalIncome + totalSpending + totalExpenses;
             totalDecrease = currentWeekTransactions.Where(transaction => transaction.amount < 0).Sum(transaction => transaction.amount);
             Tax.Text = (totalIncome * taxPercentage).ToString("C");
@@ -179,33 +175,50 @@ namespace BNZApp
                 return 0;
             }
 
-            return CalculateSum(matchingTransactions);
+            if (itemType == ListType.Income)
+            {
+                return matchingTransactions.Sum(transaction => transaction.amount);
+            }
+            else
+            {
+                return CalculateSum(matchingTransactions);
+            }
         }
 
         private List<Transaction> GetMatchingTransactions(List<Transaction> transactions, List<ListItem> items, ListType itemType)
         {
             List<Transaction> matchingTransactions = new List<Transaction>();
+
             foreach (ListItem item in items)
             {
                 if (item.listType == itemType)
                 {
+                    IEnumerable<Transaction> filteredTransactions;
+
                     switch (item.category.ToLower())
                     {
                         case "payee":
-                            matchingTransactions.AddRange(transactions.Where(transaction => transaction.payee.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0));
+                            filteredTransactions = transactions.Where(transaction => transaction.payee.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0);
                             break;
                         case "particulars":
-                            matchingTransactions.AddRange(transactions.Where(transaction => transaction.particulars.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0));
+                            filteredTransactions = transactions.Where(transaction => transaction.particulars.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0);
                             break;
                         case "code":
-                            matchingTransactions.AddRange(transactions.Where(transaction => transaction.code.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0));
+                            filteredTransactions = transactions.Where(transaction => transaction.code.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0);
                             break;
                         case "reference":
-                            matchingTransactions.AddRange(transactions.Where(transaction => transaction.reference.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0));
+                            filteredTransactions = transactions.Where(transaction => transaction.reference.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0);
                             break;
                         default:
                             throw new ArgumentException("Item type is not valid", nameof(item.category));
                     }
+
+                    if (itemType != ListType.Income)
+                    {
+                        filteredTransactions = filteredTransactions.Where(transaction => transaction.amount < 0);
+                    }
+
+                    matchingTransactions.AddRange(filteredTransactions);
                 }
             }
 
@@ -215,9 +228,9 @@ namespace BNZApp
         {
             float sum = transactions.Sum(transaction => transaction.amount);
 
-            foreach (Reimbursement reimbursement in reimbursements)
+            foreach (Transaction transaction in transactions)
             {
-                sum -= reimbursement.ExcludeFromTotal(transactions);
+                sum -= reimbursements.Sum(reimbursement => reimbursement.ExcludeFromTotal(transaction));
             }
 
             return sum;
