@@ -12,21 +12,15 @@ namespace BNZApp
     /// <summary>
     /// Interaction logic for Homepage.xaml
     /// </summary>
-    public partial class Homepage : Page, INotifyPropertyChanged
+    public partial class Homepage : Page
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
         public static float taxPercentage = 0.105f;
-        public string formattedTotalIncome { get => totalIncome.ToString("C"); set { totalIncome = float.Parse(value);  } }
-        public string formattedTotalSpending { get => totalSpending.ToString("C"); set { totalSpending = float.Parse(value);  } }
-        public string formattedTotalExpenses { get => totalExpenses.ToString("C"); set { totalExpenses = float.Parse(value);  } }
-        public string formattedTotalDecrease { get => totalDecrease.ToString("C"); set { totalDecrease = float.Parse(value);  } }
+        public string formattedTotalIncome { get => totalIncome.ToString("C"); set { totalIncome = float.Parse(value); } }
+        public string formattedTotalSpending { get => totalSpending.ToString("C"); set { totalSpending = float.Parse(value); } }
+        public string formattedTotalExpenses { get => totalExpenses.ToString("C"); set { totalExpenses = float.Parse(value); } }
+        public string formattedTotalDecrease { get => totalDecrease.ToString("C"); set { totalDecrease = float.Parse(value); } }
         public string formattedTotal { get => total.ToString("C"); set { total = float.Parse(value); } }
-        private bool TotalIsNegative;
-        public bool totalIsNegative { get => total < 0; set { TotalIsNegative = value;  } }
+        public bool totalIsNegative { get => total < 0; set { totalIsNegative = value; } }
         private float totalIncome;
         private float totalSpending;
         private float totalExpenses;
@@ -60,7 +54,7 @@ namespace BNZApp
                 NoResultsText.Visibility = Visibility.Visible;
                 return;
             }
-            
+
             latestDate = transactions.Max(transaction => transaction.date);
             currentDate = latestDate;
             LoadPage();
@@ -384,6 +378,7 @@ namespace BNZApp
                 firstItemClicked = null;
                 secondItemClicked = null;
             }
+            UpdateUI();
         }
     }
 }

@@ -218,6 +218,9 @@
                             <DataTrigger Binding="{Binding isItemClicked}" Value="True">
                                 <Setter Property="Background" Value="#abbdd6"/>
                             </DataTrigger>
+                            <DataTrigger Binding="{Binding isReimbursement}" Value="True">
+                                <Setter Property="Background" Value="Gray"/>
+                            </DataTrigger>
                             <MultiDataTrigger>
                                 <MultiDataTrigger.Conditions>
                                     <Condition Binding="{Binding isHighlighted}" Value="True" />
