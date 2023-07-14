@@ -20,7 +20,7 @@ namespace BNZApp
             }
 
             List<string> lines = File.ReadAllLines(filePath).ToList();
-            
+
             if (lines is null || lines.Count is 0)
             {
                 MessageBox.Show("Invalid file\nFile is empty");
@@ -79,7 +79,7 @@ namespace BNZApp
                 throw new FileNotFoundException("Transactions file not found.", TransactionsFile);
             }
 
-            List<string> lines = File.ReadAllLines(TransactionsFile).ToList();            
+            List<string> lines = File.ReadAllLines(TransactionsFile).ToList();
 
             if (lines is null || lines.Count is 0)
             {
@@ -135,6 +135,7 @@ namespace BNZApp
                 transactions.Add(transaction);
             }
             CheckIsReimbursement(transactions);
+            CheckIsOnList(transactions);
 
             return transactions;
         }
@@ -144,9 +145,56 @@ namespace BNZApp
             List<Reimbursement> reimbursements = ReadReimbursements();
             foreach (Transaction transaction in transactions)
             {
-                transaction.IsReimbursement = reimbursements.Any(reimbursement => transaction.Equals(reimbursement.transaction1) || transaction.Equals(reimbursement.transaction2));
+                transaction.isReimbursement = reimbursements.Any(reimbursement => transaction.Equals(reimbursement.transaction1) || transaction.Equals(reimbursement.transaction2));
             }
         }
+        private static void CheckIsOnList(List<Transaction> transactions)
+        {
+            List<ListItem> listItems = ReadList();
+
+            foreach (Transaction transaction in transactions)
+            {
+                foreach (ListItem item in listItems)
+                {
+                    bool isMatch = false;
+
+                    switch (item.category)
+                    {
+                        case "payee":
+                            isMatch = transaction.payee.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0;
+                            break;
+                        case "particulars":
+                            isMatch = transaction.particulars.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0;
+                            break;
+                        case "code":
+                            isMatch = transaction.code.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0;
+                            break;
+                        case "reference":
+                            isMatch = transaction.reference.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0;
+                            break;
+                        default:
+                            throw new ArgumentException("Item type is not valid", nameof(item.category));
+                    }
+
+                    if (isMatch)
+                    {
+                        switch (item.listType)
+                        {
+                            case ListType.Income:
+                                transaction.isIncome = true;
+                                break;
+                            case ListType.Spending:
+                                transaction.isSpending = true;
+                                break;
+                            case ListType.Expenses:
+                                transaction.isExpense = true;
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+
 
         public static List<Reimbursement> ReadReimbursements()
         {

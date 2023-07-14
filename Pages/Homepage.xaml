@@ -207,7 +207,7 @@
                 <DataGrid.CellStyle>
                     <Style TargetType="DataGridCell">
                         <Setter Property="IsHitTestVisible" Value="False"/>
-                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="Background" Value="DarkGray"/>
                         <Setter Property="Foreground" Value="Black"/>
                         <Setter Property="FontWeight" Value="Medium"/>
                         <Setter Property="FontSize" Value="20"/>
@@ -215,12 +215,17 @@
                         <Setter Property="BorderThickness" Value="4"/>
                         <Setter Property="Height" Value="50"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsItemClicked}" Value="True">
-                                <Setter Property="Background" Value="Gray"/>
+                            <DataTrigger Binding="{Binding isItemClicked}" Value="True">
+                                <Setter Property="Background" Value="#abbdd6"/>
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding IsReimbursement}" Value="True">
-                                <Setter Property="Background" Value="DarkGray"/>
-                            </DataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding isHighlighted}" Value="True" />
+                                    <Condition Binding="{Binding isReimbursement}" Value="False" />
+                                    <Condition Binding="{Binding isItemClicked}" Value="False" />
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" Value="White" />
+                            </MultiDataTrigger>
                         </Style.Triggers>
                     </Style>
                 </DataGrid.CellStyle>
@@ -238,7 +243,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Amount" Binding="{Binding formattedAmount}" Width="0.8*">
+                    <DataGridTextColumn Header="Amount" Binding="{Binding formattedAmount}" Width="150">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="FontWeight" Value="Bold"/>
@@ -255,7 +260,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Payee" Binding="{Binding payee}" Width="1*">
+                    <DataGridTextColumn Header="Payee" Binding="{Binding payee}" Width="220">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
@@ -263,7 +268,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Particulars" Binding="{Binding particulars}" Width="0.8*">
+                    <DataGridTextColumn Header="Particulars" Binding="{Binding particulars}" Width="1*">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
@@ -271,7 +276,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Code" Binding="{Binding code}" Width="0.8*">
+                    <DataGridTextColumn Header="Code" Binding="{Binding code}" Width="1*">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
@@ -279,11 +284,19 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Type" Binding="{Binding formattedTransType}" Width="1*">
+                    <DataGridTextColumn Header="Ref" Binding="{Binding reference}" Width="1*">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="Margin" Value="10 0 0 0"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Type" Binding="{Binding formattedTransType}" Width="180">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>

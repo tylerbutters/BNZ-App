@@ -18,7 +18,7 @@ namespace BNZApp
         public string reference { get; set; }
         public string transType { get; set; }
         public string formattedDate { get { return date.ToString("dd/MM/yy"); } }
-        public string formattedAmount { get => amount.ToString("C"); set { amount = float.Parse(value);  } }
+        public string formattedAmount { get => amount.ToString("C"); set { amount = float.Parse(value); } }
         public string formattedTransType
         {
             get
@@ -26,7 +26,7 @@ namespace BNZApp
                 switch (transType)
                 {
                     case "AP":
-                        return "Automatic Payment"; //self created automatic payment
+                        return "Auto Payment"; //self created automatic payment
                     case "DC":
                         return "Debit Card"; //ingrid
                     case "FT":
@@ -48,33 +48,12 @@ namespace BNZApp
         {
             get { return amount < 0; }
         }
+        
+        public bool isExpense { get; set; }
+        public bool isIncome { get; set; }
+        public bool isSpending { get; set; }
+        public bool isHighlighted => isExpense || isIncome || isSpending;
 
-        private bool isItemClicked;
-        public bool IsItemClicked
-        {
-            get { return isItemClicked; }
-            set
-            {
-                if (isItemClicked != value)
-                {
-                    isItemClicked = value;
-                    OnPropertyChanged(nameof(IsItemClicked));
-                }
-            }
-        }
-        private bool isReimbursement;
-        public bool IsReimbursement
-        {
-            get { return isReimbursement; }
-            set
-            {
-                if (isReimbursement != value)
-                {
-                    isReimbursement = value;
-                    OnPropertyChanged(nameof(IsReimbursement));
-                }
-            }
-        }
         public override string ToString()
         {
             return $"{date:dd/MM/yyyy},{amount},{payee},{particulars},{code},{reference},{transType}";
@@ -95,7 +74,11 @@ namespace BNZApp
                 && reference == other.reference
                 && transType == other.transType;
         }
+        private bool IsReimbursement;
+        public bool isReimbursement { get { return IsReimbursement; } set { IsReimbursement = value; OnPropertyChanged(nameof(isReimbursement)); } }
 
+        private bool IsItemClicked;
+        public bool isItemClicked { get { return IsItemClicked; } set { IsItemClicked = value; OnPropertyChanged(nameof(isItemClicked)); } }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)

@@ -20,13 +20,13 @@ namespace BNZApp
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         public static float taxPercentage = 0.105f;
-        public string formattedTotalIncome { get => totalIncome.ToString("C"); set { totalIncome = float.Parse(value); OnPropertyChanged(nameof(totalIncome)); } }
-        public string formattedTotalSpending { get => totalSpending.ToString("C"); set { totalSpending = float.Parse(value); OnPropertyChanged(nameof(totalSpending)); } }
-        public string formattedTotalExpenses { get => totalExpenses.ToString("C"); set { totalExpenses = float.Parse(value); OnPropertyChanged(nameof(totalExpenses)); } }
-        public string formattedTotalDecrease { get => totalDecrease.ToString("C"); set { totalDecrease = float.Parse(value); OnPropertyChanged(nameof(totalDecrease)); } }
-        public string formattedTotal { get => total.ToString("C"); set { total = float.Parse(value); OnPropertyChanged(nameof(total)); } }
+        public string formattedTotalIncome { get => totalIncome.ToString("C"); set { totalIncome = float.Parse(value);  } }
+        public string formattedTotalSpending { get => totalSpending.ToString("C"); set { totalSpending = float.Parse(value);  } }
+        public string formattedTotalExpenses { get => totalExpenses.ToString("C"); set { totalExpenses = float.Parse(value);  } }
+        public string formattedTotalDecrease { get => totalDecrease.ToString("C"); set { totalDecrease = float.Parse(value);  } }
+        public string formattedTotal { get => total.ToString("C"); set { total = float.Parse(value); } }
         private bool TotalIsNegative;
-        public bool totalIsNegative { get => total < 0; set { TotalIsNegative = value; OnPropertyChanged(nameof(TotalIsNegative)); } }
+        public bool totalIsNegative { get => total < 0; set { TotalIsNegative = value;  } }
         private float totalIncome;
         private float totalSpending;
         private float totalExpenses;
@@ -60,7 +60,7 @@ namespace BNZApp
                 NoResultsText.Visibility = Visibility.Visible;
                 return;
             }
-
+            
             latestDate = transactions.Max(transaction => transaction.date);
             currentDate = latestDate;
             LoadPage();
@@ -91,9 +91,8 @@ namespace BNZApp
             {
                 LatestButton.Visibility = Visibility.Visible;
             }
-
+            GetNewWeekTransactions();
             UpdateWeekNumberDisplay();
-            UpdateCurrentWeekGroup();
             UpdateTransactionGrid();
             UpdateSummary();
         }
@@ -106,23 +105,6 @@ namespace BNZApp
             string weekNumber = GetWeekNumber(currentDate).ToString();
             WeekAndMonth.Text = month + ", Week " + weekNumber;
             Dates.Text = startDate + " - " + endDate;
-        }
-
-        private void UpdateCurrentWeekGroup()
-        {
-            if (groupedTransactions is null)
-            {
-                throw new NullReferenceException("Grouped transactions is null.");
-            }
-
-            var currentWeekGroup = groupedTransactions.FirstOrDefault(group => group.Key == GetWeekNumber(currentDate));
-
-            if (currentWeekGroup is null)
-            {
-                throw new Exception("Current week group not found.");
-            }
-
-            currentWeekTransactions = currentWeekGroup.ToList();
         }
 
         private void UpdateTransactionGrid()
@@ -195,7 +177,7 @@ namespace BNZApp
                 {
                     IEnumerable<Transaction> filteredTransactions;
 
-                    switch (item.category.ToLower())
+                    switch (item.category)
                     {
                         case "payee":
                             filteredTransactions = transactions.Where(transaction => transaction.payee.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0);
@@ -236,23 +218,45 @@ namespace BNZApp
             return sum;
         }
 
-        private void ForwardButtonClick(object sender, RoutedEventArgs e)
+        private void GetNewWeekTransactions()
         {
-            if (transactions.Count is 0)
+            if (groupedTransactions is null)
+            {
+                throw new NullReferenceException("Grouped transactions is null.");
+            }
+
+            List<Transaction> newWeekTransactions = groupedTransactions.FirstOrDefault(group => group.Key == GetWeekNumber(currentDate)).ToList();
+
+            if (newWeekTransactions is null)
+            {
+                throw new NullReferenceException("Current week group not found.");
+            }
+
+            if (newWeekTransactions.Count is 0)
             {
                 MessageBox.Show("No transactions found for the selected week.", "No Transactions");
                 return;
             }
+
+            currentWeekTransactions = newWeekTransactions;
+        }
+
+        private void ForwardButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (transactions is null)
+            {
+                MessageBox.Show("No Transactions in file");
+                return;
+            }
             DateTime newDate = currentDate.AddDays(7);
             firstItemClicked = null;
-            bool hasTransactions = transactions.Any(transaction => transaction.date.Date == newDate.Date);
+            bool hasTransactions = groupedTransactions.Any(group => group.Key == GetWeekNumber(newDate));
 
             if (!hasTransactions)
             {
                 MessageBox.Show("No transactions found for the selected week.", "No Transactions");
                 return;
             }
-
             currentDate = newDate;
             UpdateUI();
         }
@@ -265,7 +269,7 @@ namespace BNZApp
             }
             DateTime newDate = currentDate.AddDays(-7);
             firstItemClicked = null;
-            bool hasTransactions = transactions.Any(transaction => transaction.date.Date == newDate.Date);
+            bool hasTransactions = groupedTransactions.Any(group => group.Key == GetWeekNumber(newDate));
 
             if (!hasTransactions)
             {
@@ -343,7 +347,7 @@ namespace BNZApp
                 throw new NullReferenceException("Selected item is null.");
             }
 
-            if (selectedItem.IsReimbursement)
+            if (selectedItem.isReimbursement)
             {
                 OpenReimbursementWindow_Remove?.Invoke(sender, selectedItem);
                 return;
@@ -351,17 +355,17 @@ namespace BNZApp
 
             if (firstItemClicked is null)
             {
-                selectedItem.IsItemClicked = true;
+                selectedItem.isItemClicked = true;
                 firstItemClicked = selectedItem;
             }
             else if (firstItemClicked == selectedItem)
             {
-                selectedItem.IsItemClicked = false;
+                selectedItem.isItemClicked = false;
                 firstItemClicked = null;
             }
             else if (secondItemClicked is null && firstItemClicked != null)
             {
-                selectedItem.IsItemClicked = true;
+                selectedItem.isItemClicked = true;
                 secondItemClicked = selectedItem;
                 bool isValidReimbursement = (secondItemClicked.amount > 0 && firstItemClicked.amount < 0) ||
                     (secondItemClicked.amount < 0 && firstItemClicked.amount > 0);
@@ -369,14 +373,14 @@ namespace BNZApp
                 if (!isValidReimbursement)
                 {
                     MessageBox.Show("One transaction needs to be positive, and the other needs to be negative.");
-                    selectedItem.IsItemClicked = false;
+                    selectedItem.isItemClicked = false;
                     secondItemClicked = null;
                     return;
                 }
 
                 OpenReimbursementWindow_Add?.Invoke(sender, firstItemClicked, secondItemClicked);
-                firstItemClicked.IsItemClicked = false;
-                secondItemClicked.IsItemClicked = false;
+                firstItemClicked.isItemClicked = false;
+                secondItemClicked.isItemClicked = false;
                 firstItemClicked = null;
                 secondItemClicked = null;
             }
