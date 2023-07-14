@@ -57,6 +57,9 @@
     </ApplicationDefinition>
     <Compile Include="Classes\FileManagement.cs" />
     <Compile Include="Classes\ListItem.cs" />
+    <Compile Include="Pages\EditTransactionWindow.xaml.cs">
+      <DependentUpon>EditTransactionWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Homepage.xaml.cs">
       <DependentUpon>Homepage.xaml</DependentUpon>
     </Compile>
@@ -64,16 +67,23 @@
     <Compile Include="Pages\EditItemWindow.xaml.cs">
       <DependentUpon>EditItemWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\ReimbursementWindow.xaml.cs">
-      <DependentUpon>ReimbursementWindow.xaml</DependentUpon>
+    <Compile Include="Pages\AddReimbursementWindow.xaml.cs">
+      <DependentUpon>AddReimbursementWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Classes\Transaction.cs" />
-    <Compile Include="Pages\ViewListWindow.xaml.cs">
-      <DependentUpon>ViewListWindow.xaml</DependentUpon>
+    <Compile Include="Pages\RemoveReimbursementWindow.xaml.cs">
+      <DependentUpon>RemoveReimbursementWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\ViewReimbursementsWindow.xaml.cs">
-      <DependentUpon>ViewReimbursementsWindow.xaml</DependentUpon>
+    <Compile Include="Pages\ListWindow.xaml.cs">
+      <DependentUpon>ListWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ReimbursementListWindow.xaml.cs">
+      <DependentUpon>ReimbursementListWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Pages\EditTransactionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\Homepage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -94,15 +104,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\ReimbursementWindow.xaml">
+    <Page Include="Pages\AddReimbursementWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\ViewListWindow.xaml">
+    <Page Include="Pages\RemoveReimbursementWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\ViewReimbursementsWindow.xaml">
+    <Page Include="Pages\ListWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ReimbursementListWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

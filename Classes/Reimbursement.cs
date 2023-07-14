@@ -8,20 +8,11 @@ namespace BNZApp
 {
     public class Reimbursement
     {
-        public Transaction transaction1 { get; set; }
-        public Transaction transaction2 { get; set; }
+        public Transaction transaction1 { get; set; } //positive
+        public Transaction transaction2 { get; set; } //negative
         public override string ToString()
         {
             return $"{transaction1},{transaction2}";
-        }
-        public float ExcludeFromTotal(Transaction transaction)
-        {
-            if (transaction.amount < 0 && (transaction.Equals(transaction1) || transaction.Equals(transaction2)))
-            {
-                return transaction.amount;
-            }
-
-            return 0;
         }
         public Reimbursement(Transaction transaction1, Transaction transaction2)
         {

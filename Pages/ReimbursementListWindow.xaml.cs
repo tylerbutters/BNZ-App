@@ -16,15 +16,15 @@ using System.Windows.Shapes;
 namespace BNZApp
 {
     /// <summary>
-    /// Interaction logic for ViewReimbursementsWindow.xaml
+    /// Interaction logic for ReimbursementListWindow.xaml
     /// </summary>
-    public partial class ViewReimbursementsWindow : Page
+    public partial class ReimbursementListWindow : Page
     {
         private bool isDeleteButtonClicked;
         private List<Reimbursement> reimbursements = FileManagement.ReadReimbursements();
         public event EventHandler<bool> GoBack;
 
-        public ViewReimbursementsWindow()
+        public ReimbursementListWindow()
         {
             InitializeComponent();
 

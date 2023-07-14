@@ -8,7 +8,7 @@ using System.Windows.Markup;
 
 namespace BNZApp
 {
-    public class Transaction
+    public class Transaction : INotifyPropertyChanged
     {
         public DateTime date { get; set; }
         public float amount { get; set; }
@@ -49,11 +49,11 @@ namespace BNZApp
             get { return amount < 0; }
         }
         public bool isReimbursement { get; set; }
-        public bool isItemClicked { get; set; }
         public bool isExpense { get; set; }
         public bool isIncome { get; set; }
         public bool isSpending { get; set; }
         public bool isHighlighted => isExpense || isIncome || isSpending;
+
         public override string ToString()
         {
             return $"{date:dd/MM/yyyy},{amount},{payee},{particulars},{code},{reference},{transType}";
@@ -73,6 +73,15 @@ namespace BNZApp
                 && code == other.code
                 && reference == other.reference
                 && transType == other.transType;
+        }
+
+        private bool IsItemClicked;
+        public bool wantToBeReimbursement { get { return IsItemClicked; } set { IsItemClicked = value; OnPropertyChanged(nameof(wantToBeReimbursement)); } }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

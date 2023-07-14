@@ -189,7 +189,7 @@
                       BorderThickness="0"
                       GridLinesVisibility="None" 
                       HorizontalScrollBarVisibility="Disabled"
-                      HeadersVisibility="Column" >
+                      HeadersVisibility="Column" SelectionChanged="TransactionGridItemClick">
                 <DataGrid.Resources>
                     <Style TargetType="DataGridColumnHeader">
                         <Setter Property="IsHitTestVisible" Value="False" />
@@ -201,12 +201,10 @@
                         <Setter Property="BorderBrush" Value="#2e5282"/>
                         <Setter Property="BorderThickness" Value="4"/>
                         <Setter Property="Height" Value="50"/>
-                        <Setter Property="IsHitTestVisible" Value="False"/>
                     </Style>
                 </DataGrid.Resources>
                 <DataGrid.CellStyle>
                     <Style TargetType="DataGridCell">
-                        <Setter Property="IsHitTestVisible" Value="False"/>
                         <Setter Property="Background" Value="DarkGray"/>
                         <Setter Property="Foreground" Value="Black"/>
                         <Setter Property="FontWeight" Value="Medium"/>
@@ -215,7 +213,7 @@
                         <Setter Property="BorderThickness" Value="4"/>
                         <Setter Property="Height" Value="50"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding isItemClicked}" Value="True">
+                            <DataTrigger Binding="{Binding wantToBeReimbursement}" Value="True">
                                 <Setter Property="Background" Value="#abbdd6"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding isReimbursement}" Value="True">
@@ -225,7 +223,7 @@
                                 <MultiDataTrigger.Conditions>
                                     <Condition Binding="{Binding isHighlighted}" Value="True" />
                                     <Condition Binding="{Binding isReimbursement}" Value="False" />
-                                    <Condition Binding="{Binding isItemClicked}" Value="False" />
+                                    <Condition Binding="{Binding wantToBeReimbursement}" Value="False" />
                                 </MultiDataTrigger.Conditions>
                                 <Setter Property="Background" Value="White" />
                             </MultiDataTrigger>

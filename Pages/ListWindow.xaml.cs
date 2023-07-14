@@ -10,9 +10,9 @@ using System.Windows.Media;
 namespace BNZApp
 {
     /// <summary>
-    /// Interaction logic for ViewListWindow.xaml
+    /// Interaction logic for ListWindow.xaml
     /// </summary>
-    public partial class ViewListWindow : Page
+    public partial class ListWindow : Page
     {
         public event EventHandler<bool> GoBack;
         public event EventHandler<ListItem> OpenEditItemWindow;
@@ -20,7 +20,8 @@ namespace BNZApp
         private List<ListItem> list;
         private List<ListItem> listOfType;
         private ListType listType;
-        public ViewListWindow(List<ListItem> list, ListType listType)
+
+        public ListWindow(List<ListItem> list, ListType listType)
         {
             InitializeComponent();
 
@@ -65,7 +66,7 @@ namespace BNZApp
                     MessageBox.Show("Please enter tax amount");
                     return;
                 }
-                Homepage.taxPercentage = float.Parse(TaxInput.Text = TaxInput.Text.Substring(0, TaxInput.Text.Length - 1))/100;
+                Homepage.taxPercentage = float.Parse(TaxInput.Text = TaxInput.Text.Substring(0, TaxInput.Text.Length - 1)) / 100;
             }
             if (edited)
             {
@@ -77,7 +78,6 @@ namespace BNZApp
 
         private void AddButtonClick(object sender, RoutedEventArgs e)
         {
-
             string newItemName = null;
             string newItemType = null;
             if (NameInput.Text != "Name")
@@ -141,7 +141,7 @@ namespace BNZApp
 
         private void DeleteButtonClick(object sender, RoutedEventArgs e)
         {
-            
+
             ListItem item = (sender as Button)?.DataContext as ListItem;
             if (item is null)
             {
@@ -163,7 +163,7 @@ namespace BNZApp
             {
                 return;
             }
-            if(oldItem is null)
+            if (oldItem is null)
             {
                 throw new ArgumentNullException(nameof(oldItem), "old item cannot be null");
             }

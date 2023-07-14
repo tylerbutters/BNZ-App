@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using BNZApp.Pages;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,56 +25,76 @@ namespace BNZApp
 
             CreateHomepage();
         }
-        private void OpenViewListWindow(object sender, List<ListItem> list, ListType type)
+
+        private void OpenEditTransactionWindow(object sender, Transaction transaction1, Transaction transaction2)
+        {
+
+            Popup2.Content = null;
+            EditTransactionWindow editTransactionWindow = new EditTransactionWindow(transaction1, transaction2);
+            Popup1.Content = editTransactionWindow;
+
+            editTransactionWindow.GoBack += BackToHomepage;
+            editTransactionWindow.OpenAddReimbursementWindow += OpenAddReimbursementWindow;
+            editTransactionWindow.OpenRemoveReimbursementWindow += OpenRemoveReimbursementWindow;
+            editTransactionWindow.ReturnTransaction += ReturnTransaction;
+        }
+
+        private void ReturnTransaction(object sender, Transaction transaction)
+        {
+            homepage.ReturnTransaction(transaction);
+        }
+        private void OpenListWindow(object sender, List<ListItem> list, ListType type)
         {
             if (list is null)
             {
                 throw new ArgumentNullException(nameof(list));
             }
 
-            ViewListWindow viewListWindow = new ViewListWindow(list, type);
-            PopUpWindow.Content = viewListWindow;
+            ListWindow listWindow = new ListWindow(list, type);
+            Popup1.Content = listWindow;
 
-            viewListWindow.GoBack += BackToHomepage;
+            listWindow.GoBack += BackToHomepage;
         }
 
-        private void OpenReimbursementWindow_Add(object sender, Transaction firstItem, Transaction secondItem)
+        private void OpenAddReimbursementWindow(object sender, Transaction transaction1, Transaction transaction2)
         {
-            if (firstItem is null)
+            if (transaction1 is null)
             {
-                throw new ArgumentNullException(nameof(firstItem));
+                throw new ArgumentNullException(nameof(transaction1));
             }
 
-            if (secondItem is null)
+            if (transaction2 is null)
             {
-                throw new ArgumentNullException(nameof(secondItem));
+                throw new ArgumentNullException(nameof(transaction2));
             }
 
-            ReimbursementWindow reimbursementWindow = new ReimbursementWindow(firstItem, secondItem);
-            PopUpWindow.Content = reimbursementWindow;
+            AddReimbursementWindow addReimbursementWindow = new AddReimbursementWindow(transaction1, transaction2);
+            Popup2.Content = addReimbursementWindow;
 
-            reimbursementWindow.GoBack += BackToHomepage;
+            addReimbursementWindow.GoBack += OpenEditTransactionWindow;
+            addReimbursementWindow.GoBackHome += BackToHomepage;
         }
 
-        private void OpenReimbursementWindow_Remove(object sender, Transaction item)
+        private void OpenRemoveReimbursementWindow(object sender, Transaction transaction)
         {
-            if (item is null)
+            if (transaction is null)
             {
-                throw new ArgumentNullException(nameof(item));
+                throw new ArgumentNullException(nameof(transaction));
             }
 
-            ReimbursementWindow reimbursementWindow = new ReimbursementWindow(item);
-            PopUpWindow.Content = reimbursementWindow;
+            RemoveReimbursementWindow removeReimbursementWindow = new RemoveReimbursementWindow(transaction);
+            Popup2.Content = removeReimbursementWindow;
 
-            reimbursementWindow.GoBack += BackToHomepage;
+            removeReimbursementWindow.GoBack += OpenEditTransactionWindow;
+            removeReimbursementWindow.GoBackHome += BackToHomepage;
         }
 
-        private void OpenViewReimbursementsWindow(object sender, RoutedEventArgs e)
+        private void OpenReimbursementListWindow(object sender, RoutedEventArgs e)
         {
-            ViewReimbursementsWindow viewReimbursementsWindow = new ViewReimbursementsWindow();
-            PopUpWindow.Content = viewReimbursementsWindow;
+            ReimbursementListWindow reimbursementListWindow = new ReimbursementListWindow();
+            Popup1.Content = reimbursementListWindow;
 
-            viewReimbursementsWindow.GoBack += BackToHomepage;
+            reimbursementListWindow.GoBack += BackToHomepage;
         }
 
         private void OpenUploadFile(object sender, RoutedEventArgs e)
@@ -107,8 +128,8 @@ namespace BNZApp
             {
                 homepage.LoadPage();
             }
-
-            PopUpWindow.Content = null;
+            Popup2.Content = null;
+            Popup1.Content = null;
         }
 
         private void ClearData(object sender, RoutedEventArgs e)
@@ -121,14 +142,12 @@ namespace BNZApp
         {
             homepage = new Homepage();
             MainFrame.Content = homepage;
-            PopUpWindow.Content = null;
-            homepage.OpenViewListWindow += OpenViewListWindow;
-            homepage.OpenReimbursementWindow_Add += OpenReimbursementWindow_Add;
-            homepage.OpenReimbursementWindow_Remove += OpenReimbursementWindow_Remove;
+            Popup1.Content = null;
+            homepage.OpenListWindow += OpenListWindow;
             homepage.UploadFile += OpenUploadFile;
-            homepage.ViewReimbursementsWindow += OpenViewReimbursementsWindow;
+            homepage.ReimbursementListWindow += OpenReimbursementListWindow;
             homepage.ClearData += ClearData;
+            homepage.OpenEditTransactionWindow += OpenEditTransactionWindow;
         }
-
     }
 }

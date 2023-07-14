@@ -33,14 +33,12 @@ namespace BNZApp
         private List<Reimbursement> reimbursements;
         private List<Transaction> transactions = FileManagement.ReadTransactions();
         private List<Transaction> currentWeekTransactions;
-        private Transaction firstItemClicked;
-        private Transaction secondItemClicked;
+        private Transaction stagedForReimbursement;
         private IEnumerable<IGrouping<int, Transaction>> groupedTransactions;
 
-        public event Action<object, List<ListItem>, ListType> OpenViewListWindow;
-        public event Action<object, Transaction, Transaction> OpenReimbursementWindow_Add;
-        public event EventHandler<Transaction> OpenReimbursementWindow_Remove;
-        public event EventHandler<RoutedEventArgs> ViewReimbursementsWindow;
+        public event Action<object, List<ListItem>, ListType> OpenListWindow;
+        public event Action<object, Transaction, Transaction> OpenEditTransactionWindow;
+        public event EventHandler<RoutedEventArgs> ReimbursementListWindow;
         public event EventHandler<RoutedEventArgs> UploadFile;
         public event EventHandler<RoutedEventArgs> ClearData;
         public Homepage()
@@ -62,11 +60,12 @@ namespace BNZApp
 
         public void LoadPage()
         {
+            stagedForReimbursement = null;
             GetData();
             UpdateUI();
         }
 
-        private void GetData()
+        public void GetData()
         {
             transactions = FileManagement.ReadTransactions();
             reimbursements = FileManagement.ReadReimbursements();
@@ -75,7 +74,7 @@ namespace BNZApp
             groupedTransactions = transactions.GroupBy(transaction => GetWeekNumber(transaction.date));
         }
 
-        private void UpdateUI()
+        public void UpdateUI()
         {
             if (currentDate == latestDate)
             {
@@ -103,6 +102,7 @@ namespace BNZApp
 
         private void UpdateTransactionGrid()
         {
+            TransactionGrid.ItemsSource = null;
             TransactionGrid.ItemsSource = currentWeekTransactions;
         }
 
@@ -200,13 +200,20 @@ namespace BNZApp
 
             return matchingTransactions;
         }
+
         private float CalculateSum(List<Transaction> transactions)
         {
             float sum = transactions.Sum(transaction => transaction.amount);
 
-            foreach (Transaction transaction in transactions)
+            foreach (Reimbursement reimbursement in reimbursements)
             {
-                sum -= reimbursements.Sum(reimbursement => reimbursement.ExcludeFromTotal(transaction));
+                foreach (Transaction transaction in transactions)
+                {
+                    if (transaction.amount < 0 && (transaction.Equals(reimbursement.transaction1) || transaction.Equals(reimbursement.transaction2)))
+                    {
+                        sum += reimbursement.transaction1.amount;
+                    }
+                }
             }
 
             return sum;
@@ -243,7 +250,7 @@ namespace BNZApp
                 return;
             }
             DateTime newDate = currentDate.AddDays(7);
-            firstItemClicked = null;
+            stagedForReimbursement = null;
             bool hasTransactions = groupedTransactions.Any(group => group.Key == GetWeekNumber(newDate));
 
             if (!hasTransactions)
@@ -262,7 +269,7 @@ namespace BNZApp
                 return;
             }
             DateTime newDate = currentDate.AddDays(-7);
-            firstItemClicked = null;
+            stagedForReimbursement = null;
             bool hasTransactions = groupedTransactions.Any(group => group.Key == GetWeekNumber(newDate));
 
             if (!hasTransactions)
@@ -298,7 +305,7 @@ namespace BNZApp
 
         private void ReimbursementsButtonClick(object sender, RoutedEventArgs e)
         {
-            ViewReimbursementsWindow?.Invoke(sender, e);
+            ReimbursementListWindow?.Invoke(sender, e);
         }
 
         private void UploadFileButtonClick(object sender, RoutedEventArgs e)
@@ -329,55 +336,47 @@ namespace BNZApp
                 default:
                     throw new ArgumentException("Invalid button tag.");
             }
-            OpenViewListWindow?.Invoke(sender, listOfItems, type);
+            OpenListWindow?.Invoke(sender, listOfItems, type);
         }
 
+        private Transaction selectedTransaction;
+
+        public void ReturnTransaction(Transaction transaction)
+        {
+            if (stagedForReimbursement is null)
+            {
+                stagedForReimbursement = transaction;
+            }
+        }
         private void TransactionGridItemClick(object sender, RoutedEventArgs e)
         {
-            Transaction selectedItem = (sender as FrameworkElement)?.DataContext as Transaction;
+            selectedTransaction = (sender as FrameworkElement)?.DataContext as Transaction;
 
-            if (selectedItem is null)
+            if (selectedTransaction is null)
             {
                 throw new NullReferenceException("Selected item is null.");
             }
-
-            if (selectedItem.isReimbursement)
+            foreach (Reimbursement reimbursement in reimbursements)
             {
-                OpenReimbursementWindow_Remove?.Invoke(sender, selectedItem);
-                return;
-            }
-
-            if (firstItemClicked is null)
-            {
-                selectedItem.isItemClicked = true;
-                firstItemClicked = selectedItem;
-            }
-            else if (firstItemClicked == selectedItem)
-            {
-                selectedItem.isItemClicked = false;
-                firstItemClicked = null;
-            }
-            else if (secondItemClicked is null && firstItemClicked != null)
-            {
-                selectedItem.isItemClicked = true;
-                secondItemClicked = selectedItem;
-                bool isValidReimbursement = (secondItemClicked.amount > 0 && firstItemClicked.amount < 0) ||
-                    (secondItemClicked.amount < 0 && firstItemClicked.amount > 0);
-
-                if (!isValidReimbursement)
+                if (selectedTransaction.Equals(reimbursement.transaction1) || selectedTransaction.Equals(reimbursement.transaction2))
                 {
-                    MessageBox.Show("One transaction needs to be positive, and the other needs to be negative.");
-                    selectedItem.isItemClicked = false;
-                    secondItemClicked = null;
-                    return;
+                    OpenEditTransactionWindow?.Invoke(sender, reimbursement.transaction1, reimbursement.transaction2);
                 }
-
-                OpenReimbursementWindow_Add?.Invoke(sender, firstItemClicked, secondItemClicked);
-                firstItemClicked.isItemClicked = false;
-                secondItemClicked.isItemClicked = false;
-                firstItemClicked = null;
-                secondItemClicked = null;
             }
+            if (selectedTransaction.Equals(stagedForReimbursement))
+            {
+                OpenEditTransactionWindow?.Invoke(sender, stagedForReimbursement, null);
+            }            
+            else if (stagedForReimbursement != null)
+            {
+                OpenEditTransactionWindow?.Invoke(sender, selectedTransaction, stagedForReimbursement);
+            }
+            else
+            {
+                OpenEditTransactionWindow?.Invoke(sender, selectedTransaction, null);
+            }
+            
+
             UpdateUI();
         }
     }

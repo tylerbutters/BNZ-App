@@ -195,7 +195,6 @@ namespace BNZApp
             }
         }
 
-
         public static List<Reimbursement> ReadReimbursements()
         {
             if (!File.Exists(ReimbursementsFile))
