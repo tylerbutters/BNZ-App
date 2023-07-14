@@ -209,10 +209,7 @@ namespace BNZApp
             {
                 foreach (Transaction transaction in transactions)
                 {
-                    if (transaction.amount < 0 && (transaction.Equals(reimbursement.transaction1) || transaction.Equals(reimbursement.transaction2)))
-                    {
-                        sum += reimbursement.transaction1.amount;
-                    }
+                    sum -= reimbursement.ExcludeFromTotal(transaction);                  
                 }
             }
 
@@ -259,7 +256,7 @@ namespace BNZApp
                 return;
             }
             currentDate = newDate;
-            UpdateUI();
+            LoadPage();
         }
         private void BackButtonClick(object sender, RoutedEventArgs e)
         {
@@ -279,7 +276,7 @@ namespace BNZApp
             }
 
             currentDate = newDate;
-            UpdateUI();
+            LoadPage();
         }
 
         private void LatestButtonClick(object sender, RoutedEventArgs e)
@@ -366,7 +363,7 @@ namespace BNZApp
             if (selectedTransaction.Equals(stagedForReimbursement))
             {
                 OpenEditTransactionWindow?.Invoke(sender, stagedForReimbursement, null);
-            }            
+            }
             else if (stagedForReimbursement != null)
             {
                 OpenEditTransactionWindow?.Invoke(sender, selectedTransaction, stagedForReimbursement);
@@ -375,7 +372,6 @@ namespace BNZApp
             {
                 OpenEditTransactionWindow?.Invoke(sender, selectedTransaction, null);
             }
-            
 
             UpdateUI();
         }
