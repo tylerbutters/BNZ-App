@@ -198,7 +198,10 @@ namespace BNZApp
 
             BackgroundShade.BeginAnimation(OpacityProperty, fadeAnimation);
         }
-
+        private void ClickOffNav(object sender, RoutedEventArgs e)
+        {
+            NavClick(sender, e);
+        }
         private void ExitButtonClick(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();

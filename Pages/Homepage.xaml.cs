@@ -71,7 +71,7 @@ namespace BNZApp
             groupedTransactions = transactions.GroupBy(transaction => GetWeekNumber(transaction.Date));
         }
 
-        public void UpdateUI()
+        private void UpdateUI()
         {
             if (currentDate == latestDate)
             {
@@ -259,7 +259,7 @@ namespace BNZApp
                 return;
             }
             currentDate = newDate;
-            LoadPage();
+            UpdateUI();
         }
         private void BackButtonClick(object sender, RoutedEventArgs e)
         {
@@ -279,7 +279,7 @@ namespace BNZApp
             }
 
             currentDate = newDate;
-            LoadPage();
+            UpdateUI();
         }
 
         private void LatestButtonClick(object sender, RoutedEventArgs e)

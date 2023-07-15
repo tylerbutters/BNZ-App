@@ -8,10 +8,10 @@ namespace BNZApp
 {
     public class FileManagement
     {
-        public const string TransactionsFile = @"CSVs\transactions.csv";
-        private const string ReimbursementsFile = @"CSVs\reimbursements.csv";
-        private const string ListOfItemsFile = @"CSVs\list-of-items.csv";
-        private const string ProfileFile = @"CSVs\profile.csv";
+        public const string TransactionsFile = @"DataFiles\transactions.csv";
+        private const string ReimbursementsFile = @"DataFiles\reimbursements.csv";
+        private const string ItemsFile = @"DataFiles\items.csv";
+        private const string ProfileFile = @"DataFiles\profile.csv";
 
         public static List<Transaction> ReadNewFile(string filePath)
         {
@@ -247,12 +247,12 @@ namespace BNZApp
 
         public static List<ListItem> ReadList()
         {
-            if (!File.Exists(ListOfItemsFile))
+            if (!File.Exists(ItemsFile))
             {
-                throw new FileNotFoundException("List file not found.", ListOfItemsFile);
+                throw new FileNotFoundException("List file not found.", ItemsFile);
             }
 
-            List<string> lines = File.ReadAllLines(ListOfItemsFile).ToList();
+            List<string> lines = File.ReadAllLines(ItemsFile).ToList();
             List<ListItem> list = new List<ListItem>();
 
             if (lines is null || lines.Count is 0)
@@ -285,7 +285,7 @@ namespace BNZApp
         {
             if (!File.Exists(ProfileFile))
             {
-                throw new FileNotFoundException("List file not found.", ProfileFile);
+                throw new FileNotFoundException("Profile file not found.", ProfileFile);
             }
 
             List<string> lines = File.ReadAllLines(ProfileFile).ToList();
@@ -324,9 +324,9 @@ namespace BNZApp
                 throw new NullReferenceException("New list is null");
             }
 
-            if (!File.Exists(ListOfItemsFile))
+            if (!File.Exists(ItemsFile))
             {
-                throw new FileNotFoundException("List file not found.", ListOfItemsFile);
+                throw new FileNotFoundException("List file not found.", ItemsFile);
             }
 
             List<string> lines = new List<string> { "List Type,Category,Name" };
@@ -335,7 +335,7 @@ namespace BNZApp
                 lines.Add(item.ToString());
             }
 
-            File.WriteAllLines(ListOfItemsFile, lines);
+            File.WriteAllLines(ItemsFile, lines);
         }
 
         public static void WriteTransactions(List<Transaction> transactions)

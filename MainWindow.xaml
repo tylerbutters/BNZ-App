@@ -80,7 +80,7 @@
                 </Grid>
             </Border>
         </Grid>
-        <Grid Background="#90000000" Name="BackgroundShade" Visibility="Collapsed" Panel.ZIndex="3" Opacity="0"/>
+        <Grid Background="#90000000" Name="BackgroundShade" Visibility="Collapsed" Panel.ZIndex="3" Opacity="0" MouseDown="ClickOffNav"/>
         <Frame Name="Popup2" NavigationUIVisibility="Hidden" Panel.ZIndex="2"/>
         <Frame Name="Popup1" NavigationUIVisibility="Hidden" Panel.ZIndex="1"/>
         <Frame Name="MainFrame" NavigationUIVisibility="Hidden" />
