@@ -42,7 +42,8 @@
                             BorderThickness="0"
                             GridLinesVisibility="None" 
                             HorizontalScrollBarVisibility="Disabled"
-                            HeadersVisibility="Column">
+                            HeadersVisibility="Column"
+                            ScrollViewer.CanContentScroll="False">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader">
                                     <Setter Property="IsHitTestVisible" Value="False" />

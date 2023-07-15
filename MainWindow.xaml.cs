@@ -20,14 +20,27 @@ namespace BNZApp
     }
     public partial class MainWindow : Window
     {
+        private WelcomePage welcomePage;
         private Homepage homepage;
         public MainWindow()
         {
             InitializeComponent();
 
+            if (FileManagement.ReadTransactions() is null)
+            {
+                SideNav.Visibility = Visibility.Collapsed;
+                OpenWelcomePage();
+                return;
+            }
             CreateHomepage();
         }
 
+        private void OpenWelcomePage()
+        {
+            welcomePage = new WelcomePage();
+            MainFrame.Content = welcomePage;
+            welcomePage.UploadFile += UploadFileButtonClick;
+        }
         private async void OpenEditTransactionWindow(object sender, Transaction transaction1, Transaction transaction2)
         {
             Popup2.Content = null;
@@ -49,7 +62,7 @@ namespace BNZApp
             }
 
             ListWindow listWindow = new ListWindow(list, type);
-            
+
             Popup1.Content = listWindow;
             await WindowFade(Popup1, true);
 
@@ -100,7 +113,7 @@ namespace BNZApp
             await WindowFade(Popup1, false);
             Popup1.Content = null;
             await WindowFade(Popup2, false);
-            Popup2.Content = null;       
+            Popup2.Content = null;
         }
 
         private void ReturnTransaction(object sender, Transaction transaction)
@@ -108,14 +121,9 @@ namespace BNZApp
             homepage.transactionGridPage.ReturnTransaction(transaction);
         }
 
-        private void ClearData()
-        {
-            FileManagement.ClearData();
-            CreateHomepage();
-        }
-
         private void CreateHomepage()
         {
+            SideNav.Visibility = Visibility.Visible;
             homepage = new Homepage();
             MainFrame.Content = homepage;
             Popup1.Content = null;
@@ -200,7 +208,8 @@ namespace BNZApp
 
             if (result is MessageBoxResult.Yes)
             {
-                ClearData();
+                FileManagement.ClearData();
+                OpenWelcomePage();
             }
         }
 
@@ -213,7 +222,7 @@ namespace BNZApp
             reimbursementListWindow.GoBack += BackToHomepage;
         }
 
-        private void UploadFileButtonClick(object sender, RoutedEventArgs e)
+        public void UploadFileButtonClick(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
@@ -228,9 +237,10 @@ namespace BNZApp
                 List<Transaction> newTransactions = FileManagement.ReadNewFile(selectedFilePath);
                 if (newTransactions is null)
                 {
+                    MessageBox.Show("Invalid file\nPlease try again");
                     return;
                 }
-
+                MessageBox.Show("Upload Successful!");
                 File.Copy(selectedFilePath, FileManagement.TransactionsFile, true);
                 FileManagement.WriteTransactions(newTransactions);
 

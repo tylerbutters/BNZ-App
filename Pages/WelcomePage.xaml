@@ -1,0 +1,43 @@
+﻿<Page x:Class="BNZApp.WelcomePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BNZApp"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="1200"
+      Title="WelcomePage" Background="#2e5282">
+    <Page.Resources>
+        <Style x:Key="Header" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="25"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Page.Resources>
+    <Grid>
+
+
+        <StackPanel  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="300 0 0 0">
+
+            <TextBlock Text="Welcome!" FontWeight="Black" FontSize="60" Foreground="White" HorizontalAlignment="Center" Margin="40"/>
+            <TextBlock Text="How to start:" FontWeight="Black" FontSize="30" Foreground="White" HorizontalAlignment="Center" Margin="20"/>
+            <TextBlock Text="Step 1: Open the BNZ app or website" Style="{StaticResource Header}"/>
+            <TextBlock Text="Step 2: Select the account of your choice" Style="{StaticResource Header}"/>
+            <TextBlock Text="Step 3: Click on the three dots in the top right corner" Style="{StaticResource Header}"/>
+            <TextBlock Text="Step 4: Click on the 'Export Transactions' button" Style="{StaticResource Header}"/>
+            <TextBlock Text="Step 5: Upload the file down below" Style="{StaticResource Header}"/>
+            <Button Grid.Row="0" Width="300" Margin="50" Content="Upload File" Background="#1D3461" Foreground="White" FontSize="35" FontWeight="Black" Height="70" BorderThickness="0" Cursor="Hand" Click="UploadFileButtonClick">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="10"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+        </StackPanel>
+        <StackPanel>
+            <Image Source="pack://application:,,,/Images/step_1.jpg" Width="300" HorizontalAlignment="Left" Margin="50 50 0 0"/>
+            <Image Source="pack://application:,,,/Images/step_2.jpg" Width="300" HorizontalAlignment="Left" Margin="50"/>
+        </StackPanel>
+    </Grid>
+</Page>

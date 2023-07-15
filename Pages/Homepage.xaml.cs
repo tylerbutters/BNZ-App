@@ -15,8 +15,8 @@ namespace BNZApp
     {
         private enum PageType { Records, Details }
         private PageType pageType;
-        public static double taxPercentage = 0.105;
-        public static float taxTotal;
+        public static decimal taxPercentage { get { return FileManagement.ReadProfile(); } }
+        public static decimal taxTotal;
         public string formattedTotalIncome { get => totalIncome.ToString("C"); set { totalIncome = float.Parse(value); } }
         public string formattedTotalSpending { get => totalSpending.ToString("C"); set { totalSpending = float.Parse(value); } }
         public string formattedTotalExpenses { get => totalExpenses.ToString("C"); set { totalExpenses = float.Parse(value); } }
@@ -110,9 +110,9 @@ namespace BNZApp
             }
 
             totalIncome = GetTotal(currentWeekTransactions, listOfItems, ListType.Income);
-            taxTotal = (float)(totalIncome * taxPercentage);
+            taxTotal = (decimal)totalIncome * taxPercentage;
             totalSpending = GetTotal(currentWeekTransactions, listOfItems, ListType.Spending);
-            totalExpenses = GetTotal(currentWeekTransactions, listOfItems, ListType.Expenses) - taxTotal;
+            totalExpenses = GetTotal(currentWeekTransactions, listOfItems, ListType.Expenses) - (float)taxTotal;
             total = totalIncome + totalSpending + totalExpenses;
 
             DataContext = null;

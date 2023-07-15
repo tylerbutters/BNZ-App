@@ -8,29 +8,31 @@
       d:DesignHeight="800" d:DesignWidth="1200"
       Title="DetailsPage" d:Background="#2e5282">
 
+    <Page.Resources>
+        <Style x:Key="ItemGridStyle" TargetType="DataGrid">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="HeadersVisibility" Value="None"/>
+            <Setter Property="RowStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="FontSize" Value="20"/>
+                        <Setter Property="Height" Value="50"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
     <Grid Margin="30 0 30 0">
-        <Grid.Resources>
-            <Style x:Key="ItemGridStyle" TargetType="DataGrid">
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="AutoGenerateColumns" Value="False"/>
-                <Setter Property="IsReadOnly" Value="True"/>
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="GridLinesVisibility" Value="None"/>
-                <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
-                <Setter Property="HeadersVisibility" Value="None"/>
-                <Setter Property="RowStyle">
-                    <Setter.Value>
-                        <Style TargetType="DataGridRow">
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Foreground" Value="White"/>
-                            <Setter Property="FontWeight" Value="Bold"/>
-                            <Setter Property="FontSize" Value="20"/>
-                            <Setter Property="Height" Value="50"/>
-                        </Style>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-        </Grid.Resources>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>

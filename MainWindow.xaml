@@ -13,20 +13,11 @@
     <Grid>
         <Grid Panel.ZIndex="4" Name="SideNav" Margin="-300 0 0 0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="60"/>
             </Grid.ColumnDefinitions>
             <Border Grid.Column="1" Background="#1D3461" Margin="0 15 0 0" Height="60" VerticalAlignment="Top" CornerRadius="0 10 10 0" MouseDown="NavClick">
-                <Grid Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Border Grid.Row="0" Background="White" Height="5" CornerRadius="3"/>
-                    <Border Grid.Row="1" Background="White" Height="5" CornerRadius="3"/>
-                    <Border Grid.Row="2" Background="White" Height="5" CornerRadius="3"/>
-                </Grid>
+                <Image Source="pack://application:,,,/Images/menu.png" Width="40" Height="40"/>
             </Border>
             <Border Width="300" Grid.Column="0" Background="#1D3461" HorizontalAlignment="Left" >
                 <Grid Margin="0 30 0 30">

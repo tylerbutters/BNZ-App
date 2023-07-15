@@ -48,7 +48,7 @@ namespace BNZApp
                 case ListType.Expenses:
                     Title.Text = "Transactions Classified as Expenses";
                     TaxInputBox.Visibility = Visibility.Visible;
-                    TaxInput.Text = Homepage.taxPercentage * 100 + "%";
+                    TaxInput.Text = (Homepage.taxPercentage * 100).ToString("0.0") + "%";
                     break;
             }
 
@@ -57,17 +57,15 @@ namespace BNZApp
 
         private void DoneButtonClick(object sender, RoutedEventArgs e)
         {
-            if (listType is ListType.Expenses)
+            if (listType is ListType.Expenses && TaxInput.Text is "")
             {
-                if (TaxInput.Text is "")
-                {
-                    MessageBox.Show("Please enter tax amount");
-                    return;
-                }
-                Homepage.taxPercentage = float.Parse(TaxInput.Text = TaxInput.Text.Substring(0, TaxInput.Text.Length - 1)) / 100;
+                MessageBox.Show("Please enter tax amount");
+                return;
             }
             if (edited)
             {
+                decimal tax = decimal.Parse(TaxInput.Text = TaxInput.Text.Substring(0, TaxInput.Text.Length - 1)) / 100;
+                FileManagement.WriteProfile(tax.ToString());
                 FileManagement.WriteList(list);
             }
 

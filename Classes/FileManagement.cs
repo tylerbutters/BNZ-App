@@ -11,6 +11,7 @@ namespace BNZApp
         public const string TransactionsFile = @"CSVs\transactions.csv";
         private const string ReimbursementsFile = @"CSVs\reimbursements.csv";
         private const string ListOfItemsFile = @"CSVs\list-of-items.csv";
+        private const string ProfileFile = @"CSVs\profile.csv";
 
         public static List<Transaction> ReadNewFile(string filePath)
         {
@@ -23,7 +24,6 @@ namespace BNZApp
 
             if (lines is null || lines.Count is 0)
             {
-                MessageBox.Show("Invalid file\nFile is empty");
                 return null;
             }
 
@@ -34,19 +34,16 @@ namespace BNZApp
 
                 if (split.Length != 7)
                 {
-                    MessageBox.Show("Row size is greater or less than 8");
                     return null;
                 }
 
                 if (!DateTime.TryParse(split[0], out DateTime date))
                 {
-                    MessageBox.Show($"Invalid date format: {split[0]}");
                     return null;
                 }
 
                 if (!float.TryParse(split[1], out float amount))
                 {
-                    MessageBox.Show($"Invalid float format: {split[1]}");
                     return null;
                 }
 
@@ -83,7 +80,6 @@ namespace BNZApp
 
             if (lines is null || lines.Count is 0)
             {
-                MessageBox.Show("Invalid file\nFile is empty");
                 return null;
             }
 
@@ -95,7 +91,6 @@ namespace BNZApp
 
                 if (split.Length != 7)
                 {
-                    MessageBox.Show("Row size is greater or less than 8");
                     return null;
                 }
 
@@ -106,13 +101,11 @@ namespace BNZApp
 
                 if (!DateTime.TryParse(split[0], out DateTime date))
                 {
-                    MessageBox.Show($"Invalid date format: {split[0]}");
                     return null;
                 }
 
                 if (!float.TryParse(split[1], out float amount))
                 {
-                    MessageBox.Show($"Invalid float format: {split[1]}");
                     return null;
                 }
 
@@ -286,6 +279,42 @@ namespace BNZApp
             }
 
             return list;
+        }
+
+        public static decimal ReadProfile()
+        {
+            if (!File.Exists(ProfileFile))
+            {
+                throw new FileNotFoundException("List file not found.", ProfileFile);
+            }
+
+            List<string> lines = File.ReadAllLines(ProfileFile).ToList();
+
+            if (lines is null || lines.Count is 0)
+            {
+                throw new FormatException("File is empty");
+            }
+
+            return decimal.Parse(lines[1]);
+        }
+
+        public static void WriteProfile(string tax)
+        {
+            if (!File.Exists(ProfileFile))
+            {
+                throw new FileNotFoundException("List file not found.", ProfileFile);
+            }
+
+            List<string> lines = new List<string> { "TaxPercentage" };
+
+            if (lines is null || lines.Count is 0)
+            {
+                throw new FormatException("File is empty");
+            }
+
+            lines.Add(tax);
+
+            File.WriteAllLines(ProfileFile, lines);
         }
 
         public static void WriteList(List<ListItem> list)

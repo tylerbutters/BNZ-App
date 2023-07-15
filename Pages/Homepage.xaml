@@ -68,10 +68,13 @@
                         </Style.Triggers>
                     </Style>
                 </Border.Style>
-                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="Total Spent: " FontSize="25" Foreground="#1D3461" FontWeight="Black"/>
-                    <TextBlock Text="{Binding formattedTotalSpending}" FontSize="25" FontWeight="Black" Foreground="DarkRed"/>
-                </StackPanel>
+                <Grid>
+                    <Image Source="pack://application:,,,/Images/arrow.png" Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 0 6"/>
+                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Total Spent: " FontSize="25" Foreground="#1D3461" FontWeight="Black"/>
+                        <TextBlock Text="{Binding formattedTotalSpending}" FontSize="25" FontWeight="Black" Foreground="DarkRed"/>
+                    </StackPanel>
+                </Grid>
             </Border>
             <Border Grid.Column="1" Tag="Income" CornerRadius="10" MouseDown="ViewListClick" Margin="30 0 30 0" Height="80" Cursor="Hand">
                 <Border.Style>
@@ -84,23 +87,26 @@
                         </Style.Triggers>
                     </Style>
                 </Border.Style>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock Text="Total: " FontSize="25" Foreground="#1D3461" FontWeight="Black" />
-                    <TextBlock Text="{Binding formattedTotal}" FontSize="25" FontWeight="Black">
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding totalIsNegative}" Value="True">
-                                        <Setter Property="Foreground" Value="DarkRed" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding totalIsNegative}" Value="False">
-                                        <Setter Property="Foreground" Value="Green" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                </StackPanel>
+                <Grid>
+                    <Image Source="pack://application:,,,/Images/arrow.png" Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 0 6"/>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="Total: " FontSize="25" Foreground="#1D3461" FontWeight="Black" />
+                        <TextBlock Text="{Binding formattedTotal}" FontSize="25" FontWeight="Black">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding totalIsNegative}" Value="True">
+                                            <Setter Property="Foreground" Value="DarkRed" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding totalIsNegative}" Value="False">
+                                            <Setter Property="Foreground" Value="Green" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
             </Border>
             <Border Grid.Column="2" Tag="Expenses" CornerRadius="10" MouseDown="ViewListClick" Margin="30 0 30 0" Height="80" Cursor="Hand">
                 <Border.Style>
@@ -113,10 +119,13 @@
                         </Style.Triggers>
                     </Style>
                 </Border.Style>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock Text="Expenses: " FontSize="25" Foreground="#1D3461" FontWeight="Black"/>
-                    <TextBlock Text="{Binding formattedTotalExpenses}" FontSize="25" FontWeight="Black" Foreground="DarkRed"/>
-                </StackPanel>
+                <Grid>
+                    <Image Source="pack://application:,,,/Images/arrow.png" Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 0 6"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="Expenses: " FontSize="25" Foreground="#1D3461" FontWeight="Black"/>
+                        <TextBlock Text="{Binding formattedTotalExpenses}" FontSize="25" FontWeight="Black" Foreground="DarkRed"/>
+                    </StackPanel>
+                </Grid>
             </Border>
         </Grid>
         <Frame Grid.Row="2" x:Name="Main" NavigationUIVisibility="Hidden"/>
@@ -127,7 +136,6 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-
                 <Button Grid.Column="0" Content="Records" Background="#1D3461" Foreground="White" FontSize="30" FontWeight="Black" Width="200" Height="50" BorderThickness="0" Cursor="Hand" Click="RecordsButtonClick">
                     <Button.Resources>
                         <Style TargetType="Border">

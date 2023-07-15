@@ -23,7 +23,7 @@ namespace BNZApp
             List<ListItem> spending = listItems.Where(item => item.listType == ListType.Spending).ToList();
             List<ListItem> expenses = listItems.Where(item => item.listType == ListType.Expenses).ToList();
 
-            List<DetailsItem> expensesItems = new List<DetailsItem> { new DetailsItem("tax", -Homepage.taxTotal) };
+            List<DetailsItem> expensesItems = new List<DetailsItem> { new DetailsItem("tax", (float)-Homepage.taxTotal) };
             expensesItems.AddRange(GetSource(expenses));
 
             IncomeItemsGrid.ItemsSource = null;
