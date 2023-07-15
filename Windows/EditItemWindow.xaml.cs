@@ -22,8 +22,8 @@ namespace BNZApp
                 throw new ArgumentNullException(nameof(item), "item cannot be null");
             }
 
-            DropdownBox.Text = item.category;
-            NameInput.Text = item.formattedName;
+            DropdownBox.Text = item.Category;
+            NameInput.Text = item.FormattedName;
             oldItem = item;
             newItem = item;
         }
@@ -32,16 +32,16 @@ namespace BNZApp
         {
             if(DropdownBox.SelectedItem != null)
             {
-                newItem.category = (DropdownBox.SelectedItem as ComboBoxItem).Content.ToString();
+                newItem.Category = (DropdownBox.SelectedItem as ComboBoxItem).Content.ToString();
             }
             if (string.IsNullOrEmpty(NameInput.Text))
             {
                 MessageBox.Show("Name cannot be empty\nIf you want to delete item, go back.");
             }
 
-            newItem.name = NameInput.Text;
+            newItem.Name = NameInput.Text;
 
-            if (newItem.category is null || newItem.name is null)
+            if (newItem.Category is null || newItem.Name is null)
             {
                 throw new NullReferenceException("item is null");
             }

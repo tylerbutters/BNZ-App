@@ -1,15 +1,17 @@
-﻿namespace BNZApp {
+﻿namespace BNZApp
+{
     public class DetailsItem
     {
-        public string name { get; set; }
-        public string formattedName { get { return name.ToUpper() + ":"; } }
-        public float amount { get; set; }
-        public string formattedAmount { get { return amount.ToString("C"); } }
-        public bool isZero { get { return amount is 0; } }
-        public DetailsItem(string name, float amount)
+        public string Name { get; set; }
+        public string FormattedName => $"{Name.ToUpper()}:";
+        public decimal Amount { get; set; }
+        public string FormattedAmount => Amount.ToString("C");
+        public bool IsZero => Amount == 0;
+
+        public DetailsItem(string name, decimal amount)
         {
-            this.name = name;
-            this.amount = amount;
+            Name = name;
+            Amount = amount;
         }
     }
 }

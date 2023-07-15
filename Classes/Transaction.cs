@@ -5,51 +5,51 @@ namespace BNZApp
 {
     public class Transaction : INotifyPropertyChanged
     {
-        public DateTime date { get; set; }
-        public float amount { get; set; }
-        public string payee { get; set; }
-        public string particulars { get; set; }
-        public string code { get; set; }
-        public string reference { get; set; }
-        public string transType { get; set; }
-        public string formattedDate { get { return date.ToString("dd/MM/yy"); } }
-        public string formattedAmount { get => amount.ToString("C"); set { amount = float.Parse(value); } }
-        public string formattedTransType
+        public DateTime Date { get; set; }
+        public decimal Amount { get; set; }
+        public string Payee { get; set; }
+        public string Particulars { get; set; }
+        public string Code { get; set; }
+        public string Reference { get; set; }
+        public string TransactionType { get; set; }
+
+        public string FormattedDate => Date.ToString("dd/MM/yy");
+        public string FormattedAmount { get => Amount.ToString("C"); set => Amount = decimal.Parse(value); }
+        public string FormattedTransType
         {
             get
             {
-                switch (transType)
+                switch (TransactionType)
                 {
                     case "AP":
-                        return "Auto Payment"; //self created automatic payment
+                        return "Auto Payment";
                     case "DC":
-                        return "Debit Card"; //ingrid
+                        return "Debit Card";
                     case "FT":
-                        return "Funds Transfer"; //transfer between accounts
+                        return "Funds Transfer";
                     case "POS":
-                        return "Point of Sale"; //newworld, skinny
+                        return "Point of Sale";
                     case "DD":
-                        return "Direct Debit"; //city fitness
+                        return "Direct Debit";
                     case "BP":
-                        return "Bill Payment"; //send to payee or work
+                        return "Bill Payment";
                     case "ATM":
                         return "ATM";
                     default:
-                        throw new Exception("code is null or does not fit any options");
+                        throw new Exception("Code is null or does not fit any options");
                 }
             }
         }
-        public bool isNegative { get { return amount < 0; } }
-        public bool isReimbursement { get; set; }
-        public bool isExpense { get; set; }
-        public bool isIncome { get; set; }
-        public bool isSpending { get; set; }
-        public bool isHighlighted => isExpense || isIncome || isSpending;
 
-        public override string ToString()
-        {
-            return $"{date:dd/MM/yyyy},{amount},{payee},{particulars},{code},{reference},{transType}";
-        }
+        public bool IsNegative => Amount < 0;
+        public bool IsReimbursement { get; set; }
+        public bool IsExpense { get; set; }
+        public bool IsIncome { get; set; }
+        public bool ISpending { get; set; }
+        public bool IsHighlighted => IsExpense || IsIncome || ISpending;
+
+        public bool StagedForReimbursement { get => stagedForReimbursement; set { stagedForReimbursement = value; OnPropertyChanged(nameof(StagedForReimbursement)); } }
+        private bool stagedForReimbursement;
 
         public override bool Equals(object obj)
         {
@@ -58,17 +58,16 @@ namespace BNZApp
                 return false;
             }
 
-            return date == other.date
-                && amount == other.amount
-                && payee == other.payee
-                && particulars == other.particulars
-                && code == other.code
-                && reference == other.reference
-                && transType == other.transType;
+            return Date == other.Date
+                && Amount == other.Amount
+                && Payee == other.Payee
+                && Particulars == other.Particulars
+                && Code == other.Code
+                && Reference == other.Reference
+                && TransactionType == other.TransactionType;
         }
 
-        private bool IsItemClicked;
-        public bool wantToBeReimbursement { get { return IsItemClicked; } set { IsItemClicked = value; OnPropertyChanged(nameof(wantToBeReimbursement)); } }
+        public override string ToString() => $"{Date:dd/MM/yyyy},{Amount},{Payee},{Particulars},{Code},{Reference},{TransactionType}";
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)

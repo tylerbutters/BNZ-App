@@ -118,20 +118,22 @@ namespace BNZApp
 
         private void ReturnTransaction(object sender, Transaction transaction)
         {
-            homepage.transactionGridPage.ReturnTransaction(transaction);
+            homepage.TransactionGridPage.ReturnTransaction(transaction);
         }
 
-        private void CreateHomepage()
+        private async void CreateHomepage()
         {
-            SideNav.Visibility = Visibility.Visible;
             homepage = new Homepage();
+            homepage.OpenListWindow += OpenListWindow;
+            homepage.TransactionGridPage.OpenEditTransactionWindow += OpenEditTransactionWindow;
+            SideNav.Visibility = Visibility.Visible;
             MainFrame.Content = homepage;
             Popup1.Content = null;
-            homepage.OpenListWindow += OpenListWindow;
-            homepage.transactionGridPage.OpenEditTransactionWindow += OpenEditTransactionWindow;
-        }
+            await Task.Delay(1000);
+            LoadingScreen.Visibility = Visibility.Collapsed;
+        }     
 
-        private async Task WindowFade(System.Windows.Controls.Frame frame, bool isOpening)
+            private async Task WindowFade(Frame frame, bool isOpening)
         {
             if (isOpening)
             {
@@ -150,7 +152,7 @@ namespace BNZApp
 
             fadeAnimation.Completed += (s, _) => tcs.SetResult(true);
 
-            frame.BeginAnimation(Frame.OpacityProperty, fadeAnimation);
+            frame.BeginAnimation(OpacityProperty, fadeAnimation);
 
             await tcs.Task;
 
@@ -177,7 +179,7 @@ namespace BNZApp
                 slideAnimation.To = -300;
             }
 
-            SideNav.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness((float)slideAnimation.To, 0, 0, 0), duration)); // Apply slide animation to SideNav.Margin
+            SideNav.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness((double)slideAnimation.To, 0, 0, 0), duration)); // Apply slide animation to SideNav.Margin
 
             DoubleAnimation fadeAnimation = new DoubleAnimation
             {

@@ -23,7 +23,7 @@ namespace BNZApp
                 Console.WriteLine("The list of reimbursements is empty.");
             }
 
-            ListGrid.ItemsSource = reimbursements;
+            ReimbursementGrid.ItemsSource = reimbursements;
         }
 
         private void DoneButtonClick(object sender, RoutedEventArgs e)
@@ -45,8 +45,8 @@ namespace BNZApp
             }
 
             reimbursements.Remove(selectedReimbursement);
-            ListGrid.ItemsSource = null;
-            ListGrid.ItemsSource = reimbursements;
+            ReimbursementGrid.ItemsSource = null;
+            ReimbursementGrid.ItemsSource = reimbursements;
             isDeleteButtonClicked = true;
         }
 

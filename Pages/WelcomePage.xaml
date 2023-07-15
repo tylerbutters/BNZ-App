@@ -27,13 +27,7 @@
             <TextBlock Text="Step 3: Click on the three dots in the top right corner" Style="{StaticResource Header}"/>
             <TextBlock Text="Step 4: Click on the 'Export Transactions' button" Style="{StaticResource Header}"/>
             <TextBlock Text="Step 5: Upload the file down below" Style="{StaticResource Header}"/>
-            <Button Grid.Row="0" Width="300" Margin="50" Content="Upload File" Background="#1D3461" Foreground="White" FontSize="35" FontWeight="Black" Height="70" BorderThickness="0" Cursor="Hand" Click="UploadFileButtonClick">
-                <Button.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="10"/>
-                    </Style>
-                </Button.Resources>
-            </Button>
+            <Button Grid.Row="0" Margin="50" Content="Upload File" Style="{StaticResource Button2}" FontSize="30" Width="300" Height="70" Click="UploadFileButtonClick"/>
         </StackPanel>
         <StackPanel>
             <Image Source="pack://application:,,,/Images/step_1.jpg" Width="300" HorizontalAlignment="Left" Margin="50 50 0 0"/>

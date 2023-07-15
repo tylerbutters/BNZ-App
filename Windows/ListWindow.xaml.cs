@@ -35,7 +35,7 @@ namespace BNZApp
 
             this.list = list;
             this.listType = listType;
-            listOfType = list.Where(item => item.listType == listType).ToList();
+            listOfType = list.Where(item => item.ListType == listType).ToList();
 
             switch (listType)
             {
@@ -48,7 +48,7 @@ namespace BNZApp
                 case ListType.Expenses:
                     Title.Text = "Transactions Classified as Expenses";
                     TaxInputBox.Visibility = Visibility.Visible;
-                    TaxInput.Text = (Homepage.taxPercentage * 100).ToString("0.0") + "%";
+                    TaxInput.Text = (Homepage.TaxPercentage * 100).ToString("0.0") + "%";
                     break;
             }
 
@@ -57,15 +57,20 @@ namespace BNZApp
 
         private void DoneButtonClick(object sender, RoutedEventArgs e)
         {
-            if (listType is ListType.Expenses && TaxInput.Text is "")
+            if (listType is ListType.Expenses)
             {
-                MessageBox.Show("Please enter tax amount");
-                return;
+                if (TaxInput.Text is "")
+                {
+                    MessageBox.Show("Please enter tax amount");
+                }
+                else if (edited)
+                {
+                    decimal tax = decimal.Parse(TaxInput.Text = TaxInput.Text.Substring(0, TaxInput.Text.Length - 1)) / 100;
+                    FileManagement.WriteProfile(tax.ToString());
+                }
             }
             if (edited)
-            {
-                decimal tax = decimal.Parse(TaxInput.Text = TaxInput.Text.Substring(0, TaxInput.Text.Length - 1)) / 100;
-                FileManagement.WriteProfile(tax.ToString());
+            {               
                 FileManagement.WriteList(list);
             }
 

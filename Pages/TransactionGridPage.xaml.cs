@@ -47,9 +47,9 @@ namespace BNZApp
             }
             foreach (Reimbursement reimbursement in reimbursements)
             {
-                if (selectedTransaction.Equals(reimbursement.transaction1) || selectedTransaction.Equals(reimbursement.transaction2))
+                if (selectedTransaction.Equals(reimbursement.Transaction1) || selectedTransaction.Equals(reimbursement.Transaction2))
                 {
-                    OpenEditTransactionWindow?.Invoke(sender, reimbursement.transaction1, reimbursement.transaction2);
+                    OpenEditTransactionWindow?.Invoke(sender, reimbursement.Transaction1, reimbursement.Transaction2);
                 }
             }
             if (selectedTransaction.Equals(stagedForReimbursement))

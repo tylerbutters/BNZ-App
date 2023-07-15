@@ -42,25 +42,25 @@ namespace BNZApp
                     return null;
                 }
 
-                if (!float.TryParse(split[1], out float amount))
+                if (!decimal.TryParse(split[1], out decimal amount))
                 {
                     return null;
                 }
 
                 Transaction transaction = new Transaction
                 {
-                    date = date,
-                    amount = amount,
-                    payee = split[2],
-                    particulars = split[3],
-                    code = split[4],
-                    reference = split[5],
-                    transType = split[6],
+                    Date = date,
+                    Amount = amount,
+                    Payee = split[2],
+                    Particulars = split[3],
+                    Code = split[4],
+                    Reference = split[5],
+                    TransactionType = split[6],
                 };
 
-                if (transaction.amount is 0)
+                if (transaction.Amount is 0)
                 {
-                    throw new Exception($"Amount = 0, this should never happen\nDate: {transaction.date}\nPayee: {transaction.payee}");
+                    throw new Exception($"Amount = 0, this should never happen\nDate: {transaction.Date}\nPayee: {transaction.Payee}");
                 }
 
                 transactions.Add(transaction);
@@ -104,25 +104,25 @@ namespace BNZApp
                     return null;
                 }
 
-                if (!float.TryParse(split[1], out float amount))
+                if (!decimal.TryParse(split[1], out decimal amount))
                 {
                     return null;
                 }
 
                 Transaction transaction = new Transaction
                 {
-                    date = date,
-                    amount = amount,
-                    payee = split[2],
-                    particulars = split[3],
-                    code = split[4],
-                    reference = split[5],
-                    transType = split[6],
+                    Date = date,
+                    Amount = amount,
+                    Payee = split[2],
+                    Particulars = split[3],
+                    Code = split[4],
+                    Reference = split[5],
+                    TransactionType = split[6],
                 };
 
-                if (transaction.amount is 0)
+                if (transaction.Amount is 0)
                 {
-                    throw new Exception($"Amount = 0, this should never happen\nDate: {transaction.date}\nPayee: {transaction.payee}");
+                    throw new Exception($"Amount = 0, this should never happen\nDate: {transaction.Date}\nPayee: {transaction.Payee}");
                 }
 
                 transactions.Add(transaction);
@@ -138,7 +138,7 @@ namespace BNZApp
             List<Reimbursement> reimbursements = ReadReimbursements();
             foreach (Transaction transaction in transactions)
             {
-                transaction.isReimbursement = reimbursements.Any(reimbursement => transaction.Equals(reimbursement.transaction1) || transaction.Equals(reimbursement.transaction2));
+                transaction.IsReimbursement = reimbursements.Any(reimbursement => transaction.Equals(reimbursement.Transaction1) || transaction.Equals(reimbursement.Transaction2));
             }
         }
         private static void CheckIsOnList(List<Transaction> transactions)
@@ -151,36 +151,36 @@ namespace BNZApp
                 {
                     bool isMatch = false;
 
-                    switch (item.category)
+                    switch (item.Category)
                     {
                         case "payee":
-                            isMatch = transaction.payee.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0;
+                            isMatch = transaction.Payee.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0;
                             break;
                         case "particulars":
-                            isMatch = transaction.particulars.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0;
+                            isMatch = transaction.Particulars.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0;
                             break;
                         case "code":
-                            isMatch = transaction.code.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0;
+                            isMatch = transaction.Code.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0;
                             break;
                         case "reference":
-                            isMatch = transaction.reference.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0;
+                            isMatch = transaction.Reference.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0;
                             break;
                         default:
-                            throw new ArgumentException("Item type is not valid", nameof(item.category));
+                            throw new ArgumentException("Item type is not valid", nameof(item.Category));
                     }
 
                     if (isMatch)
                     {
-                        switch (item.listType)
+                        switch (item.ListType)
                         {
                             case ListType.Income:
-                                transaction.isIncome = true;
+                                transaction.IsIncome = true;
                                 break;
                             case ListType.Spending:
-                                transaction.isSpending = true;
+                                transaction.ISpending = true;
                                 break;
                             case ListType.Expenses:
-                                transaction.isExpense = true;
+                                transaction.IsExpense = true;
                                 break;
                         }
                     }
@@ -220,23 +220,23 @@ namespace BNZApp
                 Reimbursement reimbursement = new Reimbursement(
                     new Transaction
                     {
-                        date = DateTime.TryParse(split[0], out DateTime date1) ? date1 : throw new FormatException("Invalid date format"),
-                        amount = float.TryParse(split[1], out float amount1) ? amount1 : throw new FormatException("Invalid float format"),
-                        payee = split[2],
-                        particulars = split[3],
-                        code = split[4],
-                        reference = split[5],
-                        transType = split[6]
+                        Date = DateTime.TryParse(split[0], out DateTime date1) ? date1 : throw new FormatException("Invalid date format"),
+                        Amount = decimal.TryParse(split[1], out decimal amount1) ? amount1 : throw new FormatException("Invalid decimal format"),
+                        Payee = split[2],
+                        Particulars = split[3],
+                        Code = split[4],
+                        Reference = split[5],
+                        TransactionType = split[6]
                     },
                     new Transaction
                     {
-                        date = DateTime.TryParse(split[7], out DateTime date2) ? date2 : throw new FormatException("Invalid date format"),
-                        amount = float.TryParse(split[8], out float amount2) ? amount2 : throw new FormatException("Invalid float format"),
-                        payee = split[9],
-                        particulars = split[10],
-                        code = split[11],
-                        reference = split[12],
-                        transType = split[13]
+                        Date = DateTime.TryParse(split[7], out DateTime date2) ? date2 : throw new FormatException("Invalid date format"),
+                        Amount = decimal.TryParse(split[8], out decimal amount2) ? amount2 : throw new FormatException("Invalid decimal format"),
+                        Payee = split[9],
+                        Particulars = split[10],
+                        Code = split[11],
+                        Reference = split[12],
+                        TransactionType = split[13]
                     });
 
                 reimbursements.Add(reimbursement);

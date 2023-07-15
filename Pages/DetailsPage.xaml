@@ -40,7 +40,7 @@
         </Grid.ColumnDefinitions>
         <DataGrid  Style="{StaticResource ItemGridStyle}" Name="SpendingItemsGrid">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding formattedName}" Width="*">
+                <DataGridTextColumn Binding="{Binding FormattedName}" Width="*">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -48,7 +48,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding formattedAmount}" Width="*">
+                <DataGridTextColumn Binding="{Binding FormattedAmount}" Width="*">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <!--<Setter Property="Effect">
@@ -72,7 +72,7 @@
         </DataGrid>
         <DataGrid Grid.Column="1" Style="{StaticResource ItemGridStyle}" Name="IncomeItemsGrid">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding formattedName}" Width="*">
+                <DataGridTextColumn Binding="{Binding FormattedName}" Width="*">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -80,7 +80,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding formattedAmount}" Width="*">
+                <DataGridTextColumn Binding="{Binding FormattedAmount}" Width="*">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="FontWeight" Value="Bold"/>
@@ -99,7 +99,7 @@
         </DataGrid>
         <DataGrid Grid.Column="2" Style="{StaticResource ItemGridStyle}" Name="ExpensesItemsGrid">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding formattedName}" Width="*">
+                <DataGridTextColumn Binding="{Binding FormattedName}" Width="*">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -107,7 +107,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding formattedAmount}" Width="*">
+                <DataGridTextColumn Binding="{Binding FormattedAmount}" Width="*">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="FontWeight" Value="Bold"/>
@@ -115,7 +115,7 @@
                             <Setter Property="Margin" Value="20 0 0 0"/>
                             <Setter Property="Foreground" Value="DarkRed"/>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding isZero}" Value="true">
+                                <DataTrigger Binding="{Binding IsZero}" Value="true">
                                     <Setter Property="Foreground" Value="Gray"/>
                                 </DataTrigger>
                             </Style.Triggers>

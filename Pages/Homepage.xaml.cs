@@ -14,28 +14,30 @@ namespace BNZApp
     public partial class Homepage : Page
     {
         private enum PageType { Records, Details }
+
         private PageType pageType;
-        public static decimal taxPercentage { get { return FileManagement.ReadProfile(); } }
-        public static decimal taxTotal;
-        public string formattedTotalIncome { get => totalIncome.ToString("C"); set { totalIncome = float.Parse(value); } }
-        public string formattedTotalSpending { get => totalSpending.ToString("C"); set { totalSpending = float.Parse(value); } }
-        public string formattedTotalExpenses { get => totalExpenses.ToString("C"); set { totalExpenses = float.Parse(value); } }
-        public string formattedTotalDecrease { get => totalDecrease.ToString("C"); set { totalDecrease = float.Parse(value); } }
-        public string formattedTotal { get => total.ToString("C"); set { total = float.Parse(value); } }
-        public bool totalIsNegative { get => total < 0; set { totalIsNegative = value; } }
-        private float totalIncome;
-        private float totalSpending;
-        private float totalExpenses;
-        private float totalDecrease;
-        private float total;
+        public static decimal TaxPercentage => FileManagement.ReadProfile();
+        public static decimal TaxTotal;
+        public string FormattedTotalIncome { get => totalIncome.ToString("C"); set => totalIncome = decimal.Parse(value); }
+        public string FormattedTotalSpending { get => totalSpending.ToString("C"); set => totalSpending = decimal.Parse(value); }
+        public string FormattedTotalExpenses { get => totalExpenses.ToString("C"); set => totalExpenses = decimal.Parse(value); }
+        public string FormattedTotalDecrease { get => totalDecrease.ToString("C"); set => totalDecrease = decimal.Parse(value); }
+        public string FormattedTotal { get => total.ToString("C"); set => total = decimal.Parse(value); }
+        public bool TotalIsNegative => total < 0;
+
+        private decimal totalIncome;
+        private decimal totalSpending;
+        private decimal totalExpenses;
+        private decimal totalDecrease;
+        private decimal total;
 
         private DateTime currentDate;
         private DateTime latestDate;
         private List<ListItem> listOfItems;
         private List<Reimbursement> reimbursements;
         private List<Transaction> transactions = FileManagement.ReadTransactions();
-        public TransactionGridPage transactionGridPage = new TransactionGridPage();
-        public DetailsPage detailsPage = new DetailsPage();
+        public TransactionGridPage TransactionGridPage = new TransactionGridPage();
+        public DetailsPage DetailsPage = new DetailsPage();
         private List<Transaction> currentWeekTransactions;
         private IEnumerable<IGrouping<int, Transaction>> groupedTransactions;
 
@@ -47,9 +49,9 @@ namespace BNZApp
             DataContext = this;
 
             pageType = PageType.Records;
-            Main.Content = transactionGridPage;
+            Main.Content = TransactionGridPage;
             MoveSelectionBox();
-            latestDate = transactions.Max(transaction => transaction.date);
+            latestDate = transactions.Max(transaction => transaction.Date);
             currentDate = latestDate;
             LoadPage();
         }
@@ -66,7 +68,7 @@ namespace BNZApp
             reimbursements = FileManagement.ReadReimbursements();
             listOfItems = FileManagement.ReadList();
 
-            groupedTransactions = transactions.GroupBy(transaction => GetWeekNumber(transaction.date));
+            groupedTransactions = transactions.GroupBy(transaction => GetWeekNumber(transaction.Date));
         }
 
         public void UpdateUI()
@@ -84,11 +86,11 @@ namespace BNZApp
             UpdateSummary();
             if (pageType is PageType.Records)
             {
-                transactionGridPage.UpdateTransactionGrid(currentWeekTransactions);
+                TransactionGridPage.UpdateTransactionGrid(currentWeekTransactions);
             }
             else if (pageType is PageType.Details)
             {
-                detailsPage.UpdateDetails(currentWeekTransactions, listOfItems);
+                DetailsPage.UpdateDetails(currentWeekTransactions, listOfItems);
             }
         }
 
@@ -110,9 +112,9 @@ namespace BNZApp
             }
 
             totalIncome = GetTotal(currentWeekTransactions, listOfItems, ListType.Income);
-            taxTotal = (decimal)totalIncome * taxPercentage;
+            TaxTotal = totalIncome * TaxPercentage;
             totalSpending = GetTotal(currentWeekTransactions, listOfItems, ListType.Spending);
-            totalExpenses = GetTotal(currentWeekTransactions, listOfItems, ListType.Expenses) - (float)taxTotal;
+            totalExpenses = GetTotal(currentWeekTransactions, listOfItems, ListType.Expenses) - TaxTotal;
             total = totalIncome + totalSpending + totalExpenses;
 
             DataContext = null;
@@ -131,7 +133,7 @@ namespace BNZApp
             return currentDate.AddDays(-1 * diff).Date;
         }
 
-        private float GetTotal(List<Transaction> transactions, List<ListItem> items, ListType itemType)
+        private decimal GetTotal(List<Transaction> transactions, List<ListItem> items, ListType itemType)
         {
             if (items is null)
             {
@@ -147,7 +149,7 @@ namespace BNZApp
 
             if (itemType == ListType.Income)
             {
-                return matchingTransactions.Sum(transaction => transaction.amount);
+                return matchingTransactions.Sum(transaction => transaction.Amount);
             }
             else
             {
@@ -168,26 +170,26 @@ namespace BNZApp
             {
                 foreach (ListItem item in items)
                 {
-                    if (item.listType == itemType)
+                    if (item.ListType == itemType)
                     {
                         bool isMatch = false;
 
-                        switch (item.category)
+                        switch (item.Category)
                         {
                             case "payee":
-                                isMatch = transaction.payee.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0;
+                                isMatch = transaction.Payee.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0;
                                 break;
                             case "particulars":
-                                isMatch = transaction.particulars.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0;
+                                isMatch = transaction.Particulars.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0;
                                 break;
                             case "code":
-                                isMatch = transaction.code.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0;
+                                isMatch = transaction.Code.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0;
                                 break;
                             case "reference":
-                                isMatch = transaction.reference.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0;
+                                isMatch = transaction.Reference.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0;
                                 break;
                             default:
-                                throw new ArgumentException("Item type is not valid", nameof(item.category));
+                                throw new ArgumentException("Item type is not valid", nameof(item.Category));
                         }
 
                         if (isMatch && !matchingTransactions.Contains(transaction))
@@ -202,9 +204,9 @@ namespace BNZApp
         }
 
 
-        private float CalculateSum(List<Transaction> transactions)
+        private decimal CalculateSum(List<Transaction> transactions)
         {
-            float sum = transactions.Sum(transaction => transaction.amount);
+            decimal sum = transactions.Sum(transaction => transaction.Amount);
 
             foreach (Reimbursement reimbursement in reimbursements)
             {
@@ -317,11 +319,11 @@ namespace BNZApp
             TimeSpan duration = TimeSpan.FromSeconds(0.3);
             Thickness toMargin;
 
-            if (pageType == PageType.Details)
+            if (pageType is PageType.Details)
             {
                 toMargin = new Thickness(250, 0, 0, 0);
             }
-            else if (pageType == PageType.Records)
+            else if (pageType is PageType.Records)
             {
                 toMargin = new Thickness(-250, 0, 0, 0);
             }
@@ -349,10 +351,10 @@ namespace BNZApp
         {
             if (pageType != PageType.Details)
             {
-                Main.Content = null;
-                Main.Content = detailsPage;
                 pageType = PageType.Details;
                 MoveSelectionBox();
+                Main.Content = null;
+                Main.Content = DetailsPage;               
                 UpdateUI();
             }
         }
@@ -361,10 +363,10 @@ namespace BNZApp
         {
             if (pageType != PageType.Records)
             {
-                Main.Content = null;
-                Main.Content = transactionGridPage;
                 pageType = PageType.Records;
                 MoveSelectionBox();
+                Main.Content = null;
+                Main.Content = TransactionGridPage;             
                 UpdateUI();
             }
         }

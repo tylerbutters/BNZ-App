@@ -35,7 +35,7 @@ namespace BNZApp
                 throw new NullReferenceException("Reimbursement not found for the given item.");
             }
 
-            List<Transaction>  transactions = new List<Transaction> { reimbursement.transaction1, reimbursement.transaction2 };
+            List<Transaction>  transactions = new List<Transaction> { reimbursement.Transaction1, reimbursement.Transaction2 };
             ComparisonGrid.ItemsSource = transactions;
         }
 
@@ -45,7 +45,7 @@ namespace BNZApp
             {
                 throw new ArgumentNullException("Item is null", nameof(transaction));
             }
-            return reimbursements.FirstOrDefault(reimbursement => transaction.Equals(reimbursement.transaction1) || transaction.Equals(reimbursement.transaction2));
+            return reimbursements.FirstOrDefault(reimbursement => transaction.Equals(reimbursement.Transaction1) || transaction.Equals(reimbursement.Transaction2));
         }
 
         private void ConfirmButtonClick(object sender, RoutedEventArgs e)

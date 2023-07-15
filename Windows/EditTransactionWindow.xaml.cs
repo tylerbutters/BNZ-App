@@ -22,9 +22,9 @@ namespace BNZApp
         private Transaction transaction2;
         private ListItem item;
         private List<ListItem> list = FileManagement.ReadList();
-        private ListType type { get { return (ListType)Enum.Parse(typeof(ListType), selectedButton.Tag.ToString()); } }
-        private string category { get { return selectedCell.Column.Header.ToString(); } }
-        private string name { get { return (selectedCell.Content as TextBlock).Text; } }
+        private ListType Type { get { return (ListType)Enum.Parse(typeof(ListType), selectedButton.Tag.ToString()); } }
+        private string Category { get { return selectedCell.Column.Header.ToString(); } }
+        private string Name { get { return (selectedCell.Content as TextBlock).Text; } }
 
         public EditTransactionWindow(Transaction transaction1, Transaction transaction2)
         {
@@ -48,7 +48,7 @@ namespace BNZApp
 
         public void UpdateDefaults()
         {
-            if (transaction.isHighlighted)
+            if (transaction.IsHighlighted)
             {
                 ButtonsWithDelete.Visibility = Visibility.Visible;
                 ButtonsWithoutDelete.Visibility = Visibility.Collapsed;
@@ -57,7 +57,7 @@ namespace BNZApp
                 UpdateCells();
             }
 
-            if (transaction.isReimbursement || transaction.wantToBeReimbursement)
+            if (transaction.IsReimbursement || transaction.StagedForReimbursement)
             {
                 ReimbursementButton.Background = Brushes.DarkRed;
             }
@@ -65,17 +65,17 @@ namespace BNZApp
 
         private void UpdateButtons()
         {
-            if (transaction.isIncome)
+            if (transaction.IsIncome)
             {
                 IncomeButton.Background = (Brush)new BrushConverter().ConvertFrom("#33639E");
                 selectedButton = IncomeButton;
             }
-            else if (transaction.isSpending)
+            else if (transaction.ISpending)
             {
                 SpendingButton.Background = (Brush)new BrushConverter().ConvertFrom("#33639E");
                 selectedButton = SpendingButton;
             }
-            else if (transaction.isExpense)
+            else if (transaction.IsExpense)
             {
                 ExpensesButton.Background = (Brush)new BrushConverter().ConvertFrom("#33639E");
                 selectedButton = ExpensesButton;
@@ -86,11 +86,11 @@ namespace BNZApp
         {
             foreach (ListItem item in list)
             {
-                string name = item.name.ToLowerInvariant();
-                string payee = transaction.payee.ToLowerInvariant();
-                string particulars = transaction.particulars.ToLowerInvariant();
-                string code = transaction.code.ToLowerInvariant();
-                string reference = transaction.reference.ToLowerInvariant();
+                string name = item.Name.ToLowerInvariant();
+                string payee = transaction.Payee.ToLowerInvariant();
+                string particulars = transaction.Particulars.ToLowerInvariant();
+                string code = transaction.Code.ToLowerInvariant();
+                string reference = transaction.Reference.ToLowerInvariant();
 
                 if (payee.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0)
                 {
@@ -141,7 +141,7 @@ namespace BNZApp
             {
                 unselectedCell.Background = Brushes.White;
                 unselectedCell.Foreground = Brushes.Black;
-                unselectedCell.FontWeight = FontWeights.Normal;
+                unselectedCell.FontWeight = FontWeights.Medium;
             }
         }
 
@@ -215,27 +215,27 @@ namespace BNZApp
 
         private void ReimbursementButtonClick(object sender, RoutedEventArgs e)
         {
-            if (transaction.isReimbursement)
+            if (transaction.IsReimbursement)
             {
                 OpenRemoveReimbursementWindow?.Invoke(sender, transaction);
             }
-            else if (transaction.wantToBeReimbursement)
+            else if (transaction.StagedForReimbursement)
             {
                 ReimbursementButton.Background = (Brush)new BrushConverter().ConvertFrom("#33639E");
-                transaction.wantToBeReimbursement = false;
+                transaction.StagedForReimbursement = false;
             }
-            else if (!transaction.wantToBeReimbursement)
+            else if (!transaction.StagedForReimbursement)
             {
                 if (transaction2 is null)
                 {
-                    transaction.wantToBeReimbursement = true;
+                    transaction.StagedForReimbursement = true;
                     ReturnTransaction?.Invoke(sender, transaction);
                     GoBack?.Invoke(sender, false);
                 }
                 else
                 {
-                    bool isValidReimbursement = (transaction1.amount > 0 && transaction2.amount < 0) ||
-                        (transaction1.amount < 0 && transaction2.amount > 0);
+                    bool isValidReimbursement = (transaction1.Amount > 0 && transaction2.Amount < 0) ||
+                        (transaction1.Amount < 0 && transaction2.Amount > 0);
 
                     if (!isValidReimbursement)
                     {
@@ -260,7 +260,7 @@ namespace BNZApp
             if (selectedCell != null || selectedButton != null)
             {
                 List<ListItem> list = FileManagement.ReadList();
-                list.Add(new ListItem(type, category, name));
+                list.Add(new ListItem(Type, Category, Name));
                 FileManagement.WriteList(list);
             }
             GoBack?.Invoke(sender, true);

@@ -19,11 +19,11 @@ namespace BNZApp
         public void UpdateDetails(List<Transaction> transactions, List<ListItem> listItems)
         {
             this.transactions = transactions;
-            List<ListItem> income = listItems.Where(item => item.listType == ListType.Income).ToList();
-            List<ListItem> spending = listItems.Where(item => item.listType == ListType.Spending).ToList();
-            List<ListItem> expenses = listItems.Where(item => item.listType == ListType.Expenses).ToList();
+            List<ListItem> income = listItems.Where(item => item.ListType == ListType.Income).ToList();
+            List<ListItem> spending = listItems.Where(item => item.ListType == ListType.Spending).ToList();
+            List<ListItem> expenses = listItems.Where(item => item.ListType == ListType.Expenses).ToList();
 
-            List<DetailsItem> expensesItems = new List<DetailsItem> { new DetailsItem("tax", (float)-Homepage.taxTotal) };
+            List<DetailsItem> expensesItems = new List<DetailsItem> { new DetailsItem("tax", -Homepage.TaxTotal) };
             expensesItems.AddRange(GetSource(expenses));
 
             IncomeItemsGrid.ItemsSource = null;
@@ -39,23 +39,23 @@ namespace BNZApp
             List<DetailsItem> detailsItems = new List<DetailsItem>();
             foreach (ListItem item in listItems)
             {
-                switch (item.category)
+                switch (item.Category)
                 {
                     case "payee":
-                        float sum = transactions.Where(transaction => transaction.payee.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0).Sum(transaction => transaction.amount);
-                        detailsItems.Add(new DetailsItem(item.name, sum));
+                        decimal sum = transactions.Where(transaction => transaction.Payee.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0).Sum(transaction => transaction.Amount);
+                        detailsItems.Add(new DetailsItem(item.Name, sum));
                         break;
                     case "particulars":
-                        sum = transactions.Where(transaction => transaction.particulars.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0).Sum(transaction => transaction.amount);
-                        detailsItems.Add(new DetailsItem(item.name, sum));
+                        sum = transactions.Where(transaction => transaction.Particulars.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0).Sum(transaction => transaction.Amount);
+                        detailsItems.Add(new DetailsItem(item.Name, sum));
                         break;
                     case "code":
-                        sum = transactions.Where(transaction => transaction.code.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0).Sum(transaction => transaction.amount);
-                        detailsItems.Add(new DetailsItem(item.name, sum));
+                        sum = transactions.Where(transaction => transaction.Code.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0).Sum(transaction => transaction.Amount);
+                        detailsItems.Add(new DetailsItem(item.Name, sum));
                         break;
                     case "reference":
-                        sum = transactions.Where(transaction => transaction.reference.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0).Sum(transaction => transaction.amount);
-                        detailsItems.Add(new DetailsItem(item.name, sum));
+                        sum = transactions.Where(transaction => transaction.Reference.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0).Sum(transaction => transaction.Amount);
+                        detailsItems.Add(new DetailsItem(item.Name, sum));
                         break;
                 }
             }
