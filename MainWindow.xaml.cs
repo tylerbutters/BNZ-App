@@ -35,6 +35,19 @@ namespace BNZApp
             CreateHomepage();
         }
 
+        private async void CreateHomepage()
+        {
+            homepage = new Homepage();
+
+            homepage.OpenListWindow += OpenListWindow;
+            homepage.TransactionGridPage.OpenEditTransactionWindow += OpenEditTransactionWindow;
+            SideNav.Visibility = Visibility.Visible;
+            MainFrame.Content = homepage;
+            //Popup1.Content = null;
+            await Task.Delay(500);
+            LoadingScreen.Visibility = Visibility.Collapsed;
+        }
+
         private void OpenWelcomePage()
         {
             welcomePage = new WelcomePage();
@@ -121,19 +134,7 @@ namespace BNZApp
             homepage.TransactionGridPage.ReturnTransaction(transaction);
         }
 
-        private async void CreateHomepage()
-        {
-            homepage = new Homepage();
-            homepage.OpenListWindow += OpenListWindow;
-            homepage.TransactionGridPage.OpenEditTransactionWindow += OpenEditTransactionWindow;
-            SideNav.Visibility = Visibility.Visible;
-            MainFrame.Content = homepage;
-            Popup1.Content = null;
-            await Task.Delay(1000);
-            LoadingScreen.Visibility = Visibility.Collapsed;
-        }     
-
-            private async Task WindowFade(Frame frame, bool isOpening)
+        private async Task WindowFade(Frame frame, bool isOpening)
         {
             if (isOpening)
             {
@@ -143,7 +144,7 @@ namespace BNZApp
 
             DoubleAnimation fadeAnimation = new DoubleAnimation
             {
-                Duration = TimeSpan.FromSeconds(0.1),
+                Duration = TimeSpan.FromSeconds(0.15),
                 From = isOpening ? 0 : 1,
                 To = isOpening ? 1 : 0,
             };
@@ -167,7 +168,7 @@ namespace BNZApp
             TimeSpan duration = TimeSpan.FromSeconds(0.2);
             DoubleAnimation slideAnimation = new DoubleAnimation();
             slideAnimation.Duration = duration;
-            slideAnimation.EasingFunction = new CubicEase();
+            slideAnimation.EasingFunction = new QuarticEase();
 
             if (SideNav.Margin.Left < 0)
             {

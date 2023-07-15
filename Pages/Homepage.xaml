@@ -130,7 +130,8 @@
                 </Grid>
             </Border>
         </Grid>
-        <Frame Grid.Row="2" x:Name="Main" NavigationUIVisibility="Hidden"/>
+        <Frame Grid.Row="2" x:Name="LeftFrame" NavigationUIVisibility="Hidden"/>
+        <Frame Grid.Row="2" x:Name="RightFrame" NavigationUIVisibility="Hidden"/>
         <Grid Grid.Row="3" Width="500">
             <Border Name="SelectionBox" Background="#33639E" Width="220" Height="70" CornerRadius="15"/>
             <Grid>

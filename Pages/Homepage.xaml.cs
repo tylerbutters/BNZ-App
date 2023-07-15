@@ -4,7 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 
 namespace BNZApp
 {
@@ -48,13 +50,20 @@ namespace BNZApp
 
             DataContext = this;
 
+            LeftFrame.Content = TransactionGridPage;
+            RightFrame.Content = DetailsPage;
             pageType = PageType.Records;
-            Main.Content = TransactionGridPage;
-            MoveSelectionBox();
+            SwitchPage();
             latestDate = transactions.Max(transaction => transaction.Date);
             currentDate = latestDate;
             LoadPage();
+
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                RightFrame.RenderTransform = new TranslateTransform(ActualWidth, 0);
+            }), DispatcherPriority.Loaded);
         }
+
 
         public void LoadPage()
         {
@@ -314,37 +323,61 @@ namespace BNZApp
             OpenListWindow?.Invoke(sender, listOfItems, type);
         }
 
-        private void MoveSelectionBox()
+        private void SwitchPage()
         {
-            TimeSpan duration = TimeSpan.FromSeconds(0.3);
-            Thickness toMargin;
+            TimeSpan duration = TimeSpan.FromSeconds(0.5);
+            QuarticEase easing = new QuarticEase();
+            Thickness boxMargin;
+            DoubleAnimation rightAnim;
+            DoubleAnimation leftAnim;
+            double containerWidth = ActualWidth;
 
-            if (pageType is PageType.Details)
+            
+            if (pageType is PageType.Records)
             {
-                toMargin = new Thickness(250, 0, 0, 0);
+                boxMargin = new Thickness(-250, 0, 0, 0);
+                LeftFrame.RenderTransform = new TranslateTransform(-containerWidth, 0);
+                RightFrame.RenderTransform = new TranslateTransform(0, 0);
+                leftAnim = CreateAnimation(-containerWidth, 0, duration);
+                rightAnim = CreateAnimation(0, containerWidth, duration);
             }
-            else if (pageType is PageType.Records)
+            else if (pageType is PageType.Details)
             {
-                toMargin = new Thickness(-250, 0, 0, 0);
+                boxMargin = new Thickness(250, 0, 0, 0);
+                LeftFrame.RenderTransform = new TranslateTransform(0, 0);
+                RightFrame.RenderTransform = new TranslateTransform(containerWidth, 0);
+                leftAnim = CreateAnimation(0, -containerWidth, duration);
+                rightAnim = CreateAnimation(containerWidth, 0, duration);
             }
             else
             {
                 return;
             }
 
-            ThicknessAnimation animation = new ThicknessAnimation();
-            animation.Duration = duration;
-            animation.To = toMargin;
-            animation.EasingFunction = new CubicEase();
-            animation.Completed += (sender, e) =>
-            {
-                SelectionBox.Margin = toMargin;
-            };
+            ThicknessAnimation boxAnim = new ThicknessAnimation();
+            boxAnim.Duration = duration;
+            boxAnim.To = boxMargin;
+            boxAnim.EasingFunction = easing;
+
+            LeftFrame.RenderTransform.BeginAnimation(TranslateTransform.XProperty, leftAnim);
+            RightFrame.RenderTransform.BeginAnimation(TranslateTransform.XProperty, rightAnim);
+
             Storyboard storyboard = new Storyboard();
-            storyboard.Children.Add(animation);
-            Storyboard.SetTarget(animation, SelectionBox);
-            Storyboard.SetTargetProperty(animation, new PropertyPath("Margin"));
+            storyboard.Children.Add(boxAnim);
+            Storyboard.SetTarget(boxAnim, SelectionBox);
+            Storyboard.SetTargetProperty(boxAnim, new PropertyPath("Margin"));
             storyboard.Begin();
+        }
+
+        private DoubleAnimation CreateAnimation(double from, double to, TimeSpan duration)
+        {
+            DoubleAnimation animation = new DoubleAnimation();
+            animation.From = from;
+            animation.To = to;
+            animation.Duration = duration;
+            animation.EasingFunction = new QuarticEase();
+
+            return animation;
         }
 
         private void DetailsButtonClick(object sender, RoutedEventArgs e)
@@ -352,9 +385,7 @@ namespace BNZApp
             if (pageType != PageType.Details)
             {
                 pageType = PageType.Details;
-                MoveSelectionBox();
-                Main.Content = null;
-                Main.Content = DetailsPage;               
+                SwitchPage();          
                 UpdateUI();
             }
         }
@@ -364,9 +395,7 @@ namespace BNZApp
             if (pageType != PageType.Records)
             {
                 pageType = PageType.Records;
-                MoveSelectionBox();
-                Main.Content = null;
-                Main.Content = TransactionGridPage;             
+                SwitchPage();          
                 UpdateUI();
             }
         }
