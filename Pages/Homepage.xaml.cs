@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
+using System.Windows.Media.Animation;
 
 namespace BNZApp
 {
@@ -14,7 +13,10 @@ namespace BNZApp
     /// </summary>
     public partial class Homepage : Page
     {
-        public static float taxPercentage = 0.105f;
+        private enum PageType { Records, Details }
+        private PageType pageType;
+        public static double taxPercentage = 0.105;
+        public static float taxTotal;
         public string formattedTotalIncome { get => totalIncome.ToString("C"); set { totalIncome = float.Parse(value); } }
         public string formattedTotalSpending { get => totalSpending.ToString("C"); set { totalSpending = float.Parse(value); } }
         public string formattedTotalExpenses { get => totalExpenses.ToString("C"); set { totalExpenses = float.Parse(value); } }
@@ -32,27 +34,21 @@ namespace BNZApp
         private List<ListItem> listOfItems;
         private List<Reimbursement> reimbursements;
         private List<Transaction> transactions = FileManagement.ReadTransactions();
+        public TransactionGridPage transactionGridPage = new TransactionGridPage();
+        public DetailsPage detailsPage = new DetailsPage();
         private List<Transaction> currentWeekTransactions;
-        private Transaction stagedForReimbursement;
         private IEnumerable<IGrouping<int, Transaction>> groupedTransactions;
 
         public event Action<object, List<ListItem>, ListType> OpenListWindow;
-        public event Action<object, Transaction, Transaction> OpenEditTransactionWindow;
-        public event EventHandler<RoutedEventArgs> ReimbursementListWindow;
-        public event EventHandler<RoutedEventArgs> UploadFile;
-        public event EventHandler<RoutedEventArgs> ClearData;
         public Homepage()
         {
             InitializeComponent();
 
             DataContext = this;
 
-            if (transactions is null)
-            {
-                NoResultsText.Visibility = Visibility.Visible;
-                return;
-            }
-
+            pageType = PageType.Records;
+            Main.Content = transactionGridPage;
+            MoveSelectionBox();
             latestDate = transactions.Max(transaction => transaction.date);
             currentDate = latestDate;
             LoadPage();
@@ -60,12 +56,11 @@ namespace BNZApp
 
         public void LoadPage()
         {
-            stagedForReimbursement = null;
             GetData();
             UpdateUI();
         }
 
-        public void GetData()
+        private void GetData()
         {
             transactions = FileManagement.ReadTransactions();
             reimbursements = FileManagement.ReadReimbursements();
@@ -86,8 +81,15 @@ namespace BNZApp
             }
             GetNewWeekTransactions();
             UpdateWeekNumberDisplay();
-            UpdateTransactionGrid();
             UpdateSummary();
+            if (pageType is PageType.Records)
+            {
+                transactionGridPage.UpdateTransactionGrid(currentWeekTransactions);
+            }
+            else if (pageType is PageType.Details)
+            {
+                detailsPage.UpdateDetails(currentWeekTransactions, listOfItems);
+            }
         }
 
         private void UpdateWeekNumberDisplay()
@@ -100,12 +102,6 @@ namespace BNZApp
             Dates.Text = startDate + " - " + endDate;
         }
 
-        private void UpdateTransactionGrid()
-        {
-            TransactionGrid.ItemsSource = null;
-            TransactionGrid.ItemsSource = currentWeekTransactions;
-        }
-
         private void UpdateSummary()
         {
             if (currentWeekTransactions is null)
@@ -114,12 +110,10 @@ namespace BNZApp
             }
 
             totalIncome = GetTotal(currentWeekTransactions, listOfItems, ListType.Income);
-            float tax = totalIncome * taxPercentage;
+            taxTotal = (float)(totalIncome * taxPercentage);
             totalSpending = GetTotal(currentWeekTransactions, listOfItems, ListType.Spending);
-            totalExpenses = GetTotal(currentWeekTransactions, listOfItems, ListType.Expenses) - tax;
+            totalExpenses = GetTotal(currentWeekTransactions, listOfItems, ListType.Expenses) - taxTotal;
             total = totalIncome + totalSpending + totalExpenses;
-            totalDecrease = currentWeekTransactions.Where(transaction => transaction.amount < 0).Sum(transaction => transaction.amount);
-            Tax.Text = (totalIncome * taxPercentage).ToString("C");
 
             DataContext = null;
             DataContext = this;
@@ -163,43 +157,50 @@ namespace BNZApp
 
         private List<Transaction> GetMatchingTransactions(List<Transaction> transactions, List<ListItem> items, ListType itemType)
         {
+            if (transactions is null || items is null)
+            {
+                throw new ArgumentNullException("transactions or items is null");
+            }
+
             List<Transaction> matchingTransactions = new List<Transaction>();
 
-            foreach (ListItem item in items)
+            foreach (Transaction transaction in transactions)
             {
-                if (item.listType == itemType)
+                foreach (ListItem item in items)
                 {
-                    IEnumerable<Transaction> filteredTransactions;
-
-                    switch (item.category)
+                    if (item.listType == itemType)
                     {
-                        case "payee":
-                            filteredTransactions = transactions.Where(transaction => transaction.payee.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0);
-                            break;
-                        case "particulars":
-                            filteredTransactions = transactions.Where(transaction => transaction.particulars.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0);
-                            break;
-                        case "code":
-                            filteredTransactions = transactions.Where(transaction => transaction.code.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0);
-                            break;
-                        case "reference":
-                            filteredTransactions = transactions.Where(transaction => transaction.reference.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0);
-                            break;
-                        default:
-                            throw new ArgumentException("Item type is not valid", nameof(item.category));
-                    }
+                        bool isMatch = false;
 
-                    if (itemType != ListType.Income)
-                    {
-                        filteredTransactions = filteredTransactions.Where(transaction => transaction.amount < 0);
-                    }
+                        switch (item.category)
+                        {
+                            case "payee":
+                                isMatch = transaction.payee.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0;
+                                break;
+                            case "particulars":
+                                isMatch = transaction.particulars.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0;
+                                break;
+                            case "code":
+                                isMatch = transaction.code.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0;
+                                break;
+                            case "reference":
+                                isMatch = transaction.reference.IndexOf(item.name, StringComparison.OrdinalIgnoreCase) >= 0;
+                                break;
+                            default:
+                                throw new ArgumentException("Item type is not valid", nameof(item.category));
+                        }
 
-                    matchingTransactions.AddRange(filteredTransactions);
+                        if (isMatch && !matchingTransactions.Contains(transaction))
+                        {
+                            matchingTransactions.Add(transaction);
+                        }
+                    }
                 }
             }
 
             return matchingTransactions;
         }
+
 
         private float CalculateSum(List<Transaction> transactions)
         {
@@ -209,7 +210,7 @@ namespace BNZApp
             {
                 foreach (Transaction transaction in transactions)
                 {
-                    sum -= reimbursement.ExcludeFromTotal(transaction);                  
+                    sum -= reimbursement.ExcludeFromTotal(transaction);
                 }
             }
 
@@ -247,7 +248,7 @@ namespace BNZApp
                 return;
             }
             DateTime newDate = currentDate.AddDays(7);
-            stagedForReimbursement = null;
+
             bool hasTransactions = groupedTransactions.Any(group => group.Key == GetWeekNumber(newDate));
 
             if (!hasTransactions)
@@ -266,7 +267,7 @@ namespace BNZApp
                 return;
             }
             DateTime newDate = currentDate.AddDays(-7);
-            stagedForReimbursement = null;
+
             bool hasTransactions = groupedTransactions.Any(group => group.Key == GetWeekNumber(newDate));
 
             if (!hasTransactions)
@@ -283,31 +284,6 @@ namespace BNZApp
         {
             currentDate = latestDate;
             UpdateUI();
-        }
-
-        private void ExitButtonClick(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
-        }
-
-        private void ClearDataButtonClick(object sender, RoutedEventArgs e)
-        {
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to clear all your data?", "Confirm", MessageBoxButton.YesNo);
-
-            if (result is MessageBoxResult.Yes)
-            {
-                ClearData?.Invoke(sender, e);
-            }
-        }
-
-        private void ReimbursementsButtonClick(object sender, RoutedEventArgs e)
-        {
-            ReimbursementListWindow?.Invoke(sender, e);
-        }
-
-        private void UploadFileButtonClick(object sender, RoutedEventArgs e)
-        {
-            UploadFile?.Invoke(sender, e);
         }
 
         private void ViewListClick(object sender, RoutedEventArgs e)
@@ -336,44 +312,61 @@ namespace BNZApp
             OpenListWindow?.Invoke(sender, listOfItems, type);
         }
 
-        private Transaction selectedTransaction;
-
-        public void ReturnTransaction(Transaction transaction)
+        private void MoveSelectionBox()
         {
-            if (stagedForReimbursement is null)
-            {
-                stagedForReimbursement = transaction;
-            }
-        }
-        private void TransactionGridItemClick(object sender, RoutedEventArgs e)
-        {
-            selectedTransaction = (sender as FrameworkElement)?.DataContext as Transaction;
+            TimeSpan duration = TimeSpan.FromSeconds(0.3);
+            Thickness toMargin;
 
-            if (selectedTransaction is null)
+            if (pageType == PageType.Details)
             {
-                throw new NullReferenceException("Selected item is null.");
+                toMargin = new Thickness(250, 0, 0, 0);
             }
-            foreach (Reimbursement reimbursement in reimbursements)
+            else if (pageType == PageType.Records)
             {
-                if (selectedTransaction.Equals(reimbursement.transaction1) || selectedTransaction.Equals(reimbursement.transaction2))
-                {
-                    OpenEditTransactionWindow?.Invoke(sender, reimbursement.transaction1, reimbursement.transaction2);
-                }
-            }
-            if (selectedTransaction.Equals(stagedForReimbursement))
-            {
-                OpenEditTransactionWindow?.Invoke(sender, stagedForReimbursement, null);
-            }
-            else if (stagedForReimbursement != null)
-            {
-                OpenEditTransactionWindow?.Invoke(sender, selectedTransaction, stagedForReimbursement);
+                toMargin = new Thickness(-250, 0, 0, 0);
             }
             else
             {
-                OpenEditTransactionWindow?.Invoke(sender, selectedTransaction, null);
+                return;
             }
 
-            UpdateUI();
+            ThicknessAnimation animation = new ThicknessAnimation();
+            animation.Duration = duration;
+            animation.To = toMargin;
+            animation.EasingFunction = new CubicEase();
+            animation.Completed += (sender, e) =>
+            {
+                SelectionBox.Margin = toMargin;
+            };
+            Storyboard storyboard = new Storyboard();
+            storyboard.Children.Add(animation);
+            Storyboard.SetTarget(animation, SelectionBox);
+            Storyboard.SetTargetProperty(animation, new PropertyPath("Margin"));
+            storyboard.Begin();
+        }
+
+        private void DetailsButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (pageType != PageType.Details)
+            {
+                Main.Content = null;
+                Main.Content = detailsPage;
+                pageType = PageType.Details;
+                MoveSelectionBox();
+                UpdateUI();
+            }
+        }
+
+        private void RecordsButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (pageType != PageType.Records)
+            {
+                Main.Content = null;
+                Main.Content = transactionGridPage;
+                pageType = PageType.Records;
+                MoveSelectionBox();
+                UpdateUI();
+            }
         }
     }
 }

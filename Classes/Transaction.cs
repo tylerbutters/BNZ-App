@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Markup;
 
 namespace BNZApp
 {
@@ -44,10 +39,7 @@ namespace BNZApp
                 }
             }
         }
-        public bool isNegative
-        {
-            get { return amount < 0; }
-        }
+        public bool isNegative { get { return amount < 0; } }
         public bool isReimbursement { get; set; }
         public bool isExpense { get; set; }
         public bool isIncome { get; set; }

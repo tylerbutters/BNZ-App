@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,7 +14,6 @@ namespace BNZApp
     public partial class ListWindow : Page
     {
         public event EventHandler<bool> GoBack;
-        public event EventHandler<ListItem> OpenEditItemWindow;
         private bool edited;
         private List<ListItem> list;
         private List<ListItem> listOfType;
@@ -134,8 +132,9 @@ namespace BNZApp
             {
                 throw new NullReferenceException("Old item cannot be null");
             }
+
             EditItemWindow editItemWindow = new EditItemWindow(oldItem);
-            EditPopup.Content = editItemWindow;
+            Popup.Content = editItemWindow;
             editItemWindow.GoBack += CloseEditItemWindow;
         }
 
@@ -157,7 +156,7 @@ namespace BNZApp
 
         private void CloseEditItemWindow(object sender, ListItem oldItem, ListItem newItem)
         {
-            EditPopup.Content = null;
+            Popup.Content = null;
 
             if (newItem is null)
             {

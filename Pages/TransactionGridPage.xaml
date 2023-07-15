@@ -1,0 +1,135 @@
+﻿<Page x:Class="BNZApp.TransactionGridPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BNZApp"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="1200"
+      Title="TransactionGridPage" d:Background="#2e5282">
+
+    <Grid>
+        <TextBlock Name="NoResultsText" Text="No Transactions in File" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="30" FontWeight="Bold" Visibility="Hidden"/>
+        <DataGrid  Background="Transparent" Margin="50 0 50 0"
+                      Name="TransactionGrid"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      BorderThickness="0"
+                      GridLinesVisibility="None" 
+                      HorizontalScrollBarVisibility="Disabled"
+                      HeadersVisibility="Column">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="IsHitTestVisible" Value="False" />
+                    <Setter Property="Background" Value="#1D3461" />
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontWeight" Value="Black"/>
+                    <Setter Property="FontSize" Value="25"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="BorderBrush" Value="#2e5282"/>
+                    <Setter Property="BorderThickness" Value="4"/>
+                    <Setter Property="Height" Value="50"/>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Background" Value="DarkGray"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="FontWeight" Value="Medium"/>
+                    <Setter Property="FontSize" Value="20"/>
+                    <Setter Property="BorderBrush" Value="#2e5282"/>
+                    <Setter Property="BorderThickness" Value="4"/>
+                    <Setter Property="Height" Value="50"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding wantToBeReimbursement}" Value="True">
+                            <Setter Property="Background" Value="#abbdd6"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding isReimbursement}" Value="True">
+                            <Setter Property="Background" Value="Gray"/>
+                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding isHighlighted}" Value="True" />
+                                <Condition Binding="{Binding isReimbursement}" Value="False" />
+                                <Condition Binding="{Binding wantToBeReimbursement}" Value="False" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Background" Value="White" />
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="TransactionGridItemClick" />
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Date" Binding="{Binding formattedDate}" Width="120">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Amount" Binding="{Binding formattedAmount}" Width="150">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Margin" Value="10 0 0 0"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding isNegative}" Value="true">
+                                    <Setter Property="Foreground" Value="DarkRed"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding isNegative}" Value="false">
+                                    <Setter Property="Foreground" Value="Green"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Payee" Binding="{Binding payee}" Width="220">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Margin" Value="10 0 0 0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Particulars" Binding="{Binding particulars}" Width="1*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Margin" Value="10 0 0 0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Code" Binding="{Binding code}" Width="1*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Margin" Value="10 0 0 0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Ref" Binding="{Binding reference}" Width="1*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Margin" Value="10 0 0 0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Type" Binding="{Binding formattedTransType}" Width="180">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>

@@ -55,32 +55,43 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\DetailsItem.cs" />
     <Compile Include="Classes\FileManagement.cs" />
     <Compile Include="Classes\ListItem.cs" />
-    <Compile Include="Pages\EditTransactionWindow.xaml.cs">
+    <Compile Include="Pages\DetailsPage.xaml.cs">
+      <DependentUpon>DetailsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\EditTransactionWindow.xaml.cs">
       <DependentUpon>EditTransactionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Homepage.xaml.cs">
       <DependentUpon>Homepage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Classes\Reimbursement.cs" />
-    <Compile Include="Pages\EditItemWindow.xaml.cs">
+    <Compile Include="Windows\EditItemWindow.xaml.cs">
       <DependentUpon>EditItemWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\AddReimbursementWindow.xaml.cs">
+    <Compile Include="Windows\AddReimbursementWindow.xaml.cs">
       <DependentUpon>AddReimbursementWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Classes\Transaction.cs" />
-    <Compile Include="Pages\RemoveReimbursementWindow.xaml.cs">
+    <Compile Include="Windows\RemoveReimbursementWindow.xaml.cs">
       <DependentUpon>RemoveReimbursementWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\ListWindow.xaml.cs">
+    <Compile Include="Windows\ListWindow.xaml.cs">
       <DependentUpon>ListWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\ReimbursementListWindow.xaml.cs">
+    <Compile Include="Windows\ReimbursementListWindow.xaml.cs">
       <DependentUpon>ReimbursementListWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Pages\EditTransactionWindow.xaml">
+    <Compile Include="Pages\TransactionGridPage.xaml.cs">
+      <DependentUpon>TransactionGridPage.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Pages\DetailsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\EditTransactionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -100,23 +111,27 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Pages\EditItemWindow.xaml">
+    <Page Include="Windows\EditItemWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\AddReimbursementWindow.xaml">
+    <Page Include="Windows\AddReimbursementWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\RemoveReimbursementWindow.xaml">
+    <Page Include="Windows\RemoveReimbursementWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\ListWindow.xaml">
+    <Page Include="Windows\ListWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\ReimbursementListWindow.xaml">
+    <Page Include="Windows\ReimbursementListWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\TransactionGridPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

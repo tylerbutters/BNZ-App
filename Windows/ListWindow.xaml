@@ -7,8 +7,9 @@
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="1200"
       Title="ListWindow" Background="#90000000">
+    
     <Grid>
-        <Frame x:Name="EditPopup" Panel.ZIndex="999"/>
+        <Frame x:Name="Popup" Panel.ZIndex="999"/>
         <Border Background="#1D3461" Name="TaxInputBox" CornerRadius="10" Width="200" Height="60" VerticalAlignment="Top" Margin="0 100 80 0" HorizontalAlignment="Right" Visibility="Collapsed">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <TextBlock Margin="0 0 20 0" Text="Tax:" HorizontalAlignment="Center" FontWeight="Medium" VerticalAlignment="Center" FontSize="25" Foreground="White"/>
@@ -35,8 +36,7 @@
                         BorderThickness="0"
                         GridLinesVisibility="None" 
                         HorizontalScrollBarVisibility="Disabled"
-                        HeadersVisibility="Column"
-                        >
+                        HeadersVisibility="Column">
                         <DataGrid.Resources>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="IsHitTestVisible" Value="False" />
@@ -80,7 +80,7 @@
                                     <DataTemplate>
                                         <Grid>
                                             <TextBlock Text="{Binding formattedName}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"/>
-                                            <Button Tag="Delete" Content="X" FontSize="20" Background="Transparent" FontWeight="Black" Width="40" Height="40" HorizontalAlignment="Right" Margin="0 0 10 0" BorderThickness="0" Cursor="Hand" Click="DeleteButtonClick">
+                                            <Button Content="X" FontSize="20" Background="Transparent" FontWeight="Black" Width="40" Height="40" HorizontalAlignment="Right" Margin="0 0 10 0" BorderThickness="0" Cursor="Hand" Click="DeleteButtonClick">
                                                 <Button.Style>
                                                     <Style TargetType="Button">
                                                         <Setter Property="Foreground" Value="Black"/>

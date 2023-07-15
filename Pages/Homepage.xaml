@@ -6,64 +6,24 @@
       xmlns:local="clr-namespace:BNZApp"
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="1200"
-      Title="Homepage">
-    <Grid Background="#2e5282">
+      Title="Homepage" ShowsNavigationUI="False" Background="#2e5282">
+
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
             <RowDefinition Height="90"/>
-            <RowDefinition Height="150"/>
+            <RowDefinition Height="130"/>
             <RowDefinition Height="1*"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Background="#1D3461">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Margin="20 0 20 0" Content="Upload File" Background="#1F487E" Foreground="White" FontSize="25" FontWeight="Black" Height="50" BorderThickness="0" Cursor="Hand" Click="UploadFileButtonClick">
+        <Grid Grid.Row="0">
+            <Button Name="LatestButton" Background="#1D3461" Margin="0 0 80 0" Content="Latest" Foreground="White" FontSize="25" FontWeight="Black" Width="140" Height="40" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Right" Click="LatestButtonClick" Visibility="Hidden">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="10"/>
                     </Style>
                 </Button.Resources>
             </Button>
-            <Button Grid.Column="1" Margin="20 0 20 0" Content="Reimbursements" Background="#1F487E" Foreground="White" FontSize="25" FontWeight="Black" Height="50" BorderThickness="0" Cursor="Hand" Click="ReimbursementsButtonClick">
-                <Button.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="10"/>
-                    </Style>
-                </Button.Resources>
-            </Button>
-            <Button Grid.Column="3" Margin="20 0 20 0" Content="Exit Applicaiton" Background="DarkRed" Foreground="White" FontSize="25" FontWeight="Black" Height="50" BorderThickness="0" Cursor="Hand" Click="ExitButtonClick">
-                <Button.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="10"/>
-                    </Style>
-                </Button.Resources>
-            </Button>
-            <Button Grid.Column="2" Margin="20 0 20 0" Content="Clear All Data" Background="Black" Foreground="White" FontSize="25" FontWeight="Black" Height="50" BorderThickness="0" Cursor="Hand" Click="ClearDataButtonClick">
-                <Button.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="10"/>
-                    </Style>
-                </Button.Resources>
-            </Button>
-        </Grid>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="700"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="2" Name="LatestButton" Background="#1D3461" Margin="20 0 0 0" Content="Latest" Foreground="White" FontSize="25" FontWeight="Black" Width="140" Height="40" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Left" Click="LatestButtonClick" Visibility="Hidden">
-                <Button.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="10"/>
-                    </Style>
-                </Button.Resources>
-            </Button>
-            <Border Grid.Column="1" Background="#1D3461" Width="700" CornerRadius="0 0 15 15" BorderBrush="#2e5282" BorderThickness="6">
+            <Border Background="#1D3461" Width="700" CornerRadius="0 0 20 20">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -89,16 +49,15 @@
                         </Button.Resources>
                     </Button>
                 </Grid>
-            
-        </Border>
+            </Border>
         </Grid>
-        <Grid Grid.Row="2" Margin="25 0 25 0">
+        <Grid Grid.Row="1" Margin="30 0 30 0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <Border Grid.Column="0" Tag="Spending" CornerRadius="10" MouseDown="ViewListClick" Margin="30 0 30 0" Height="100" Cursor="Hand">
+            <Border Grid.Column="0" Tag="Spending" CornerRadius="10" MouseDown="ViewListClick" Margin="30 0 30 0" Height="80" Cursor="Hand">
                 <Border.Style>
                     <Style TargetType="Border">
                         <Setter Property="Background" Value="White"/>
@@ -109,19 +68,12 @@
                         </Style.Triggers>
                     </Style>
                 </Border.Style>
-                <StackPanel VerticalAlignment="Center" >
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="Total Spent: " FontSize="25" Foreground="#1D3461" FontWeight="Black"/>
-                        <TextBlock Text="{Binding formattedTotalSpending}" FontSize="25" FontWeight="Black" Foreground="DarkRed"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="Total Decrease: " FontSize="20"  Foreground="#1D3461" FontWeight="Medium"/>
-                        <TextBlock Text="{Binding formattedTotalDecrease}" FontSize="20" FontWeight="Bold" Foreground="DarkRed"/>
-                    </StackPanel>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="Total Spent: " FontSize="25" Foreground="#1D3461" FontWeight="Black"/>
+                    <TextBlock Text="{Binding formattedTotalSpending}" FontSize="25" FontWeight="Black" Foreground="DarkRed"/>
                 </StackPanel>
-
             </Border>
-            <Border Grid.Column="1" Tag="Income" CornerRadius="10" MouseDown="ViewListClick" Margin="30 0 30 0" Height="100" Cursor="Hand">
+            <Border Grid.Column="1" Tag="Income" CornerRadius="10" MouseDown="ViewListClick" Margin="30 0 30 0" Height="80" Cursor="Hand">
                 <Border.Style>
                     <Style TargetType="Border">
                         <Setter Property="Background" Value="White"/>
@@ -132,177 +84,65 @@
                         </Style.Triggers>
                     </Style>
                 </Border.Style>
-                <StackPanel VerticalAlignment="Center">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="Total: " FontSize="25" Foreground="#1D3461" FontWeight="Black" />
-                        <TextBlock Text="{Binding formattedTotal}" FontSize="25" FontWeight="Black">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding totalIsNegative}" Value="True">
-                                            <Setter Property="Foreground" Value="DarkRed" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding totalIsNegative}" Value="False">
-                                            <Setter Property="Foreground" Value="Green" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </StackPanel>
-
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="Income: " FontSize="20" Foreground="#1D3461" FontWeight="Medium"/>
-                        <TextBlock Text="{Binding formattedTotalIncome}" FontSize="20" FontWeight="Bold" Foreground="Green"/>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-            <Border Grid.Column="2" Tag="Expenses" CornerRadius="10" MouseDown="ViewListClick" Margin="30 0 30 0" Height="100" Cursor="Hand">
-                <Border.Style>
-                    <Style TargetType="Border">
-                        <Setter Property="Background" Value="White"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="LightGray"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
-                <StackPanel VerticalAlignment="Center">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="Expenses: " FontSize="25" Foreground="#1D3461" FontWeight="Black"/>
-                        <TextBlock Text="{Binding formattedTotalExpenses}" FontSize="25" FontWeight="Black" Foreground="DarkRed"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="Tax: " FontSize="20" Foreground="#1D3461" FontWeight="Medium"/>
-                        <TextBlock Name="Tax" FontSize="20" FontWeight="Bold" Foreground="DarkRed"/>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-        </Grid>
-        <Grid Grid.Row="3">
-            <TextBlock Name="NoResultsText" Text="No Transactions in File" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="30" FontWeight="Bold" Visibility="Hidden"/>
-            <DataGrid  Background="Transparent" Margin="50 0 50 0"
-                      Name="TransactionGrid"
-                      AutoGenerateColumns="False"
-                      IsReadOnly="True"
-                      BorderThickness="0"
-                      GridLinesVisibility="None" 
-                      HorizontalScrollBarVisibility="Disabled"
-                      HeadersVisibility="Column" SelectionChanged="TransactionGridItemClick">
-                <DataGrid.Resources>
-                    <Style TargetType="DataGridColumnHeader">
-                        <Setter Property="IsHitTestVisible" Value="False" />
-                        <Setter Property="Background" Value="#1D3461" />
-                        <Setter Property="Foreground" Value="White"/>
-                        <Setter Property="FontWeight" Value="Black"/>
-                        <Setter Property="FontSize" Value="25"/>
-                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                        <Setter Property="BorderBrush" Value="#2e5282"/>
-                        <Setter Property="BorderThickness" Value="4"/>
-                        <Setter Property="Height" Value="50"/>
-                    </Style>
-                </DataGrid.Resources>
-                <DataGrid.CellStyle>
-                    <Style TargetType="DataGridCell">
-                        <Setter Property="Background" Value="DarkGray"/>
-                        <Setter Property="Foreground" Value="Black"/>
-                        <Setter Property="FontWeight" Value="Medium"/>
-                        <Setter Property="FontSize" Value="20"/>
-                        <Setter Property="BorderBrush" Value="#2e5282"/>
-                        <Setter Property="BorderThickness" Value="4"/>
-                        <Setter Property="Height" Value="50"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding wantToBeReimbursement}" Value="True">
-                                <Setter Property="Background" Value="#abbdd6"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding isReimbursement}" Value="True">
-                                <Setter Property="Background" Value="Gray"/>
-                            </DataTrigger>
-                            <MultiDataTrigger>
-                                <MultiDataTrigger.Conditions>
-                                    <Condition Binding="{Binding isHighlighted}" Value="True" />
-                                    <Condition Binding="{Binding isReimbursement}" Value="False" />
-                                    <Condition Binding="{Binding wantToBeReimbursement}" Value="False" />
-                                </MultiDataTrigger.Conditions>
-                                <Setter Property="Background" Value="White" />
-                            </MultiDataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </DataGrid.CellStyle>
-                <DataGrid.RowStyle>
-                    <Style TargetType="DataGridRow">
-                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="TransactionGridItemClick" />
-                    </Style>
-                </DataGrid.RowStyle>
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Date" Binding="{Binding formattedDate}" Width="120">
-                        <DataGridTextColumn.ElementStyle>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Total: " FontSize="25" Foreground="#1D3461" FontWeight="Black" />
+                    <TextBlock Text="{Binding formattedTotal}" FontSize="25" FontWeight="Black">
+                        <TextBlock.Style>
                             <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="Amount" Binding="{Binding formattedAmount}" Width="150">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="FontWeight" Value="Bold"/>
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="Margin" Value="10 0 0 0"/>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding isNegative}" Value="true">
-                                        <Setter Property="Foreground" Value="DarkRed"/>
+                                    <DataTrigger Binding="{Binding totalIsNegative}" Value="True">
+                                        <Setter Property="Foreground" Value="DarkRed" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding isNegative}" Value="false">
-                                        <Setter Property="Foreground" Value="Green"/>
+                                    <DataTrigger Binding="{Binding totalIsNegative}" Value="False">
+                                        <Setter Property="Foreground" Value="Green" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="Payee" Binding="{Binding payee}" Width="220">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="Margin" Value="10 0 0 0"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="Particulars" Binding="{Binding particulars}" Width="1*">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="Margin" Value="10 0 0 0"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="Code" Binding="{Binding code}" Width="1*">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="Margin" Value="10 0 0 0"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="Ref" Binding="{Binding reference}" Width="1*">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="Margin" Value="10 0 0 0"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="Type" Binding="{Binding formattedTransType}" Width="180">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+            <Border Grid.Column="2" Tag="Expenses" CornerRadius="10" MouseDown="ViewListClick" Margin="30 0 30 0" Height="80" Cursor="Hand">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="White"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="LightGray"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="Expenses: " FontSize="25" Foreground="#1D3461" FontWeight="Black"/>
+                    <TextBlock Text="{Binding formattedTotalExpenses}" FontSize="25" FontWeight="Black" Foreground="DarkRed"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+        <Frame Grid.Row="2" x:Name="Main" NavigationUIVisibility="Hidden"/>
+        <Grid Grid.Row="3" Width="500">
+            <Border Name="SelectionBox" Background="#33639e" Width="220" Height="70" CornerRadius="15"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Content="Records" Background="#1D3461" Foreground="White" FontSize="30" FontWeight="Black" Width="200" Height="50" BorderThickness="0" Cursor="Hand" Click="RecordsButtonClick">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="10"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button Grid.Column="1" Content="Details" Background="#1D3461" Foreground="White" FontSize="30" FontWeight="Black" Width="200" Height="50" BorderThickness="0" Cursor="Hand" Click="DetailsButtonClick">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="10"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

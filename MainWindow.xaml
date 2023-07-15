@@ -4,11 +4,78 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BNZApp"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:Windows="clr-namespace:System.Windows;assembly=PresentationCore"
+        xmlns:WindowsMedia="clr-namespace:System.Windows.Media;assembly=PresentationCore"
+        xmlns:WindowsMediaAnimation="clr-namespace:System.Windows.Media.Animation;assembly=PresentationCore"
         mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="1200">
     <Grid>
+        <Grid Panel.ZIndex="4" Name="SideNav" Margin="-300 0 0 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="60"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="1" Background="#1D3461" Margin="0 15 0 0" Height="60" VerticalAlignment="Top" CornerRadius="0 10 10 0" MouseDown="NavClick">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Background="White" Height="5" CornerRadius="3"/>
+                    <Border Grid.Row="1" Background="White" Height="5" CornerRadius="3"/>
+                    <Border Grid.Row="2" Background="White" Height="5" CornerRadius="3"/>
+                </Grid>
+            </Border>
+            <Border Width="300" Grid.Column="0" Background="#1D3461" HorizontalAlignment="Left" >
+                <Grid Margin="0 30 0 30">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0" Margin="20 0 20 0" Content="Upload File" Background="#1F487E" Foreground="White" FontSize="25" FontWeight="Black" Height="50" BorderThickness="0" Cursor="Hand" Click="UploadFileButtonClick">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="10"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <Button Grid.Row="1" Margin="20 0 20 0" Content="Reimbursements" Background="#1F487E" Foreground="White" FontSize="25" FontWeight="Black" Height="50" BorderThickness="0" Cursor="Hand" Click="ReimbursementListClick">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="10"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <Button Grid.Row="8" Margin="20 0 20 0" Content="Clear All Data" Background="Black" Foreground="White" FontSize="25" FontWeight="Black" Height="50" BorderThickness="0" Cursor="Hand" Click="ClearDataButtonClick">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="10"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <Button Grid.Row="9" Margin="20 0 20 0" Content="Exit Applicaiton" Background="DarkRed" Foreground="White" FontSize="25" FontWeight="Black" Height="50" BorderThickness="0" Cursor="Hand" Click="ExitButtonClick">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="10"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </Grid>
+            </Border>
+        </Grid>
+        <Grid Background="#90000000" Name="BackgroundShade" Visibility="Collapsed" Panel.ZIndex="3" Opacity="0"/>
         <Frame Name="Popup2" NavigationUIVisibility="Hidden" Panel.ZIndex="2"/>
         <Frame Name="Popup1" NavigationUIVisibility="Hidden" Panel.ZIndex="1"/>
-        <Frame Name="MainFrame"/>
+        <Frame Name="MainFrame" NavigationUIVisibility="Hidden" />
     </Grid>
 </Window>

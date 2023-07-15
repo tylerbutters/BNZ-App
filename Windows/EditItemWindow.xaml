@@ -7,6 +7,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="1200"
       Title="EditItemWindow" Background="#90000000">
+
     <Border Background="#1D3461" Width="550" Height="200" CornerRadius="15">
         <Grid>
             <Grid.RowDefinitions>
@@ -15,27 +16,27 @@
             </Grid.RowDefinitions>
             <Border Grid.Row="0" Background="#2e5282" CornerRadius="15 15 0 0">
                 <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="2*"/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="Edit Item Details" HorizontalAlignment="Center" FontWeight="Medium" VerticalAlignment="Bottom" FontSize="18" Foreground="White"/>
-                <Grid Grid.Row="1" Margin="30 0 30 0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.5*"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="2*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Edit Item Details" HorizontalAlignment="Center" FontWeight="Medium" VerticalAlignment="Bottom" FontSize="18" Foreground="White"/>
+                    <Grid Grid.Row="1" Margin="30 0 30 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.5*"/>
                             <ColumnDefinition Width="3*"/>
                         </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" Margin="5 0 5 0" Name="DropdownBox" BorderThickness="0" Height="40" FontSize="20" SelectedItem="{Binding SelectedOption}" IsReadOnly="True" IsEditable="True" FontWeight="Medium" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                        <ComboBox.Items>
-                            <ComboBoxItem Content="Payee"/>
-                            <ComboBoxItem Content="Particulars"/>
-                            <ComboBoxItem Content="Code"/>
-                            <ComboBoxItem Content="Reference"/>
-                        </ComboBox.Items>
-                    </ComboBox>
+                        <ComboBox Grid.Column="0" Margin="5 0 5 0" Name="DropdownBox" BorderThickness="0" Height="40" FontSize="20" SelectedItem="{Binding SelectedOption}" IsReadOnly="True" IsEditable="True" FontWeight="Medium" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                            <ComboBox.Items>
+                                <ComboBoxItem Content="Payee"/>
+                                <ComboBoxItem Content="Particulars"/>
+                                <ComboBoxItem Content="Code"/>
+                                <ComboBoxItem Content="Reference"/>
+                            </ComboBox.Items>
+                        </ComboBox>
                         <TextBox Grid.Column="1" Name="NameInput" TextAlignment="Center" FontWeight="Medium" Height="40" Margin="5 0 5 0" Background="White" BorderThickness="0" VerticalContentAlignment="Center" FontSize="20" Padding="10 0 0 0"/>
                     </Grid>
-            </Grid>
+                </Grid>
             </Border>
             <Grid Grid.Row="2" Width="400">
                 <Grid.ColumnDefinitions>

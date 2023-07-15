@@ -119,6 +119,7 @@ namespace BNZApp
             TransactionGrid.Dispatcher.BeginInvoke(new Action(() =>
             {
                 var cell = TransactionGrid.Columns[index].GetCellContent(TransactionGrid.Items[0])?.Parent as DataGridCell;
+                selectedCell = cell;
                 if (cell != null)
                 {
                     cell.Background = (Brush)new BrushConverter().ConvertFrom("#33639E");
@@ -228,7 +229,7 @@ namespace BNZApp
                 if (transaction2 is null)
                 {
                     transaction.wantToBeReimbursement = true;
-                    ReturnTransaction(sender, transaction);
+                    ReturnTransaction?.Invoke(sender, transaction);
                     GoBack?.Invoke(sender, false);
                 }
                 else

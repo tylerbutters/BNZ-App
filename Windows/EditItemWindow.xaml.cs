@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 
 namespace BNZApp
 {
@@ -14,6 +10,7 @@ namespace BNZApp
     public partial class EditItemWindow : Page
     {
         public event Action<object, ListItem, ListItem> GoBack;
+        public event EventHandler<bool> GoBackHome;
         private ListItem oldItem;
         private ListItem newItem;
         public EditItemWindow(ListItem item)
