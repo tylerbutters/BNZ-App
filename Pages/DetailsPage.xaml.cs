@@ -20,18 +20,10 @@ namespace BNZApp
         public void UpdateDetails(List<Transaction> transactions, List<ListItem> listItems)
         {
             this.transactions = transactions;
-            List<ListItem> income = listItems.Where(item => item.ListType == ListType.Income).ToList();
-            List<ListItem> spending = listItems.Where(item => item.ListType == ListType.Spending).ToList();
-            List<ListItem> expenses = listItems.Where(item => item.ListType == ListType.Expenses).ToList();
+            List<DetailsItem> incomeItems = GetSource(transactions, listItems, ListType.Income);
+            List<DetailsItem> spendingItems = GetSource(transactions, listItems, ListType.Spending);
+            List<DetailsItem> expensesItems = GetSource(transactions, listItems, ListType.Expenses);
 
-            List<DetailsItem> incomeItems = GetSource(income);
-            List<DetailsItem> spendingItems = GetSource(spending);
-            List<DetailsItem> expensesItems = GetSource(expenses);
-
-
-            IncomeItemsGrid.ItemsSource = null;
-            SpendingItemsGrid.ItemsSource = null;
-            ExpensesItemsGrid.ItemsSource = null;
             IncomeItemsGrid.ItemsSource = incomeItems;
             TotalDecrease.Text = spendingItems.Sum(item => item.Amount).ToString("C");
             SpendingItemsGrid.ItemsSource = spendingItems;
@@ -39,44 +31,55 @@ namespace BNZApp
             Tax.Text = (-Homepage.TaxTotal).ToString("C");
         }
 
-        private List<DetailsItem> GetSource(List<ListItem> listItems)
+        private List<DetailsItem> GetSource(List<Transaction> transactions, List<ListItem> listItems, ListType itemType)
         {
-            List<DetailsItem> detailsItems = new List<DetailsItem>();
-
-            foreach (ListItem item in listItems)
-            {
-                IEnumerable<Transaction> matchingTransactions = FilterTransactions(item);
-                decimal sum = CalculateSum(matchingTransactions);
-                detailsItems.Add(new DetailsItem(item.Name, sum));
-            }
+            List<DetailsItem> detailsItems = listItems
+                .Where(item => item.ListType == itemType)
+                .Select(item => new DetailsItem(item.Name, CalculateSum(transactions, item)))
+                .ToList();
 
             return detailsItems;
         }
 
-        private IEnumerable<Transaction> FilterTransactions(ListItem item)
+        private decimal CalculateSum(List<Transaction> transactions, ListItem item)
+        {
+            List<Transaction> matchingTransactions = GetMatchingTransactions(transactions, item);
+            decimal sum = matchingTransactions.Sum(transaction => transaction.Amount);
+            decimal excludedAmount = ExcludeReimbursements(matchingTransactions);
+            decimal total = sum - excludedAmount;
+
+            return total;
+        }
+
+        private decimal ExcludeReimbursements(List<Transaction> transactions)
+        {
+            decimal excludedAmount = 0;
+            foreach (Reimbursement reimbursement in reimbursements)
+            {
+                foreach (Transaction transaction in transactions)
+                {
+                    excludedAmount -= reimbursement.ExcludeAmount(transaction);
+                }
+            }
+
+            return excludedAmount;
+        }
+
+        private List<Transaction> GetMatchingTransactions(List<Transaction> transactions, ListItem item)
         {
             switch (item.Category)
             {
                 case "payee":
-                    return transactions.Where(transaction => transaction.Payee.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0);
+                    return transactions.Where(transaction => transaction.Payee.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
                 case "particulars":
-                    return transactions.Where(transaction => transaction.Particulars.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0);
+                    return transactions.Where(transaction => transaction.Particulars.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
                 case "code":
-                    return transactions.Where(transaction => transaction.Code.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0);
+                    return transactions.Where(transaction => transaction.Code.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
                 case "reference":
-                    return transactions.Where(transaction => transaction.Reference.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0);
+                    return transactions.Where(transaction => transaction.Reference.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
                 default:
-                    return Enumerable.Empty<Transaction>();
+                    return new List<Transaction>();
             }
         }
-
-        private decimal CalculateSum(IEnumerable<Transaction> transactions)
-        {
-            decimal sum = transactions.Sum(transaction => transaction.Amount);
-            decimal reimbursementSum = reimbursements.Sum(reimbursement => transactions.Sum(transaction => reimbursement.ExcludeFromTotal(transaction)));
-
-            return sum - reimbursementSum;
-        }
-
     }
 }

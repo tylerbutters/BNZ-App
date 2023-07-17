@@ -16,7 +16,7 @@
                 <TextBox  Name="TaxInput" FontWeight="Medium" Height="40" Width="100" Background="White" VerticalAlignment="Center" BorderThickness="0" VerticalContentAlignment="Center" FontSize="20" Padding="10 0 0 0" PreviewKeyDown="TaxInputKeyDown" PreviewMouseDown="TaxInputMouseDown"/>
             </StackPanel>
         </Border>
-        <Border Background="#1D3461" Margin="0 100 0 100" Width="600" CornerRadius="15">
+        <Border Background="#2e5282" Margin="0 100 0 100" Width="600" CornerRadius="15">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="70"/>
@@ -24,11 +24,9 @@
                     <RowDefinition Height="90"/>
                     <RowDefinition Height="80"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <TextBlock Grid.Row="0" Name="Title" FontSize="30" FontWeight="Black" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                </Grid>
-                <Grid Grid.Row="1" Background="#2e5282">
-                    <DataGrid Name="ListGrid" Style="{StaticResource DataGridStyle}" ColumnHeaderStyle="{StaticResource DataGridHeader}" Margin="20 4 20 4">
+                <TextBlock Grid.Row="0" Name="Title" FontSize="30" FontWeight="Black" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Grid Grid.Row="1">
+                    <DataGrid Name="ListGrid" Style="{StaticResource DataGridStyle}" ColumnHeaderStyle="{StaticResource DataGridHeader}" Margin="20 0 20 0">
                         <DataGrid.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Setter Property="Background" Value="#f4f5f0"/>
@@ -49,6 +47,7 @@
                             <DataGridTextColumn Header="Category" Width="1*" Binding="{Binding FormattedCategory}">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
+                                        <Setter Property="Tag" Value="Category"/>
                                         <Setter Property="HorizontalAlignment" Value="Center"/>
                                         <Setter Property="VerticalAlignment" Value="Center"/>
                                     </Style>
@@ -58,7 +57,7 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Grid>
-                                            <TextBlock Text="{Binding FormattedName}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"/>
+                                            <TextBlock Tag="Name" Text="{Binding FormattedName}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"/>
                                             <Button Content="X" FontSize="20" Background="Transparent" FontWeight="Black" Width="40" Height="40" HorizontalAlignment="Right" Margin="0 0 10 0" BorderThickness="0" Cursor="Hand" Click="DeleteButtonClick">
                                                 <Button.Style>
                                                     <Style TargetType="Button">
@@ -111,9 +110,9 @@
                         <Button Grid.Column="2" Content="Add" Margin="5 0 5 0" Style="{StaticResource Button2}" FontSize="20" Height="40" Click="AddButtonClick"/>
                     </Grid>
                 </Grid>
-                <Grid Grid.Row="3">
+                <Border Grid.Row="3" Background="#1D3461" CornerRadius="0 0 15 15">
                     <Button Content="Done" Style="{StaticResource Button}" Click="DoneButtonClick"/>
-                </Grid>
+                </Border>
             </Grid>
         </Border>
     </Grid>

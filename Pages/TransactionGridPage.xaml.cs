@@ -37,7 +37,7 @@ namespace BNZApp
                 stagedForReimbursement = transaction;
             }
         }
-        private void TransactionGridItemClick(object sender, RoutedEventArgs e)
+        private void TransactionClick(object sender, RoutedEventArgs e)
         {
             selectedTransaction = (sender as FrameworkElement)?.DataContext as Transaction;
 

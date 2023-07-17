@@ -47,17 +47,17 @@
             <Border Grid.Row="0" CornerRadius="10" Margin="30 0 30 0" Height="50" Background="White">
                 <Grid VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="Total Decrease: " FontSize="20" FontWeight="Bold" HorizontalAlignment="Right"/>
-                    <TextBlock Grid.Column="1" Name="TotalDecrease" Foreground="DarkRed" FontSize="20" FontWeight="Bold" Margin="20 0 0 0"/>
+                    <TextBlock Grid.Column="0" Text="Total Decrease:" FontSize="20" FontWeight="Bold" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Column="1" Name="TotalDecrease" Foreground="DarkRed" FontSize="20" FontWeight="Bold" Margin="10 0 0 0"/>
                 </Grid>
             </Border>
             <Border Grid.Row="1" CornerRadius="10" Margin="30 0 30 0" VerticalAlignment="Top" Background="White">
                 <DataGrid  Style="{StaticResource ItemGridStyle}" Name="SpendingItemsGrid" >
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding FormattedName}" Width="*">
+                    <DataGridTextColumn Binding="{Binding FormattedName}" Width="1.5*">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
@@ -65,13 +65,13 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding FormattedAmount}" Width="*">
+                    <DataGridTextColumn Binding="{Binding FormattedAmount}" Width="1*">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="FontWeight" Value="Bold"/>
                                 <Setter Property="Foreground" Value="DarkRed"/>
                                 <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="Margin" Value="20 0 0 0"/>
+                                <Setter Property="Margin" Value="10 0 0 0"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding isZero}" Value="true">
                                         <Setter Property="Foreground" Value="Gray"/>
@@ -91,7 +91,7 @@
             <Border Grid.Row="1" CornerRadius="10" Margin="30 15 30 0" VerticalAlignment="Top" Background="White">
                 <DataGrid  Style="{StaticResource ItemGridStyle}" Name="IncomeItemsGrid">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding FormattedName}" Width="*">
+                        <DataGridTextColumn Binding="{Binding FormattedName}" Width="1.5*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center"/>
@@ -99,12 +99,12 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding FormattedAmount}" Width="*">
+                        <DataGridTextColumn Binding="{Binding FormattedAmount}" Width="1*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="FontWeight" Value="Bold"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Margin" Value="20 0 0 0"/>
+                                    <Setter Property="Margin" Value="10 0 0 0"/>
                                     <Setter Property="Foreground" Value="Green"/>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding isZero}" Value="true">
@@ -126,17 +126,17 @@
             <Border Grid.Row="0" CornerRadius="10" Margin="30 0 30 0" Height="50" Background="White">
                 <Grid VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="Tax: " FontSize="20" FontWeight="Bold" HorizontalAlignment="Right"/>
-                    <TextBlock Grid.Column="1" Name="Tax" Foreground="DarkRed" FontSize="20" FontWeight="Bold" Margin="20 0 0 0"/>
+                    <TextBlock Grid.Column="0" Text="Tax:" FontSize="20" FontWeight="Bold" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Column="1" Name="Tax" Foreground="DarkRed" FontSize="20" FontWeight="Bold" Margin="10 0 0 0"/>
                 </Grid>
             </Border>
             <Border Grid.Row="1" CornerRadius="10" Margin="30 0 30 0" VerticalAlignment="Top" Background="White">
                 <DataGrid Style="{StaticResource ItemGridStyle}" Name="ExpensesItemsGrid">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding FormattedName}" Width="*">
+                        <DataGridTextColumn Binding="{Binding FormattedName}" Width="1.5*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center"/>
@@ -144,12 +144,12 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding FormattedAmount}" Width="*">
+                        <DataGridTextColumn Binding="{Binding FormattedAmount}" Width="1*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="FontWeight" Value="Bold"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Margin" Value="20 0 0 0"/>
+                                    <Setter Property="Margin" Value="10 0 0 0"/>
                                     <Setter Property="Foreground" Value="DarkRed"/>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsZero}" Value="true">

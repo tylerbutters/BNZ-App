@@ -1,15 +1,6 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Remoting.Channels;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Documents;
 using System.Windows.Media.Animation;
-using System.Windows.Navigation;
 
 namespace BNZApp
 {
@@ -33,66 +24,7 @@ namespace BNZApp
         {
             InitializeComponent();
 
-            _ = new NavigationService(this);
-        }
-
-        public void NavigateToPage(Page content)
-        {
-            MainFrame.Content = content;
-        }
-
-        public async void OpenPopup2(Page content)
-        {
-            Popup2.Content = content;
-            await WindowFade(Popup2, true);
-        }
-
-        public async void OpenPopup1(Page content)
-        {
-            Popup1.Content = content;
-            await WindowFade(Popup1, true);
-        }
-
-        public async void ClosePopup2()
-        {
-            await WindowFade(Popup2, false);
-            Popup2.Content = null;     
-        }
-        public async void ClosePopups()
-        {
-            await WindowFade(Popup1, false);
-            Popup1.Content = null;
-            await WindowFade(Popup2, false);
-            Popup1.Content = null;
-        }
-
-        private async Task WindowFade(Frame frame, bool isOpening)
-        {
-            if (isOpening)
-            {
-                frame.Opacity = 0;
-                frame.Visibility = Visibility.Visible;
-            }
-
-            DoubleAnimation fadeAnimation = new DoubleAnimation
-            {
-                Duration = TimeSpan.FromSeconds(0.15),
-                From = isOpening ? 0 : 1,
-                To = isOpening ? 1 : 0,
-            };
-
-            var tcs = new TaskCompletionSource<bool>();
-
-            fadeAnimation.Completed += (s, _) => tcs.SetResult(true);
-
-            frame.BeginAnimation(OpacityProperty, fadeAnimation);
-
-            await tcs.Task;
-
-            if (!isOpening)
-            {
-                frame.Visibility = Visibility.Collapsed;
-            }
+            new NavigationService(this);
         }
 
         public void NavClick(object sender, RoutedEventArgs e)

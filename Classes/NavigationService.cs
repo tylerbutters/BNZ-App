@@ -1,9 +1,10 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Animation;
 
 namespace BNZApp
 {
@@ -11,6 +12,8 @@ namespace BNZApp
     {
         private MainWindow mainWindow;
         private Homepage homepage;
+        private EditItemWindow editItemWindow;
+        private ListWindow listWindow;
 
         public NavigationService(MainWindow mainWindow)
         {
@@ -29,9 +32,9 @@ namespace BNZApp
             }
             else
             {
-                LoginPage loginPage = new LoginPage();
-                mainWindow.NavigateToPage(loginPage);
+                LoginPage loginPage = new LoginPage();                
                 loginPage.OpenHomepage += CreateHomepage;
+                NavigateToPage(loginPage);
             }
         }
 
@@ -41,20 +44,20 @@ namespace BNZApp
             homepage.OpenListWindow += OpenListWindow;
             homepage.TransactionGridPage.OpenEditTransactionWindow += OpenEditTransactionWindow;
             mainWindow.SideNav.Visibility = Visibility.Visible;         
-            mainWindow.NavigateToPage(homepage);
+            NavigateToPage(homepage);
         }
 
         private void OpenLoginPage()
         {
             LoginPage loginPage = new LoginPage();
             mainWindow.SideNav.Visibility = Visibility.Collapsed;
-            mainWindow.NavigateToPage(loginPage);
+            NavigateToPage(loginPage);
         }
         public void OpenWelcomePage()
         {
             WelcomePage welcomePage = new WelcomePage();
             welcomePage.UploadFile += UploadFile;
-            mainWindow.NavigateToPage(welcomePage);
+            NavigateToPage(welcomePage);
         }
 
         private void UploadFile()
@@ -84,8 +87,8 @@ namespace BNZApp
         private void OpenChangePasswordWindow()
         {
             ChangePasswordWindow changePasswordWindow = new ChangePasswordWindow();
-            changePasswordWindow.GoBack += () => mainWindow.ClosePopups();
-            mainWindow.OpenPopup1(changePasswordWindow);
+            changePasswordWindow.GoBack += () => ClosePopups();
+            OpenPopup1(changePasswordWindow);
         }
 
         private void OpenEditTransactionWindow(Transaction transaction1, Transaction transaction2)
@@ -95,11 +98,8 @@ namespace BNZApp
             editTransactionWindow.OpenAddReimbursementWindow += OpenAddReimbursementWindow;
             editTransactionWindow.OpenRemoveReimbursementWindow += OpenRemoveReimbursementWindow;
             editTransactionWindow.ReturnTransaction += ReturnTransaction;
-            mainWindow.OpenPopup1(editTransactionWindow);
+            OpenPopup1(editTransactionWindow);
         }
-
-        private EditItemWindow editItemWindow;
-        private ListWindow listWindow;
 
         private void OpenEditItemWindow(ListItem oldItem)
         {
@@ -112,9 +112,9 @@ namespace BNZApp
             editItemWindow.GoBack += (_oldItem, _newItem) =>
             {
                 listWindow.CloseEditItemWindow(_oldItem, _newItem);
-                mainWindow.ClosePopup2();
+                ClosePopup2();
             };
-            mainWindow.OpenPopup2(editItemWindow);
+            OpenPopup2(editItemWindow);
         }
 
         private void OpenListWindow(List<ListItem> list, ListType type)
@@ -127,7 +127,7 @@ namespace BNZApp
             listWindow = new ListWindow(list, type);
             listWindow.OpenEditItemWindow += OpenEditItemWindow;
             listWindow.GoBack += BackToHomepage;
-            mainWindow.OpenPopup1(listWindow);
+            OpenPopup1(listWindow);
         }
 
         private void OpenAddReimbursementWindow(Transaction transaction1, Transaction transaction2)
@@ -143,9 +143,9 @@ namespace BNZApp
             }
 
             AddReimbursementWindow addReimbursementWindow = new AddReimbursementWindow(transaction1, transaction2);
-            addReimbursementWindow.GoBack += () => mainWindow.ClosePopup2();
+            addReimbursementWindow.GoBack += () => ClosePopup2();
             addReimbursementWindow.GoBackHome += BackToHomepage;
-            mainWindow.OpenPopup2(addReimbursementWindow);
+            OpenPopup2(addReimbursementWindow);
         }
 
         private void OpenRemoveReimbursementWindow(Transaction transaction)
@@ -156,16 +156,16 @@ namespace BNZApp
             }
 
             RemoveReimbursementWindow removeReimbursementWindow = new RemoveReimbursementWindow(transaction);
-            removeReimbursementWindow.GoBack += () => mainWindow.ClosePopup2();
+            removeReimbursementWindow.GoBack += () => ClosePopup2();
             removeReimbursementWindow.GoBackHome += BackToHomepage;
-            mainWindow.OpenPopup2(removeReimbursementWindow);
+            OpenPopup2(removeReimbursementWindow);
         }
 
         private void OpenReimbursementListWindow()
         {
             ReimbursementListWindow reimbursementListWindow = new ReimbursementListWindow();
             reimbursementListWindow.GoBack += BackToHomepage;
-            mainWindow.OpenPopup1(reimbursementListWindow);
+            OpenPopup1(reimbursementListWindow);
         }
 
         private void BackToHomepage(bool reloadPage)
@@ -174,12 +174,71 @@ namespace BNZApp
             {
                 homepage.LoadPage();
             }
-            mainWindow.ClosePopups();
+            ClosePopups();
         }
 
         private void ReturnTransaction(Transaction transaction)
         {
             homepage.TransactionGridPage.ReturnTransaction(transaction);
+        }
+
+        public void NavigateToPage(Page content)
+        {
+            mainWindow.MainFrame.Content = content;
+        }
+
+        public async void OpenPopup2(Page content)
+        {
+            mainWindow.Popup2.Content = content;
+            await WindowFade(mainWindow.Popup2, true);
+        }
+
+        public async void OpenPopup1(Page content)
+        {
+            mainWindow.Popup1.Content = content;
+            await WindowFade(mainWindow.Popup1, true);
+        }
+
+        public async void ClosePopup2()
+        {
+            await WindowFade(mainWindow.Popup2, false);
+            mainWindow.Popup2.Content = null;
+        }
+        public async void ClosePopups()
+        {
+            await WindowFade(mainWindow.Popup1, false);
+            mainWindow.Popup1.Content = null;
+            await WindowFade(mainWindow.Popup2, false);
+            mainWindow.Popup1.Content = null;
+        }
+
+        private async Task WindowFade(Frame frame, bool isOpening)
+        {
+            if (isOpening)
+            {
+                frame.Opacity = 0;
+                frame.Visibility = Visibility.Visible;
+            }
+
+            DoubleAnimation fadeAnimation = new DoubleAnimation
+            {
+                Duration = TimeSpan.FromSeconds(0.15),
+                From = isOpening ? 0 : 1,
+                To = isOpening ? 1 : 0,
+            };
+
+            var tcs = new TaskCompletionSource<bool>();
+
+            fadeAnimation.Completed += (s, _) => tcs.SetResult(true);
+
+            frame.BeginAnimation(UIElement.OpacityProperty, fadeAnimation);
+
+            await tcs.Task;
+
+            if (!isOpening)
+            {
+                frame.Visibility = Visibility.Collapsed;
+            }
         }
     }
 }

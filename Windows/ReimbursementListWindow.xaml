@@ -9,7 +9,7 @@
       Title="ReimbursementListWindow">
     <Grid>
         <Grid Background="#90000000" PreviewMouseDown="BackgroundClick"/>
-        <Border Background="#1D3461" Margin="90" CornerRadius="15">
+        <Border Background="#2e5282" Margin="90" CornerRadius="15">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="70"/>
@@ -18,7 +18,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="Reimbursements" FontSize="30" FontWeight="Black" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 <Grid Grid.Row="1" Background="#2e5282">
-                    <Grid Margin="20">
+                    <Grid Margin="20 0 20 0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="50"/>
                             <RowDefinition Height="*"/>
@@ -146,7 +146,9 @@
                         </Grid>
                     </Grid>
                 </Grid>
-                <Button Grid.Row="3" Content="Done" Style="{StaticResource Button}" Click="DoneButtonClick"/>
+                <Border Grid.Row="3" Background="#1D3461" CornerRadius="0 0 15 15">
+                    <Button Content="Done" Style="{StaticResource Button}" Click="DoneButtonClick"/>
+                </Border>
             </Grid>
         </Border>
     </Grid>

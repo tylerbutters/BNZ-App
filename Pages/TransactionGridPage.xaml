@@ -40,7 +40,7 @@
             </DataGrid.CellStyle>
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
-                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="TransactionGridItemClick" />
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="TransactionClick" />
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.Columns>

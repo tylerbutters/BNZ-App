@@ -14,7 +14,8 @@ namespace BNZApp
     public partial class LoginPage : Page
     {
         public event Action OpenHomepage;
-        private int attempts = 3;
+        private const int Attempts = 3;
+        private int attempts = Attempts;
         public LoginPage()
         {
             InitializeComponent();

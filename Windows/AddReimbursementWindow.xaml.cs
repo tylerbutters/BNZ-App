@@ -13,7 +13,6 @@ namespace BNZApp
     {
         public event Action<bool> GoBackHome;
         public event Action GoBack;
-        private List<Transaction> transactions;
         private Transaction transaction1;
         private Transaction transaction2;
         private List<Reimbursement> reimbursements = FileManagement.ReadReimbursements();
@@ -34,8 +33,7 @@ namespace BNZApp
             this.transaction1 = transaction1;
             this.transaction2 = transaction2;
 
-            transactions = new List<Transaction> { transaction1, transaction2 };
-            ComparisonGrid.ItemsSource = transactions;
+            ComparisonGrid.ItemsSource = new List<Transaction> { transaction1, transaction2 };
         }
 
         private void BackgroundClick(object sender, MouseButtonEventArgs e)

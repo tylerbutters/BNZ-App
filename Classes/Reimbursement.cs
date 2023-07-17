@@ -7,7 +7,7 @@ namespace BNZApp
         public Transaction Transaction1 { get; set; } // Positive transaction
         public Transaction Transaction2 { get; set; } // Negative transaction
 
-        public decimal ExcludeFromTotal(Transaction transaction)
+        public decimal ExcludeAmount(Transaction transaction)
         {
             if (transaction.Amount < 0 && (transaction.Equals(Transaction1) || transaction.Equals(Transaction2)))
             {

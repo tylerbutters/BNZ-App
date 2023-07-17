@@ -17,7 +17,7 @@ namespace BNZApp
         public event Action<ListItem> OpenEditItemWindow;
         private bool edited;
         private List<ListItem> list;
-        private List<ListItem> listOfType;
+        private List<ListItem> ListOfType => list.Where(item => item.ListType == listType).ToList();
         private ListType listType;
 
         public ListWindow(List<ListItem> list, ListType listType)
@@ -36,7 +36,6 @@ namespace BNZApp
 
             this.list = list;
             this.listType = listType;
-            listOfType = list.Where(item => item.ListType == listType).ToList();
 
             switch (listType)
             {
@@ -53,7 +52,7 @@ namespace BNZApp
                     break;
             }
 
-            ListGrid.ItemsSource = listOfType;
+            ListGrid.ItemsSource = ListOfType;
         }
 
         private void BackgroundClick(object sender, MouseButtonEventArgs e)
@@ -79,7 +78,7 @@ namespace BNZApp
                 }
             }
             if (edited)
-            {               
+            {
                 FileManagement.WriteList(list);
             }
 
@@ -106,16 +105,15 @@ namespace BNZApp
             }
 
             list.Add(new ListItem(listType, newItemType, newItemName));
-            listOfType.Add(new ListItem(listType, newItemType, newItemName));
             ListGrid.ItemsSource = null;
-            ListGrid.ItemsSource = listOfType;
+            ListGrid.ItemsSource = ListOfType;
             edited = true;
             ResetInput();
         }
 
         private void NameInputGotFocus(object sender, RoutedEventArgs e)
         {
-            if(NameInput.Foreground == Brushes.Gray)
+            if (NameInput.Foreground == Brushes.Gray)
             {
                 NameInput.Text = "";
                 NameInput.Foreground = Brushes.Black;
@@ -146,10 +144,11 @@ namespace BNZApp
 
         private void ListItemClick(object sender, MouseButtonEventArgs e)
         {
-            if (e.OriginalSource is TextBlock)
+            if (e.OriginalSource is TextBlock text && text.Tag == null)
             {
                 return;
             }
+
 
             ListItem oldItem = (sender as FrameworkElement)?.DataContext as ListItem;
             if (oldItem is null)
@@ -169,26 +168,28 @@ namespace BNZApp
             }
 
             list.Remove(item);
-            listOfType.Remove(item);
             edited = true;
             ListGrid.ItemsSource = null;
-            ListGrid.ItemsSource = listOfType;
+            ListGrid.ItemsSource = ListOfType;
         }
 
         public void CloseEditItemWindow(ListItem oldItem, ListItem newItem)
         {
-            if(newItem is null)
+            if (newItem is null)
             {
                 return;
             }
-            list.Remove(oldItem);
-            listOfType.Remove(oldItem);
-            list.Add(newItem);
-            listOfType.Add(newItem);
-            ListGrid.ItemsSource = null;
-            ListGrid.ItemsSource = listOfType;
-            edited = true;
+
+            int index = list.IndexOf(oldItem);
+            if (index >= 0)
+            {
+                list[index] = newItem;
+                ListGrid.Items.Refresh(); // Refresh the grid to reflect the changes
+                edited = true;
+            }
         }
+
+
         private void TaxInputMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (TaxInput.Text.Contains("%"))
@@ -198,7 +199,7 @@ namespace BNZApp
         }
 
         private void TaxInputKeyDown(object sender, KeyEventArgs e)
-        {           
+        {
             if (e.Key == Key.Enter)
             {
                 TaxInput.Text += "%";

@@ -10,12 +10,12 @@
 
     <Grid>
         <Grid Background="#90000000" PreviewMouseDown="BackgroundClick"/>
-        <Border Background="#1D3461" Margin="100 0 100 0" Height="328" CornerRadius="15">
+        <Border Background="#2e5282" Margin="100 0 100 0" Height="320" CornerRadius="15">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="60"/>
                     <RowDefinition Height="70"/>
-                    <RowDefinition Height="70"/>
-                    <RowDefinition Height="108"/>
+                    <RowDefinition Height="110"/>
                     <RowDefinition Height="80"/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="Select the Type and Category" FontSize="25" Foreground="White" FontWeight="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -26,12 +26,12 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Tag="Spending" Name="SpendingButton"  Content="Spending" Style="{StaticResource Button}" Width="150" Height="45" Click="TypeButtonClick"/>
-                    <Button Grid.Column="1" Tag="Income" Name="IncomeButton" Content="Income" Style="{StaticResource Button}" Width="150" Height="45" Click="TypeButtonClick"/>
-                    <Button Grid.Column="2" Tag="Expenses" Name="ExpensesButton" Content="Expense" Style="{StaticResource Button}" Width="150" Height="45" Click="TypeButtonClick"/>
-                    <Button Grid.Column="3" Name="ReimbursementButton" Background="#33639e" Content="Reimbursement"  Width="220" Height="45" HorizontalAlignment="Right" Style="{StaticResource Button}" Margin="0 0 30 0" Click="ReimbursementButtonClick"/>
+                    <Button Grid.Column="0" Tag="Spending" Name="SpendingButton"  Content="Spending" Style="{StaticResource Button2}" Width="150" Height="45" Click="TypeButtonClick"/>
+                    <Button Grid.Column="1" Tag="Income" Name="IncomeButton" Content="Income" Style="{StaticResource Button2}" Width="150" Height="45" Click="TypeButtonClick"/>
+                    <Button Grid.Column="2" Tag="Expenses" Name="ExpensesButton" Content="Expense" Style="{StaticResource Button2}" Width="150" Height="45" Click="TypeButtonClick"/>
+                    <Button Grid.Column="3" Name="ReimbursementButton" Content="Reimbursement" Style="{StaticResource Button2}" Width="220" Height="45" HorizontalAlignment="Right"  Margin="0 0 30 0" Click="ReimbursementButtonClick"/>
                 </Grid>
-                <Grid Grid.Row="2" Background="#2e5282">
+                <Grid Grid.Row="2">
                     <DataGrid Name="TransactionGrid" Margin="4" VerticalScrollBarVisibility="Disabled" Style="{StaticResource DataGridStyle}" ColumnHeaderStyle="{StaticResource DataGridHeader}">
                         <DataGrid.CellStyle>
                             <Style TargetType="DataGridCell">
@@ -106,24 +106,28 @@
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
-                <Grid Grid.Row="3" Width="500" Visibility="Collapsed" Name="ButtonsWithDelete">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="2" Content="Delete" Style="{StaticResource RedButton}" Click="DeleteButtonClick"/>
-                    <Button Grid.Column="0" Content="Cancel" Style="{StaticResource Button}" Click="CancelButtonClick"/>
-                    <Button Grid.Column="1" Content="Confirm" Style="{StaticResource Button}" Click="ConfirmButtonClick"/>
-                </Grid>
-                <Grid Grid.Row="3" Width="350" Name="ButtonsWithoutDelete">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Content="Cancel" Style="{StaticResource Button}" Click="CancelButtonClick"/>
-                    <Button Grid.Column="1" Content="Confirm" Style="{StaticResource Button}" Click="ConfirmButtonClick"/>
-                </Grid>
+                <Border Grid.Row="3" Background="#1D3461" CornerRadius="0 0 15 15">
+                    <Grid>
+                        <Grid Width="500" Visibility="Collapsed" Name="ButtonsWithDelete">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="2" Content="Delete" Style="{StaticResource RedButton}" Click="DeleteButtonClick"/>
+                            <Button Grid.Column="0" Content="Cancel" Style="{StaticResource Button}" Click="CancelButtonClick"/>
+                            <Button Grid.Column="1" Content="Confirm" Style="{StaticResource Button}" Click="ConfirmButtonClick"/>
+                        </Grid>
+                        <Grid Width="350" Name="ButtonsWithoutDelete">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="Cancel" Style="{StaticResource Button}" Click="CancelButtonClick"/>
+                            <Button Grid.Column="1" Content="Confirm" Style="{StaticResource Button}" Click="ConfirmButtonClick"/>
+                        </Grid>
+                    </Grid>
+                </Border>
             </Grid>
         </Border>
     </Grid>

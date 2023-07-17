@@ -67,11 +67,11 @@ namespace BNZApp
 
         public void LoadPage()
         {
-            GetData();
+            UpdateData();
             UpdateUI();
         }
 
-        private void GetData()
+        private void UpdateData()
         {
             transactions = FileManagement.ReadTransactions();
             reimbursements = FileManagement.ReadReimbursements();
@@ -82,6 +82,10 @@ namespace BNZApp
 
         private void UpdateUI()
         {
+            GetNewWeekTransactions();
+            UpdateDateDisplay();
+            UpdateTotalSummary();
+
             if (currentDate == latestDate)
             {
                 LatestButton.Visibility = Visibility.Collapsed;
@@ -90,20 +94,19 @@ namespace BNZApp
             {
                 LatestButton.Visibility = Visibility.Visible;
             }
-            GetNewWeekTransactions();
-            UpdateWeekNumberDisplay();
-            UpdateSummary();
-            if (pageType is PageType.Records)
+
+            switch (pageType)
             {
-                TransactionGridPage.UpdateTransactionGrid(currentWeekTransactions);
-            }
-            else if (pageType is PageType.Details)
-            {
-                DetailsPage.UpdateDetails(currentWeekTransactions, listOfItems);
+                case PageType.Records:
+                    TransactionGridPage.UpdateTransactionGrid(currentWeekTransactions);
+                    break;
+                case PageType.Details:
+                    DetailsPage.UpdateDetails(currentWeekTransactions, listOfItems);
+                    break;
             }
         }
 
-        private void UpdateWeekNumberDisplay()
+        private void UpdateDateDisplay()
         {
             string startDate = GetStartDateOfWeek(currentDate).ToString("dd/MM/yy");
             string endDate = DateTime.Parse(startDate).AddDays(7).ToString("dd/MM/yy");
@@ -113,7 +116,7 @@ namespace BNZApp
             Dates.Text = startDate + " - " + endDate;
         }
 
-        private void UpdateSummary()
+        private void UpdateTotalSummary()
         {
             if (currentWeekTransactions is null)
             {
@@ -150,20 +153,33 @@ namespace BNZApp
             }
 
             List<Transaction> matchingTransactions = GetMatchingTransactions(transactions, items, itemType);
+            decimal sum = matchingTransactions.Sum(transaction => transaction.Amount);
+            decimal excludedAmount = ExcludeReimbursements(matchingTransactions);
+            decimal total = sum - excludedAmount;
 
-            if (matchingTransactions.Count is 0)
-            {
-                return 0;
-            }
+            return total;
+        }
 
-            if (itemType == ListType.Income)
+        private bool IsMatch(Transaction transaction, ListItem item)
+        {
+            switch (item.Category)
             {
-                return matchingTransactions.Sum(transaction => transaction.Amount);
+                case "payee":
+                    return IsStringMatch(transaction.Payee, item.Name);
+                case "particulars":
+                    return IsStringMatch(transaction.Particulars, item.Name);
+                case "code":
+                    return IsStringMatch(transaction.Code, item.Name);
+                case "reference":
+                    return IsStringMatch(transaction.Reference, item.Name);
+                default:
+                    throw new ArgumentException("Item type is not valid", nameof(item.Category));
             }
-            else
-            {
-                return CalculateSum(matchingTransactions);
-            }
+        }
+
+        private bool IsStringMatch(string source, string target)
+        {
+            return source.IndexOf(target, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         private List<Transaction> GetMatchingTransactions(List<Transaction> transactions, List<ListItem> items, ListType itemType)
@@ -173,58 +189,29 @@ namespace BNZApp
                 throw new ArgumentNullException("transactions or items is null");
             }
 
-            List<Transaction> matchingTransactions = new List<Transaction>();
+            List<ListItem> itemsOfType = items.Where(item => item.ListType == itemType).ToList();
 
-            foreach (Transaction transaction in transactions)
-            {
-                foreach (ListItem item in items)
-                {
-                    if (item.ListType == itemType)
-                    {
-                        bool isMatch = false;
-
-                        switch (item.Category)
-                        {
-                            case "payee":
-                                isMatch = transaction.Payee.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0;
-                                break;
-                            case "particulars":
-                                isMatch = transaction.Particulars.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0;
-                                break;
-                            case "code":
-                                isMatch = transaction.Code.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0;
-                                break;
-                            case "reference":
-                                isMatch = transaction.Reference.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0;
-                                break;
-                            default:
-                                throw new ArgumentException("Item type is not valid", nameof(item.Category));
-                        }
-
-                        if (isMatch && !matchingTransactions.Contains(transaction))
-                        {
-                            matchingTransactions.Add(transaction);
-                        }
-                    }
-                }
-            }
+            List<Transaction> matchingTransactions = transactions
+                .Where(transaction => itemsOfType
+                    .Any(item => IsMatch(transaction, item)))
+                .Distinct()
+                .ToList();
 
             return matchingTransactions;
         }
 
-        private decimal CalculateSum(List<Transaction> transactions)
+        private decimal ExcludeReimbursements(List<Transaction> transactions)
         {
-            decimal sum = transactions.Sum(transaction => transaction.Amount);
-
+            decimal excludedAmount = 0;
             foreach (Reimbursement reimbursement in reimbursements)
             {
                 foreach (Transaction transaction in transactions)
                 {
-                    sum -= reimbursement.ExcludeFromTotal(transaction);
+                    excludedAmount -= reimbursement.ExcludeAmount(transaction);
                 }
             }
 
-            return sum;
+            return excludedAmount;
         }
 
         private void GetNewWeekTransactions()
@@ -236,15 +223,9 @@ namespace BNZApp
 
             List<Transaction> newWeekTransactions = groupedTransactions.FirstOrDefault(group => group.Key == GetWeekNumber(currentDate)).ToList();
 
-            if (newWeekTransactions is null)
+            if (newWeekTransactions is null || newWeekTransactions.Count == 0)
             {
                 throw new NullReferenceException("Current week group not found.");
-            }
-
-            if (newWeekTransactions.Count is 0)
-            {
-                MessageBox.Show("No transactions found for the selected week.", "No Transactions");
-                return;
             }
 
             currentWeekTransactions = newWeekTransactions;
@@ -254,8 +235,7 @@ namespace BNZApp
         {
             if (transactions is null)
             {
-                MessageBox.Show("No Transactions in file");
-                return;
+                throw new NullReferenceException("Transactions is null");
             }
             DateTime newDate = currentDate.AddDays(7);
 
@@ -271,10 +251,9 @@ namespace BNZApp
         }
         private void BackButtonClick(object sender, RoutedEventArgs e)
         {
-            if (transactions.Count is 0)
+            if (transactions is null)
             {
-                MessageBox.Show("No transactions found for the selected week.", "No Transactions");
-                return;
+                throw new NullReferenceException("Transactions is null");
             }
             DateTime newDate = currentDate.AddDays(-7);
 
@@ -322,69 +301,12 @@ namespace BNZApp
             OpenListWindow?.Invoke(listOfItems, type);
         }
 
-        private void SwitchPage()
-        {
-            TimeSpan duration = TimeSpan.FromSeconds(0.5);
-            QuarticEase easing = new QuarticEase();
-            Thickness boxMargin;
-            DoubleAnimation rightAnim;
-            DoubleAnimation leftAnim;
-            double containerWidth = ActualWidth;
-
-            
-            if (pageType is PageType.Records)
-            {
-                boxMargin = new Thickness(-250, 0, 0, 0);
-                LeftFrame.RenderTransform = new TranslateTransform(-containerWidth, 0);
-                RightFrame.RenderTransform = new TranslateTransform(0, 0);
-                leftAnim = CreateAnimation(-containerWidth, 0, duration);
-                rightAnim = CreateAnimation(0, containerWidth, duration);
-            }
-            else if (pageType is PageType.Details)
-            {
-                boxMargin = new Thickness(250, 0, 0, 0);
-                LeftFrame.RenderTransform = new TranslateTransform(0, 0);
-                RightFrame.RenderTransform = new TranslateTransform(containerWidth, 0);
-                leftAnim = CreateAnimation(0, -containerWidth, duration);
-                rightAnim = CreateAnimation(containerWidth, 0, duration);
-            }
-            else
-            {
-                return;
-            }
-
-            ThicknessAnimation boxAnim = new ThicknessAnimation();
-            boxAnim.Duration = duration;
-            boxAnim.To = boxMargin;
-            boxAnim.EasingFunction = easing;
-
-            LeftFrame.RenderTransform.BeginAnimation(TranslateTransform.XProperty, leftAnim);
-            RightFrame.RenderTransform.BeginAnimation(TranslateTransform.XProperty, rightAnim);
-
-            Storyboard storyboard = new Storyboard();
-            storyboard.Children.Add(boxAnim);
-            Storyboard.SetTarget(boxAnim, SelectionBox);
-            Storyboard.SetTargetProperty(boxAnim, new PropertyPath("Margin"));
-            storyboard.Begin();
-        }
-
-        private DoubleAnimation CreateAnimation(double from, double to, TimeSpan duration)
-        {
-            DoubleAnimation animation = new DoubleAnimation();
-            animation.From = from;
-            animation.To = to;
-            animation.Duration = duration;
-            animation.EasingFunction = new QuarticEase();
-
-            return animation;
-        }
-
         private void DetailsButtonClick(object sender, RoutedEventArgs e)
         {
             if (pageType != PageType.Details)
             {
                 pageType = PageType.Details;
-                SwitchPage();          
+                SwitchPage();
                 UpdateUI();
             }
         }
@@ -394,9 +316,46 @@ namespace BNZApp
             if (pageType != PageType.Records)
             {
                 pageType = PageType.Records;
-                SwitchPage();          
+                SwitchPage();
                 UpdateUI();
             }
+        }
+
+        private void SwitchPage()
+        {
+            TimeSpan duration = TimeSpan.FromSeconds(0.5);
+            QuarticEase easing = new QuarticEase();
+            ThicknessAnimation selectionBoxAnimation = null;
+            DoubleAnimation rightFrameAnimation = null;
+            DoubleAnimation leftFrameAnimation = null;
+
+            switch (pageType)
+            {
+                case PageType.Records:                   
+                    selectionBoxAnimation = new ThicknessAnimation { To = new Thickness(-250, 0, 0, 0), Duration = duration, EasingFunction = easing };
+                    leftFrameAnimation = new DoubleAnimation { From = -ActualWidth, To = 0, Duration = duration, EasingFunction = easing };
+                    rightFrameAnimation = new DoubleAnimation { From = 0, To = ActualWidth, Duration = duration, EasingFunction = easing };
+                    LeftFrame.RenderTransform = new TranslateTransform(-ActualWidth, 0);
+                    RightFrame.RenderTransform = new TranslateTransform(0, 0);
+                    break;
+
+                case PageType.Details:                    
+                    selectionBoxAnimation = new ThicknessAnimation { To = new Thickness(250, 0, 0, 0), Duration = duration, EasingFunction = easing };
+                    leftFrameAnimation = new DoubleAnimation { From = 0, To = -ActualWidth, Duration = duration, EasingFunction = easing };
+                    rightFrameAnimation = new DoubleAnimation { From = ActualWidth, To = 0, Duration = duration, EasingFunction = easing };
+                    LeftFrame.RenderTransform = new TranslateTransform(0, 0);
+                    RightFrame.RenderTransform = new TranslateTransform(ActualWidth, 0);
+                    break;
+            }
+
+            LeftFrame.RenderTransform.BeginAnimation(TranslateTransform.XProperty, leftFrameAnimation);
+            RightFrame.RenderTransform.BeginAnimation(TranslateTransform.XProperty, rightFrameAnimation);
+
+            Storyboard storyboard = new Storyboard();
+            storyboard.Children.Add(selectionBoxAnimation);
+            Storyboard.SetTarget(selectionBoxAnimation, SelectionBox);
+            Storyboard.SetTargetProperty(selectionBoxAnimation, new PropertyPath("Margin"));
+            storyboard.Begin();
         }
     }
 }

@@ -14,7 +14,6 @@ namespace BNZApp
     {
         public event Action GoBack;
         public event Action<bool> GoBackHome;
-        private Transaction transaction;
         private Reimbursement reimbursement;
         private List<Reimbursement> reimbursements = FileManagement.ReadReimbursements();
 
@@ -27,8 +26,6 @@ namespace BNZApp
                 throw new ArgumentNullException(nameof(transaction), "Item cannot be null.");
             }
 
-            this.transaction = transaction;
-
             reimbursement = FindReimbursement(reimbursements, transaction);
 
             if (reimbursement is null)
@@ -36,8 +33,7 @@ namespace BNZApp
                 throw new NullReferenceException("Reimbursement not found for the given item.");
             }
 
-            List<Transaction>  transactions = new List<Transaction> { reimbursement.Transaction1, reimbursement.Transaction2 };
-            ComparisonGrid.ItemsSource = transactions;
+            ComparisonGrid.ItemsSource = new List<Transaction> { reimbursement.Transaction1, reimbursement.Transaction2 };
         }
 
         private void BackgroundClick(object sender, MouseButtonEventArgs e)

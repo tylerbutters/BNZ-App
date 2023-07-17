@@ -133,14 +133,15 @@
         <Frame Grid.Row="2" x:Name="LeftFrame" NavigationUIVisibility="Hidden"/>
         <Frame Grid.Row="2" x:Name="RightFrame" NavigationUIVisibility="Hidden"/>
         <Grid Grid.Row="3" Width="500">
+            <Border Background="#1D3461" Width="470" Height="70" CornerRadius="15"/>
             <Border Name="SelectionBox" Background="#33639E" Width="220" Height="70" CornerRadius="15"/>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Records" Style="{StaticResource Button2}" Width="200" Height="50" Click="RecordsButtonClick"/>
-                <Button Grid.Column="1" Content="Details" Style="{StaticResource Button2}" Width="200" Height="50" Click="DetailsButtonClick"/>
+                <Button Grid.Column="0" Content="Records" Style="{StaticResource Button}" Width="200" Height="50" Click="RecordsButtonClick"/>
+                <Button Grid.Column="1" Content="Details" Style="{StaticResource Button}" Width="200" Height="50" Click="DetailsButtonClick"/>
             </Grid>
         </Grid>
     </Grid>

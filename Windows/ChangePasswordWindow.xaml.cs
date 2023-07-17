@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace BNZApp
 {
@@ -78,6 +70,7 @@ namespace BNZApp
             }
             if (OldPasswordInput.Text == password && NewPasswordInput.Text != "")
             {
+                MessageBox.Show("Password changed successfully!");
                 string tax = profile[1];
                 List<string> newProfile = new List<string> { NewPasswordInput.Text, tax };
                 FileManagement.WriteProfile(newProfile);
