@@ -56,5 +56,10 @@ namespace BNZApp
                 AuthenticateAccount();
             }
         }
+
+        private void ExitButtonClick(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
     }
 }

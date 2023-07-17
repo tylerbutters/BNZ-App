@@ -7,10 +7,12 @@
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="1200"
       Title="LoginPage" Background="#2e5282">
-
-    <StackPanel VerticalAlignment="Center">
-        <TextBlock Text="Please Enter Your Password" FontWeight="Black" FontSize="35" Foreground="White" HorizontalAlignment="Center"/>
-        <TextBox Name="PasswordInput" FontWeight="Medium" Height="50" Width="350" Background="White" VerticalContentAlignment="Center" Margin="30"  BorderThickness="0" FontSize="20" Padding="10 0 0 0" PreviewKeyDown="PasswordInputKeyDown"/>
-        <Button Style="{StaticResource Button2}" Width="200" FontSize="30" Height="60" Content="Login" Click="LoginButtonClick"/>
-    </StackPanel>
+    <Grid>
+        <StackPanel VerticalAlignment="Center">
+            <TextBlock Text="Please Enter Your Password" FontWeight="Black" FontSize="35" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBox Name="PasswordInput" FontWeight="Medium" Height="50" Width="350" Background="White" VerticalContentAlignment="Center" Margin="30"  BorderThickness="0" FontSize="20" Padding="10 0 0 0" PreviewKeyDown="PasswordInputKeyDown"/>
+            <Button Style="{StaticResource Button2}" Width="200" FontSize="30" Height="60" Content="Login" Click="LoginButtonClick"/>
+        </StackPanel>
+        <Button Style="{StaticResource RedButton}" Width="150" FontSize="30" Height="60" VerticalAlignment="Bottom" Margin="40" Content="Exit" Click="ExitButtonClick"/>
+    </Grid>
 </Page>
