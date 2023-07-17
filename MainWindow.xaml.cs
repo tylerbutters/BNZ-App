@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Remoting.Channels;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,7 +25,9 @@ namespace BNZApp
     public partial class MainWindow : Window
     {
         public event Action OpenWelcomePage;
+        public event Action OpenLoginPage;
         public event Action OpenReimbursementListWindow;
+        public event Action OpenChangePasswordWindow;
         public event Action UploadFile;
         public MainWindow()
         {
@@ -134,9 +137,10 @@ namespace BNZApp
             NavClick(sender, e);
         }
 
-        private void ExitButtonClick(object sender, RoutedEventArgs e)
+        private void LogOutClick(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            NavClick(sender, e);
+            OpenLoginPage?.Invoke();
         }
 
         private void ClearDataButtonClick(object sender, RoutedEventArgs e)
@@ -159,6 +163,12 @@ namespace BNZApp
         public void UploadFileButtonClick(object sender, RoutedEventArgs e)
         {
             UploadFile?.Invoke();
+        }
+
+        private void ChangePassswordClick(object sender, RoutedEventArgs e)
+        {
+            NavClick(sender, e);
+            OpenChangePasswordWindow?.Invoke();
         }
     }
 }

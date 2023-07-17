@@ -11,7 +11,6 @@ namespace BNZApp
     {
         private MainWindow mainWindow;
         private Homepage homepage;
-        private LoginPage loginPage = new LoginPage();
 
         public NavigationService(MainWindow mainWindow)
         {
@@ -21,6 +20,8 @@ namespace BNZApp
             mainWindow.OpenWelcomePage += OpenWelcomePage;
             mainWindow.OpenReimbursementListWindow += OpenReimbursementListWindow;
             mainWindow.UploadFile += UploadFile;
+            mainWindow.OpenLoginPage += OpenLoginPage;
+            mainWindow.OpenChangePasswordWindow += OpenChangePasswordWindow;
 
             if (FileManagement.ReadTransactions() is null)
             {
@@ -28,6 +29,7 @@ namespace BNZApp
             }
             else
             {
+                LoginPage loginPage = new LoginPage();
                 mainWindow.NavigateToPage(loginPage);
                 loginPage.OpenHomepage += CreateHomepage;
             }
@@ -38,10 +40,16 @@ namespace BNZApp
             homepage = new Homepage();
             homepage.OpenListWindow += OpenListWindow;
             homepage.TransactionGridPage.OpenEditTransactionWindow += OpenEditTransactionWindow;
-            mainWindow.SideNav.Visibility = Visibility.Visible;
+            mainWindow.SideNav.Visibility = Visibility.Visible;         
             mainWindow.NavigateToPage(homepage);
         }
 
+        private void OpenLoginPage()
+        {
+            LoginPage loginPage = new LoginPage();
+            mainWindow.SideNav.Visibility = Visibility.Collapsed;
+            mainWindow.NavigateToPage(loginPage);
+        }
         public void OpenWelcomePage()
         {
             WelcomePage welcomePage = new WelcomePage();
@@ -71,6 +79,13 @@ namespace BNZApp
                 FileManagement.WriteTransactions(newTransactions);
                 CreateHomepage();
             }
+        }
+
+        private void OpenChangePasswordWindow()
+        {
+            ChangePasswordWindow changePasswordWindow = new ChangePasswordWindow();
+            changePasswordWindow.GoBack += () => mainWindow.ClosePopups();
+            mainWindow.OpenPopup1(changePasswordWindow);
         }
 
         private void OpenEditTransactionWindow(Transaction transaction1, Transaction transaction2)

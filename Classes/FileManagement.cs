@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Xml.Linq;
 
 namespace BNZApp
 {
@@ -274,9 +275,9 @@ namespace BNZApp
                 return list;
             }
 
-            foreach (string row in lines.Skip(1))
+            foreach (string line in lines.Skip(1))
             {
-                string[] split = row.Split(',');
+                string[] split = line.Split(',');
 
                 if (split.Length != 3)
                 {
@@ -289,40 +290,27 @@ namespace BNZApp
             return list;
         }
 
-        public static string ReadProfile()
+        public static List<string> ReadProfile()
         {
             if (!File.Exists(ProfileFile))
             {
                 throw new FileNotFoundException("Profile file not found.", ProfileFile);
             }
 
-            List<string> line = File.ReadAllLines(ProfileFile).ToList();
+            List<string> lines = File.ReadAllLines(ProfileFile).ToList();
 
-            if (line is null || line.Count < 2)
-            {
-                throw new FormatException("File is empty");
-            }
-
-            return line[1];
+            return lines;
         }
 
-        public static void WriteProfile(string line)
+        public static void WriteProfile(List<string> profile)
         {
             if (!File.Exists(ProfileFile))
             {
                 throw new FileNotFoundException("List file not found.", ProfileFile);
             }
 
-            List<string> lines = new List<string> { "TaxPercentage" };
 
-            if (lines is null || lines.Count is 0)
-            {
-                throw new FormatException("File is empty");
-            }
-
-            lines.Add(line);
-
-            File.WriteAllLines(ProfileFile, lines);
+            File.WriteAllLines(ProfileFile, profile);
         }
 
         public static void WriteList(List<ListItem> list)

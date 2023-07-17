@@ -55,6 +55,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Windows\ChangePasswordWindow.xaml.cs">
+      <DependentUpon>ChangePasswordWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Classes\DetailsItem.cs" />
     <Compile Include="Classes\FileManagement.cs" />
     <Compile Include="Classes\ListItem.cs" />
@@ -94,6 +97,10 @@
     <Compile Include="Pages\TransactionGridPage.xaml.cs">
       <DependentUpon>TransactionGridPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="Windows\ChangePasswordWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\LoginPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

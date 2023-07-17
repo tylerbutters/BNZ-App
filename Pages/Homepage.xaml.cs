@@ -18,7 +18,7 @@ namespace BNZApp
         private enum PageType { Records, Details }
 
         private PageType pageType;
-        public static decimal TaxPercentage => decimal.Parse(FileManagement.ReadProfile().Split(',')[1]);
+        public static decimal TaxPercentage => decimal.Parse(FileManagement.ReadProfile()[1]);
         public static decimal TaxTotal;
         public string FormattedTotalIncome { get => totalIncome.ToString("C"); set => totalIncome = decimal.Parse(value); }
         public string FormattedTotalSpending { get => totalSpending.ToString("C"); set => totalSpending = decimal.Parse(value); }

@@ -24,8 +24,8 @@ namespace BNZApp
 
         private void AuthenticateAccount()
         {
-            string profile = FileManagement.ReadProfile();
-            string password = profile.Split(',')[0];
+            List<string> profile = FileManagement.ReadProfile();
+            string password = profile[0];
 
             if (PasswordInput.Text == password)
             {

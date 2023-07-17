@@ -53,9 +53,10 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Button Grid.Row="0" Content="Upload File" Style="{StaticResource Button}" Width="250" Height="50" Click="UploadFileButtonClick"/>
-                    <Button Grid.Row="1" Content="Reimbursements" Style="{StaticResource Button}" Width="250" Height="50" BorderThickness="0" Cursor="Hand" Click="ReimbursementListClick"/>
+                    <Button Grid.Row="1" Content="Reimbursements" Style="{StaticResource Button}" Width="250" Height="50" Cursor="Hand" Click="ReimbursementListClick"/>
+                    <Button Grid.Row="2" Content="Change Password" Style="{StaticResource Button}" Width="250" Height="50" Cursor="Hand" Click="ChangePassswordClick"/>
                     <Button Grid.Row="8" Content="Clear All Data"  Style="{StaticResource BlackButton}" Width="250" Height="50" Click="ClearDataButtonClick"/>
-                    <Button Grid.Row="9" Content="Exit Applicaiton" Style="{StaticResource RedButton}" Width="250" Height="50" Click="ExitButtonClick"/>
+                    <Button Grid.Row="9" Content="Log Out" Style="{StaticResource RedButton}" Width="250" Height="50" Click="LogOutClick"/>
                 </Grid>
             </Border>
         </Grid>

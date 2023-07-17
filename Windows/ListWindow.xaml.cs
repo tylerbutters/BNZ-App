@@ -72,7 +72,10 @@ namespace BNZApp
                 else if (edited)
                 {
                     decimal tax = decimal.Parse(TaxInput.Text = TaxInput.Text.Substring(0, TaxInput.Text.Length - 1)) / 100;
-                    FileManagement.WriteProfile(tax.ToString());
+                    List<string> lines = FileManagement.ReadProfile();
+                    lines.Remove(lines[1]);
+                    lines.Add(tax.ToString());
+                    FileManagement.WriteProfile(lines);
                 }
             }
             if (edited)
