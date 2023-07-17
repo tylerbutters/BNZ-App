@@ -5,7 +5,10 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
 using System.Windows.Media.Animation;
+using System.Windows.Navigation;
 
 namespace BNZApp
 {
@@ -20,118 +23,44 @@ namespace BNZApp
     }
     public partial class MainWindow : Window
     {
-        private WelcomePage welcomePage;
-        private Homepage homepage;
+        public event Action OpenWelcomePage;
+        public event Action OpenReimbursementListWindow;
+        public event Action UploadFile;
         public MainWindow()
         {
             InitializeComponent();
 
-            if (FileManagement.ReadTransactions() is null)
-            {
-                SideNav.Visibility = Visibility.Collapsed;
-                OpenWelcomePage();
-                return;
-            }
-            CreateHomepage();
+            _ = new NavigationService(this);
         }
 
-        private async void CreateHomepage()
+        public void NavigateToPage(Page content)
         {
-            homepage = new Homepage();
-
-            homepage.OpenListWindow += OpenListWindow;
-            homepage.TransactionGridPage.OpenEditTransactionWindow += OpenEditTransactionWindow;
-            SideNav.Visibility = Visibility.Visible;
-            MainFrame.Content = homepage;
-            //Popup1.Content = null;
-            await Task.Delay(500);
-            LoadingScreen.Visibility = Visibility.Collapsed;
+            MainFrame.Content = content;
         }
 
-        private void OpenWelcomePage()
+        public async void OpenPopup2(Page content)
         {
-            welcomePage = new WelcomePage();
-            MainFrame.Content = welcomePage;
-            welcomePage.UploadFile += UploadFileButtonClick;
-        }
-        private async void OpenEditTransactionWindow(object sender, Transaction transaction1, Transaction transaction2)
-        {
-            Popup2.Content = null;
-            EditTransactionWindow editTransactionWindow = new EditTransactionWindow(transaction1, transaction2);
-            Popup1.Content = editTransactionWindow;
-            await WindowFade(Popup1, true);
-
-            editTransactionWindow.GoBack += BackToHomepage;
-            editTransactionWindow.OpenAddReimbursementWindow += OpenAddReimbursementWindow;
-            editTransactionWindow.OpenRemoveReimbursementWindow += OpenRemoveReimbursementWindow;
-            editTransactionWindow.ReturnTransaction += ReturnTransaction;
-        }
-
-        private async void OpenListWindow(object sender, List<ListItem> list, ListType type)
-        {
-            if (list is null)
-            {
-                throw new ArgumentNullException(nameof(list));
-            }
-
-            ListWindow listWindow = new ListWindow(list, type);
-
-            Popup1.Content = listWindow;
-            await WindowFade(Popup1, true);
-
-            listWindow.GoBack += BackToHomepage;
-        }
-
-        private async void OpenAddReimbursementWindow(object sender, Transaction transaction1, Transaction transaction2)
-        {
-            if (transaction1 is null)
-            {
-                throw new ArgumentNullException(nameof(transaction1));
-            }
-
-            if (transaction2 is null)
-            {
-                throw new ArgumentNullException(nameof(transaction2));
-            }
-
-            AddReimbursementWindow addReimbursementWindow = new AddReimbursementWindow(transaction1, transaction2);
-            Popup2.Content = addReimbursementWindow;
+            Popup2.Content = content;
             await WindowFade(Popup2, true);
-
-            addReimbursementWindow.GoBack += OpenEditTransactionWindow;
-            addReimbursementWindow.GoBackHome += BackToHomepage;
         }
 
-        private async void OpenRemoveReimbursementWindow(object sender, Transaction transaction)
+        public async void OpenPopup1(Page content)
         {
-            if (transaction is null)
-            {
-                throw new ArgumentNullException(nameof(transaction));
-            }
-
-            RemoveReimbursementWindow removeReimbursementWindow = new RemoveReimbursementWindow(transaction);
-            Popup2.Content = removeReimbursementWindow;
-            await WindowFade(Popup2, true);
-
-            removeReimbursementWindow.GoBack += OpenEditTransactionWindow;
-            removeReimbursementWindow.GoBackHome += BackToHomepage;
+            Popup1.Content = content;
+            await WindowFade(Popup1, true);
         }
 
-        private async void BackToHomepage(object sender, bool reloadPage)
+        public async void ClosePopup2()
         {
-            if (reloadPage)
-            {
-                homepage.LoadPage();
-            }
+            await WindowFade(Popup2, false);
+            Popup2.Content = null;     
+        }
+        public async void ClosePopups()
+        {
             await WindowFade(Popup1, false);
             Popup1.Content = null;
             await WindowFade(Popup2, false);
-            Popup2.Content = null;
-        }
-
-        private void ReturnTransaction(object sender, Transaction transaction)
-        {
-            homepage.TransactionGridPage.ReturnTransaction(transaction);
+            Popup1.Content = null;
         }
 
         private async Task WindowFade(Frame frame, bool isOpening)
@@ -163,7 +92,7 @@ namespace BNZApp
             }
         }
 
-        private void NavClick(object sender, RoutedEventArgs e)
+        public void NavClick(object sender, RoutedEventArgs e)
         {
             TimeSpan duration = TimeSpan.FromSeconds(0.2);
             DoubleAnimation slideAnimation = new DoubleAnimation();
@@ -199,10 +128,12 @@ namespace BNZApp
 
             BackgroundShade.BeginAnimation(OpacityProperty, fadeAnimation);
         }
-        private void ClickOffNav(object sender, RoutedEventArgs e)
+
+        private void BackgroundClick(object sender, RoutedEventArgs e)
         {
             NavClick(sender, e);
         }
+
         private void ExitButtonClick(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
@@ -212,46 +143,22 @@ namespace BNZApp
         {
             MessageBoxResult result = MessageBox.Show("Are you sure you want to clear all your data?", "Confirm", MessageBoxButton.YesNo);
 
-            if (result is MessageBoxResult.Yes)
+            if (result == MessageBoxResult.Yes)
             {
                 FileManagement.ClearData();
-                OpenWelcomePage();
+                OpenWelcomePage?.Invoke();
             }
         }
 
         private void ReimbursementListClick(object sender, RoutedEventArgs e)
         {
             NavClick(sender, e);
-            ReimbursementListWindow reimbursementListWindow = new ReimbursementListWindow();
-            Popup1.Content = reimbursementListWindow;
-
-            reimbursementListWindow.GoBack += BackToHomepage;
+            OpenReimbursementListWindow?.Invoke();
         }
 
         public void UploadFileButtonClick(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
-            {
-                Filter = "CSV Files (*.csv)|*.csv",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                Title = "Select a CSV file"
-            };
-
-            if (openFileDialog.ShowDialog() is true) //if user selected a file
-            {
-                string selectedFilePath = openFileDialog.FileName;
-                List<Transaction> newTransactions = FileManagement.ReadNewFile(selectedFilePath);
-                if (newTransactions is null)
-                {
-                    MessageBox.Show("Invalid file\nPlease try again");
-                    return;
-                }
-                MessageBox.Show("Upload Successful!");
-                File.Copy(selectedFilePath, FileManagement.TransactionsFile, true);
-                FileManagement.WriteTransactions(newTransactions);
-
-                CreateHomepage();
-            }
+            UploadFile?.Invoke();
         }
     }
 }

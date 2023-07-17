@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace BNZApp
 {
@@ -11,8 +12,8 @@ namespace BNZApp
     /// </summary>
     public partial class RemoveReimbursementWindow : Page
     {
-        public event Action<object, Transaction, Transaction> GoBack;
-        public event EventHandler<bool> GoBackHome;
+        public event Action GoBack;
+        public event Action<bool> GoBackHome;
         private Transaction transaction;
         private Reimbursement reimbursement;
         private List<Reimbursement> reimbursements = FileManagement.ReadReimbursements();
@@ -39,6 +40,11 @@ namespace BNZApp
             ComparisonGrid.ItemsSource = transactions;
         }
 
+        private void BackgroundClick(object sender, MouseButtonEventArgs e)
+        {
+            CancelButtonClick(sender, e);
+        }
+
         private Reimbursement FindReimbursement(List<Reimbursement> reimbursements, Transaction transaction)
         {
             if (transaction is null)
@@ -55,12 +61,12 @@ namespace BNZApp
                 reimbursements.Remove(reimbursement);
                 FileManagement.WriteReimbursements(reimbursements);
             }
-            GoBackHome?.Invoke(sender, true);
+            GoBackHome?.Invoke(true);
         }
 
         private void CancelButtonClick(object sender, RoutedEventArgs e)
         {
-            GoBack?.Invoke(sender, transaction, null);
+            GoBack?.Invoke();
         }
     }
 }

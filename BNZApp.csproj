@@ -58,6 +58,10 @@
     <Compile Include="Classes\DetailsItem.cs" />
     <Compile Include="Classes\FileManagement.cs" />
     <Compile Include="Classes\ListItem.cs" />
+    <Compile Include="Classes\NavigationService.cs" />
+    <Compile Include="Pages\LoginPage.xaml.cs">
+      <DependentUpon>LoginPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\DetailsPage.xaml.cs">
       <DependentUpon>DetailsPage.xaml</DependentUpon>
     </Compile>
@@ -90,6 +94,10 @@
     <Compile Include="Pages\TransactionGridPage.xaml.cs">
       <DependentUpon>TransactionGridPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="Pages\LoginPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\DetailsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

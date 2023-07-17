@@ -13,7 +13,7 @@ namespace BNZApp
         private List<Reimbursement> reimbursements = FileManagement.ReadReimbursements();
         private Transaction selectedTransaction;
         private Transaction stagedForReimbursement;
-        public event Action<object, Transaction, Transaction> OpenEditTransactionWindow;
+        public event Action<Transaction, Transaction> OpenEditTransactionWindow;
         public TransactionGridPage()
         {
             InitializeComponent();
@@ -49,20 +49,20 @@ namespace BNZApp
             {
                 if (selectedTransaction.Equals(reimbursement.Transaction1) || selectedTransaction.Equals(reimbursement.Transaction2))
                 {
-                    OpenEditTransactionWindow?.Invoke(sender, reimbursement.Transaction1, reimbursement.Transaction2);
+                    OpenEditTransactionWindow?.Invoke(reimbursement.Transaction1, reimbursement.Transaction2);
                 }
             }
             if (selectedTransaction.Equals(stagedForReimbursement))
             {
-                OpenEditTransactionWindow?.Invoke(sender, stagedForReimbursement, null);
+                OpenEditTransactionWindow?.Invoke(stagedForReimbursement, null);
             }
             else if (stagedForReimbursement != null)
             {
-                OpenEditTransactionWindow?.Invoke(sender, selectedTransaction, stagedForReimbursement);
+                OpenEditTransactionWindow?.Invoke(selectedTransaction, stagedForReimbursement);
             }
             else
             {
-                OpenEditTransactionWindow?.Invoke(sender, selectedTransaction, null);
+                OpenEditTransactionWindow?.Invoke(selectedTransaction, null);
             }
         }
     }

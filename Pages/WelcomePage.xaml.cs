@@ -9,7 +9,7 @@ namespace BNZApp
     /// </summary>
     public partial class WelcomePage : Page
     {
-        public event EventHandler<RoutedEventArgs> UploadFile;
+        public event Action UploadFile;
         public WelcomePage()
         {
             InitializeComponent();
@@ -17,7 +17,7 @@ namespace BNZApp
 
         private void UploadFileButtonClick(object sender, RoutedEventArgs e)
         {
-            UploadFile?.Invoke(sender, e);
+            UploadFile?.Invoke();
         }
     }
 }

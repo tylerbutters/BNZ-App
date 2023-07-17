@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace BNZApp
 {
@@ -12,7 +13,7 @@ namespace BNZApp
     {
         private bool isDeleteButtonClicked;
         private List<Reimbursement> reimbursements = FileManagement.ReadReimbursements();
-        public event EventHandler<bool> GoBack;
+        public event Action<bool> GoBack;
 
         public ReimbursementListWindow()
         {
@@ -26,6 +27,11 @@ namespace BNZApp
             ReimbursementGrid.ItemsSource = reimbursements;
         }
 
+        private void BackgroundClick(object sender, MouseButtonEventArgs e)
+        {
+            DoneButtonClick(sender, e);
+        }
+
         private void DoneButtonClick(object sender, RoutedEventArgs e)
         {
             if (isDeleteButtonClicked)
@@ -33,7 +39,7 @@ namespace BNZApp
                 FileManagement.WriteReimbursements(reimbursements);
             }
 
-            GoBack?.Invoke(sender, isDeleteButtonClicked);
+            GoBack?.Invoke(isDeleteButtonClicked);
         }
 
         private void DeleteButtonClick(object sender, RoutedEventArgs e)

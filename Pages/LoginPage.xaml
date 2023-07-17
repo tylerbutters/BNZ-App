@@ -1,0 +1,16 @@
+﻿<Page x:Class="BNZApp.LoginPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BNZApp"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="1200"
+      Title="LoginPage" Background="#2e5282">
+
+    <StackPanel VerticalAlignment="Center">
+        <TextBlock Text="Please Enter Your Password" FontWeight="Black" FontSize="35" Foreground="White" HorizontalAlignment="Center"/>
+        <TextBox Name="PasswordInput" FontWeight="Medium" Height="50" Width="350" Background="White" VerticalContentAlignment="Center" Margin="30"  BorderThickness="0" FontSize="20" Padding="10 0 0 0" PreviewKeyDown="PasswordInputKeyDown"/>
+        <Button Style="{StaticResource Button2}" Width="200" FontSize="30" Height="60" Content="Login" Click="LoginButtonClick"/>
+    </StackPanel>
+</Page>

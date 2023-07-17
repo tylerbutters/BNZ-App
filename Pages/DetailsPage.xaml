@@ -16,12 +16,14 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="GridLinesVisibility" Value="None"/>
             <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Hidden"/>
             <Setter Property="HeadersVisibility" Value="None"/>
+            <Setter Property="IsHitTestVisible" Value="False" />
             <Setter Property="RowStyle">
                 <Setter.Value>
                     <Style TargetType="DataGridRow">
                         <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Foreground" Value="Black"/>
                         <Setter Property="FontWeight" Value="Bold"/>
                         <Setter Property="FontSize" Value="20"/>
                         <Setter Property="Height" Value="50"/>
@@ -32,97 +34,134 @@
     </Page.Resources>
 
     <Grid Margin="30 0 30 0">
-        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <DataGrid  Style="{StaticResource ItemGridStyle}" Name="SpendingItemsGrid">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding FormattedName}" Width="*">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="HorizontalAlignment" Value="Right"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding FormattedAmount}" Width="*">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <!--<Setter Property="Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect Color="#1F487E" Direction="-100" ShadowDepth="3" Opacity="0.3" BlurRadius="0"/>
-                                </Setter.Value>
-                            </Setter>-->
-                            <Setter Property="FontWeight" Value="Bold"/>
-                            <Setter Property="Foreground" Value="DarkRed"/>
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="Margin" Value="20 0 0 0"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding isZero}" Value="true">
-                                    <Setter Property="Foreground" Value="Gray"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-        <DataGrid Grid.Column="1" Style="{StaticResource ItemGridStyle}" Name="IncomeItemsGrid">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding FormattedName}" Width="*">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="HorizontalAlignment" Value="Right"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding FormattedAmount}" Width="*">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="FontWeight" Value="Bold"/>
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="Margin" Value="20 0 0 0"/>
-                            <Setter Property="Foreground" Value="Green"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding isZero}" Value="true">
-                                    <Setter Property="Foreground" Value="Gray"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-        <DataGrid Grid.Column="2" Style="{StaticResource ItemGridStyle}" Name="ExpensesItemsGrid">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding FormattedName}" Width="*">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="HorizontalAlignment" Value="Right"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding FormattedAmount}" Width="*">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="FontWeight" Value="Bold"/>
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="Margin" Value="20 0 0 0"/>
-                            <Setter Property="Foreground" Value="DarkRed"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsZero}" Value="true">
-                                    <Setter Property="Foreground" Value="Gray"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" CornerRadius="10" Margin="30 0 30 0" Height="50" Background="White">
+                <Grid VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Total Decrease: " FontSize="20" FontWeight="Bold" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Column="1" Name="TotalDecrease" Foreground="DarkRed" FontSize="20" FontWeight="Bold" Margin="20 0 0 0"/>
+                </Grid>
+            </Border>
+            <Border Grid.Row="1" CornerRadius="10" Margin="30 0 30 0" VerticalAlignment="Top" Background="White">
+                <DataGrid  Style="{StaticResource ItemGridStyle}" Name="SpendingItemsGrid" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding FormattedName}" Width="*">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding FormattedAmount}" Width="*">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Foreground" Value="DarkRed"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Margin" Value="20 0 0 0"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding isZero}" Value="true">
+                                        <Setter Property="Foreground" Value="Gray"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            </Border>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="1" CornerRadius="10" Margin="30 15 30 0" VerticalAlignment="Top" Background="White">
+                <DataGrid  Style="{StaticResource ItemGridStyle}" Name="IncomeItemsGrid">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding FormattedName}" Width="*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding FormattedAmount}" Width="*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Margin" Value="20 0 0 0"/>
+                                    <Setter Property="Foreground" Value="Green"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding isZero}" Value="true">
+                                            <Setter Property="Foreground" Value="Gray"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" CornerRadius="10" Margin="30 0 30 0" Height="50" Background="White">
+                <Grid VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Tax: " FontSize="20" FontWeight="Bold" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Column="1" Name="Tax" Foreground="DarkRed" FontSize="20" FontWeight="Bold" Margin="20 0 0 0"/>
+                </Grid>
+            </Border>
+            <Border Grid.Row="1" CornerRadius="10" Margin="30 0 30 0" VerticalAlignment="Top" Background="White">
+                <DataGrid Style="{StaticResource ItemGridStyle}" Name="ExpensesItemsGrid">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding FormattedName}" Width="*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding FormattedAmount}" Width="*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Margin" Value="20 0 0 0"/>
+                                    <Setter Property="Foreground" Value="DarkRed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsZero}" Value="true">
+                                            <Setter Property="Foreground" Value="Gray"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
     </Grid>
 </Page>

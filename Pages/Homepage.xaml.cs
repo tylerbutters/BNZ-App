@@ -18,7 +18,7 @@ namespace BNZApp
         private enum PageType { Records, Details }
 
         private PageType pageType;
-        public static decimal TaxPercentage => FileManagement.ReadProfile();
+        public static decimal TaxPercentage => decimal.Parse(FileManagement.ReadProfile().Split(',')[1]);
         public static decimal TaxTotal;
         public string FormattedTotalIncome { get => totalIncome.ToString("C"); set => totalIncome = decimal.Parse(value); }
         public string FormattedTotalSpending { get => totalSpending.ToString("C"); set => totalSpending = decimal.Parse(value); }
@@ -43,7 +43,7 @@ namespace BNZApp
         private List<Transaction> currentWeekTransactions;
         private IEnumerable<IGrouping<int, Transaction>> groupedTransactions;
 
-        public event Action<object, List<ListItem>, ListType> OpenListWindow;
+        public event Action<List<ListItem>, ListType> OpenListWindow;
         public Homepage()
         {
             InitializeComponent();
@@ -212,7 +212,6 @@ namespace BNZApp
             return matchingTransactions;
         }
 
-
         private decimal CalculateSum(List<Transaction> transactions)
         {
             decimal sum = transactions.Sum(transaction => transaction.Amount);
@@ -320,7 +319,7 @@ namespace BNZApp
                 default:
                     throw new ArgumentException("Invalid button tag.");
             }
-            OpenListWindow?.Invoke(sender, listOfItems, type);
+            OpenListWindow?.Invoke(listOfItems, type);
         }
 
         private void SwitchPage()

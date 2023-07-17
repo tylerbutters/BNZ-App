@@ -151,22 +151,29 @@ namespace BNZApp
                 {
                     bool isMatch = false;
 
-                    switch (item.Category)
+                    if (item.Category.Equals("payee", StringComparison.OrdinalIgnoreCase))
                     {
-                        case "payee":
-                            isMatch = transaction.Payee.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0;
-                            break;
-                        case "particulars":
-                            isMatch = transaction.Particulars.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0;
-                            break;
-                        case "code":
-                            isMatch = transaction.Code.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0;
-                            break;
-                        case "reference":
-                            isMatch = transaction.Reference.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0;
-                            break;
-                        default:
-                            throw new ArgumentException("Item type is not valid", nameof(item.Category));
+                        isMatch = (transaction.Payee.All(char.IsDigit) && transaction.Payee == item.Name) ||
+                                  (!transaction.Payee.All(char.IsDigit) && transaction.Payee.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0);
+                    }
+                    else if (item.Category.Equals("particulars", StringComparison.OrdinalIgnoreCase))
+                    {
+                        isMatch = (transaction.Particulars.All(char.IsDigit) && transaction.Particulars == item.Name) ||
+                                  (!transaction.Particulars.All(char.IsDigit) && transaction.Particulars.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0);
+                    }
+                    else if (item.Category.Equals("code", StringComparison.OrdinalIgnoreCase))
+                    {
+                        isMatch = (transaction.Code.All(char.IsDigit) && transaction.Code == item.Name) ||
+                                  (!transaction.Code.All(char.IsDigit) && transaction.Code.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0);
+                    }
+                    else if (item.Category.Equals("reference", StringComparison.OrdinalIgnoreCase))
+                    {
+                        isMatch = (transaction.Reference.All(char.IsDigit) && transaction.Reference == item.Name) ||
+                                  (!transaction.Reference.All(char.IsDigit) && transaction.Reference.IndexOf(item.Name, StringComparison.OrdinalIgnoreCase) >= 0);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Item type is not valid", nameof(item.Category));
                     }
 
                     if (isMatch)
@@ -187,6 +194,7 @@ namespace BNZApp
                 }
             }
         }
+
 
         public static List<Reimbursement> ReadReimbursements()
         {
@@ -281,24 +289,24 @@ namespace BNZApp
             return list;
         }
 
-        public static decimal ReadProfile()
+        public static string ReadProfile()
         {
             if (!File.Exists(ProfileFile))
             {
                 throw new FileNotFoundException("Profile file not found.", ProfileFile);
             }
 
-            List<string> lines = File.ReadAllLines(ProfileFile).ToList();
+            List<string> line = File.ReadAllLines(ProfileFile).ToList();
 
-            if (lines is null || lines.Count is 0)
+            if (line is null || line.Count < 2)
             {
                 throw new FormatException("File is empty");
             }
 
-            return decimal.Parse(lines[1]);
+            return line[1];
         }
 
-        public static void WriteProfile(string tax)
+        public static void WriteProfile(string line)
         {
             if (!File.Exists(ProfileFile))
             {
@@ -312,7 +320,7 @@ namespace BNZApp
                 throw new FormatException("File is empty");
             }
 
-            lines.Add(tax);
+            lines.Add(line);
 
             File.WriteAllLines(ProfileFile, lines);
         }

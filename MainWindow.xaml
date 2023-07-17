@@ -3,41 +3,40 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BNZApp"
-        xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:Windows="clr-namespace:System.Windows;assembly=PresentationCore"
-        xmlns:WindowsMedia="clr-namespace:System.Windows.Media;assembly=PresentationCore"
-        xmlns:WindowsMediaAnimation="clr-namespace:System.Windows.Media.Animation;assembly=PresentationCore"
         mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="1200">
+    <Window.Resources>
+        <Style x:Key="NavButton" TargetType="Button">
+            <Setter Property="Background" Value="#1D3461"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Black"/>
+            <Setter Property="FontSize" Value="25"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="0 10 10 0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#1F487E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
-        <Grid x:Name="LoadingScreen" Background="White" Panel.ZIndex="9"/>
         <Grid Panel.ZIndex="4" Name="SideNav" Margin="-300 0 0 0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="60"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" Margin="0 15 0 0" Height="60" VerticalAlignment="Top" Click="NavClick" BorderThickness="0">
+            <Button Grid.Column="1" Margin="0 15 0 0" Height="60" VerticalAlignment="Top" Style="{StaticResource NavButton}" Click="NavClick" BorderThickness="0">
                 <Image Source="pack://application:,,,/Images/menu.png" Width="40" Height="40"/>
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="Background" Value="#1D3461"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="Button">
-                                    <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="0 10 10 0">
-                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="ButtonBorder" Property="Background" Value="#1F487E"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </Button.Style>
             </Button>
             <Border Width="300" Grid.Column="0" Background="#1D3461" HorizontalAlignment="Left" >
                 <Grid Margin="0 30 0 30">
@@ -55,32 +54,12 @@
                     </Grid.RowDefinitions>
                     <Button Grid.Row="0" Content="Upload File" Style="{StaticResource Button}" Width="250" Height="50" Click="UploadFileButtonClick"/>
                     <Button Grid.Row="1" Content="Reimbursements" Style="{StaticResource Button}" Width="250" Height="50" BorderThickness="0" Cursor="Hand" Click="ReimbursementListClick"/>
-                    <Button Grid.Row="8" Content="Clear All Data"  Foreground="White" FontSize="25" FontWeight="Black" Width="250" Height="50" BorderThickness="0" Cursor="Hand" Click="ClearDataButtonClick">
-                        <Button.Resources>
-                            <Style TargetType="Button">
-                                <Setter Property="Background" Value="#1c1c1c"/>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="10">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter TargetName="ButtonBorder" Property="Background" Value="#2e2e2e"/>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
+                    <Button Grid.Row="8" Content="Clear All Data"  Style="{StaticResource BlackButton}" Width="250" Height="50" Click="ClearDataButtonClick"/>
                     <Button Grid.Row="9" Content="Exit Applicaiton" Style="{StaticResource RedButton}" Width="250" Height="50" Click="ExitButtonClick"/>
                 </Grid>
             </Border>
         </Grid>
-        <Grid Background="#90000000" Name="BackgroundShade" Visibility="Collapsed" Panel.ZIndex="3" Opacity="0" MouseDown="ClickOffNav"/>
+        <Grid Background="#90000000" Name="BackgroundShade" Visibility="Collapsed" Panel.ZIndex="3" Opacity="0" PreviewMouseDown="BackgroundClick"/>
         <Frame Name="Popup2" NavigationUIVisibility="Hidden" Panel.ZIndex="2"/>
         <Frame Name="Popup1" NavigationUIVisibility="Hidden" Panel.ZIndex="1"/>
         <Frame Name="MainFrame" NavigationUIVisibility="Hidden" />

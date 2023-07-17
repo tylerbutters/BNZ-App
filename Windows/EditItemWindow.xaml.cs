@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace BNZApp
 {
@@ -9,8 +11,7 @@ namespace BNZApp
     /// </summary>
     public partial class EditItemWindow : Page
     {
-        public event Action<object, ListItem, ListItem> GoBack;
-        public event EventHandler<bool> GoBackHome;
+        public event Action<ListItem, ListItem> GoBack;
         private ListItem oldItem;
         private ListItem newItem;
         public EditItemWindow(ListItem item)
@@ -26,6 +27,11 @@ namespace BNZApp
             NameInput.Text = item.FormattedName;
             oldItem = item;
             newItem = item;
+        }
+
+        private void BackgroundClick(object sender, MouseButtonEventArgs e)
+        {
+            CancelButtonClick(sender, e);
         }
 
         private void ConfirmButtonClick(object sender, RoutedEventArgs e)
@@ -46,12 +52,21 @@ namespace BNZApp
                 throw new NullReferenceException("item is null");
             }
 
-            GoBack?.Invoke(sender, oldItem, newItem);
+            GoBack?.Invoke(oldItem, newItem);
         }
 
         private void CancelButtonClick(object sender, RoutedEventArgs e)
         {
-            GoBack?.Invoke(sender, oldItem, null);
+            GoBack?.Invoke(oldItem, null);
+        }
+
+        private void NameInputKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                ConfirmButtonClick(sender, e);
+                Keyboard.ClearFocus();
+            }
         }
     }
 }

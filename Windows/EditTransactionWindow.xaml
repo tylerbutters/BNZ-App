@@ -6,123 +6,126 @@
       xmlns:local="clr-namespace:BNZApp"
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="1200"
-      Title="EditTransactionWindow" Background="#90000000">
+      Title="EditTransactionWindow">
 
-    <Border Background="#1D3461" Margin="100 0 100 0" Height="320" CornerRadius="15">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="70"/>
-                <RowDefinition Height="70"/>
-                <RowDefinition Height="100"/>
-                <RowDefinition Height="80"/>
-            </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="Select the Type and Category" FontSize="25" Foreground="White" FontWeight="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <Grid Grid.Row="1" Margin="20 0 20 0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="2*"/>
-                </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Tag="Spending" Name="SpendingButton"  Content="Spending" Style="{StaticResource Button}" Width="150" Height="45" Click="TypeButtonClick"/>
-                <Button Grid.Column="1" Tag="Income" Name="IncomeButton" Content="Income" Style="{StaticResource Button}" Width="150" Height="45" Click="TypeButtonClick"/>
-                <Button Grid.Column="2" Tag="Expenses" Name="ExpensesButton" Content="Expense" Style="{StaticResource Button}" Width="150" Height="45" Click="TypeButtonClick"/>
-                <Button Grid.Column="3" Name="ReimbursementButton" Background="#33639e" Content="Reimbursement"  Width="220" Height="45" HorizontalAlignment="Right" Style="{StaticResource Button}" Margin="0 0 30 0" Click="ReimbursementButtonClick"/>
+    <Grid>
+        <Grid Background="#90000000" PreviewMouseDown="BackgroundClick"/>
+        <Border Background="#1D3461" Margin="100 0 100 0" Height="328" CornerRadius="15">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="108"/>
+                    <RowDefinition Height="80"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Select the Type and Category" FontSize="25" Foreground="White" FontWeight="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Grid Grid.Row="1" Margin="20 0 20 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Tag="Spending" Name="SpendingButton"  Content="Spending" Style="{StaticResource Button}" Width="150" Height="45" Click="TypeButtonClick"/>
+                    <Button Grid.Column="1" Tag="Income" Name="IncomeButton" Content="Income" Style="{StaticResource Button}" Width="150" Height="45" Click="TypeButtonClick"/>
+                    <Button Grid.Column="2" Tag="Expenses" Name="ExpensesButton" Content="Expense" Style="{StaticResource Button}" Width="150" Height="45" Click="TypeButtonClick"/>
+                    <Button Grid.Column="3" Name="ReimbursementButton" Background="#33639e" Content="Reimbursement"  Width="220" Height="45" HorizontalAlignment="Right" Style="{StaticResource Button}" Margin="0 0 30 0" Click="ReimbursementButtonClick"/>
+                </Grid>
+                <Grid Grid.Row="2" Background="#2e5282">
+                    <DataGrid Name="TransactionGrid" Margin="4" VerticalScrollBarVisibility="Disabled" Style="{StaticResource DataGridStyle}" ColumnHeaderStyle="{StaticResource DataGridHeader}">
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Background" Value="White"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                                <Setter Property="FontWeight" Value="Medium"/>
+                                <Setter Property="FontSize" Value="20"/>
+                                <Setter Property="BorderBrush" Value="#2e5282"/>
+                                <Setter Property="BorderThickness" Value="4"/>
+                                <Setter Property="Height" Value="50"/>
+                                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="TransactionGridClick" />
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Date" Binding="{Binding FormattedDate}" Width="120">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Amount" Binding="{Binding FormattedAmount}" Width="150">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="Margin" Value="10 0 0 0"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsNegative}" Value="true">
+                                                <Setter Property="Foreground" Value="DarkRed"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsNegative}" Value="false">
+                                                <Setter Property="Foreground" Value="Green"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Payee" x:Name="PayeeCell" Binding="{Binding Payee}" Width="220">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="Margin" Value="10 0 0 0"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Particulars" x:Name="ParticularsCell" Binding="{Binding Particulars}" Width="1*">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="Margin" Value="10 0 0 0"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Code" x:Name="CodeCell" Binding="{Binding Code}" Width="1*">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="Margin" Value="10 0 0 0"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Ref" x:Name="ReferenceCell" Binding="{Binding Reference}" Width="1*">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="Margin" Value="10 0 0 0"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+                <Grid Grid.Row="3" Width="500" Visibility="Collapsed" Name="ButtonsWithDelete">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="2" Content="Delete" Style="{StaticResource RedButton}" Click="DeleteButtonClick"/>
+                    <Button Grid.Column="0" Content="Cancel" Style="{StaticResource Button}" Click="CancelButtonClick"/>
+                    <Button Grid.Column="1" Content="Confirm" Style="{StaticResource Button}" Click="ConfirmButtonClick"/>
+                </Grid>
+                <Grid Grid.Row="3" Width="350" Name="ButtonsWithoutDelete">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Content="Cancel" Style="{StaticResource Button}" Click="CancelButtonClick"/>
+                    <Button Grid.Column="1" Content="Confirm" Style="{StaticResource Button}" Click="ConfirmButtonClick"/>
+                </Grid>
             </Grid>
-            <Grid Grid.Row="2" Background="#2e5282">
-                <DataGrid Name="TransactionGrid" Margin="4" Style="{StaticResource DataGridStyle}" ColumnHeaderStyle="{StaticResource DataGridHeader}">
-                    <DataGrid.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="White"/>
-                            <Setter Property="Foreground" Value="Black"/>
-                            <Setter Property="FontWeight" Value="Medium"/>
-                            <Setter Property="FontSize" Value="20"/>
-                            <Setter Property="BorderBrush" Value="#2e5282"/>
-                            <Setter Property="BorderThickness" Value="4"/>
-                            <Setter Property="Height" Value="50"/>
-                            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="TransactionGridClick" />
-                        </Style>
-                    </DataGrid.CellStyle>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Date" Binding="{Binding FormattedDate}" Width="120">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="HorizontalAlignment" Value="Center"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Header="Amount" Binding="{Binding FormattedAmount}" Width="150">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="FontWeight" Value="Bold"/>
-                                    <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Margin" Value="10 0 0 0"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsNegative}" Value="true">
-                                            <Setter Property="Foreground" Value="DarkRed"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding IsNegative}" Value="false">
-                                            <Setter Property="Foreground" Value="Green"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Header="Payee" x:Name="PayeeCell" Binding="{Binding Payee}" Width="220">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Margin" Value="10 0 0 0"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Header="Particulars" x:Name="ParticularsCell" Binding="{Binding Particulars}" Width="1*">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Margin" Value="10 0 0 0"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Header="Code" x:Name="CodeCell" Binding="{Binding Code}" Width="1*">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Margin" Value="10 0 0 0"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Header="Ref" x:Name="ReferenceCell" Binding="{Binding Reference}" Width="1*">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Margin" Value="10 0 0 0"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </Grid>
-            <Grid Grid.Row="3" Width="500" Visibility="Collapsed" Name="ButtonsWithDelete">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Button Grid.Column="2" Content="Delete" Style="{StaticResource RedButton}" Click="DeleteButtonClick"/>
-                <Button Grid.Column="0" Content="Cancel" Style="{StaticResource Button}" Click="CancelButtonClick"/>
-                <Button Grid.Column="1" Content="Confirm" Style="{StaticResource Button}" Click="ConfirmButtonClick"/>
-            </Grid>
-            <Grid Grid.Row="3" Width="350" Name="ButtonsWithoutDelete">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Cancel" Style="{StaticResource Button}" Click="CancelButtonClick"/>
-                <Button Grid.Column="1" Content="Confirm" Style="{StaticResource Button}" Click="ConfirmButtonClick"/>
-            </Grid>
-        </Grid>
-    </Border>
+        </Border>
+    </Grid>
 </Page>
 

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
+using System.Xml.Linq;
 
 namespace BNZApp
 {
@@ -11,10 +14,10 @@ namespace BNZApp
     /// </summary>
     public partial class EditTransactionWindow : Page
     {
-        public event EventHandler<bool> GoBack;
-        public event EventHandler<Transaction> ReturnTransaction;
-        public event EventHandler<Transaction> OpenRemoveReimbursementWindow;
-        public event Action<object, Transaction, Transaction> OpenAddReimbursementWindow;
+        public event Action<bool> GoBack;
+        public event Action<Transaction> ReturnTransaction;
+        public event Action<Transaction> OpenRemoveReimbursementWindow;
+        public event Action<Transaction, Transaction> OpenAddReimbursementWindow;
         private Button selectedButton;
         private DataGridCell selectedCell;
         private Transaction transaction;
@@ -22,9 +25,9 @@ namespace BNZApp
         private Transaction transaction2;
         private ListItem item;
         private List<ListItem> list = FileManagement.ReadList();
-        private ListType Type { get { return (ListType)Enum.Parse(typeof(ListType), selectedButton.Tag.ToString()); } }
-        private string Category { get { return selectedCell.Column.Header.ToString(); } }
-        private string Name { get { return (selectedCell.Content as TextBlock).Text; } }
+        private ListType Type => (ListType)Enum.Parse(typeof(ListType), selectedButton.Tag.ToString());
+        private string Category => selectedCell.Column.Header.ToString();
+        private string Name => (selectedCell.Content as TextBlock).Text;
 
         public EditTransactionWindow(Transaction transaction1, Transaction transaction2)
         {
@@ -44,6 +47,11 @@ namespace BNZApp
             TransactionGrid.ItemsSource = new List<Transaction> { transaction };
 
             UpdateDefaults();
+        }
+
+        private void BackgroundClick(object sender, MouseButtonEventArgs e)
+        {
+            CancelButtonClick(sender, e);
         }
 
         public void UpdateDefaults()
@@ -84,36 +92,58 @@ namespace BNZApp
 
         private void UpdateCells()
         {
+            int index = 0;
             foreach (ListItem item in list)
             {
-                string name = item.Name.ToLowerInvariant();
-                string payee = transaction.Payee.ToLowerInvariant();
-                string particulars = transaction.Particulars.ToLowerInvariant();
-                string code = transaction.Code.ToLowerInvariant();
-                string reference = transaction.Reference.ToLowerInvariant();
+                if (item.Name.All(char.IsDigit))
+                {
+                    if (transaction.Payee == item.Name)
+                    {
+                        index = 2;
+                    }
+                    else if (transaction.Particulars == item.Name)
+                    {
+                        index = 3;
+                    }
+                    else if (transaction.Code == item.Name)
+                    {
+                        index = 4;
+                    }
+                    else if (transaction.Reference == item.Name)
+                    {
+                        index = 5;
+                    }
+                }
+                else
+                {
+                    if (transaction.Payee.Equals(item.Name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        index = 2;
+                    }
+                    else if (transaction.Particulars.Equals(item.Name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        index = 3;
+                    }
+                    else if (transaction.Code.Equals(item.Name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        index = 4;
+                    }
+                    else if (transaction.Reference.Equals(item.Name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        index = 5;
+                    }
+                }
 
-                if (payee.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0)
+                if (index != 0)
                 {
-                    UpdateDefaultCellStyle(2);
                     this.item = item;
-                }
-                else if (particulars.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    UpdateDefaultCellStyle(3);
-                    this.item = item;
-                }
-                else if (code.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    UpdateDefaultCellStyle(4);
-                    this.item = item;
-                }
-                else if (reference.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    UpdateDefaultCellStyle(5);
-                    this.item = item;
+                    UpdateDefaultCellStyle(index);
+                    break;
                 }
             }
         }
+
+
         private void UpdateDefaultCellStyle(int index)
         {
             TransactionGrid.Dispatcher.BeginInvoke(new Action(() =>
@@ -217,7 +247,7 @@ namespace BNZApp
         {
             if (transaction.IsReimbursement)
             {
-                OpenRemoveReimbursementWindow?.Invoke(sender, transaction);
+                OpenRemoveReimbursementWindow?.Invoke(transaction);
             }
             else if (transaction.StagedForReimbursement)
             {
@@ -229,8 +259,8 @@ namespace BNZApp
                 if (transaction2 is null)
                 {
                     transaction.StagedForReimbursement = true;
-                    ReturnTransaction?.Invoke(sender, transaction);
-                    GoBack?.Invoke(sender, false);
+                    ReturnTransaction?.Invoke(transaction);
+                    GoBack?.Invoke(false);
                 }
                 else
                 {
@@ -243,7 +273,7 @@ namespace BNZApp
                         return;
                     }
 
-                    OpenAddReimbursementWindow?.Invoke(sender, transaction1, transaction2);
+                    OpenAddReimbursementWindow?.Invoke(transaction1, transaction2);
                 }
             }
         }
@@ -252,7 +282,7 @@ namespace BNZApp
         {
             list.Remove(item);
             FileManagement.WriteList(list);
-            GoBack?.Invoke(sender, true);
+            GoBack?.Invoke(true);
         }
 
         private void ConfirmButtonClick(object sender, RoutedEventArgs e)
@@ -263,12 +293,12 @@ namespace BNZApp
                 list.Add(new ListItem(Type, Category, Name));
                 FileManagement.WriteList(list);
             }
-            GoBack?.Invoke(sender, true);
+            GoBack?.Invoke(true);
         }
 
         private void CancelButtonClick(object sender, RoutedEventArgs e)
         {
-            GoBack?.Invoke(sender, false);
+            GoBack?.Invoke(false);
         }
     }
 }

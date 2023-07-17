@@ -13,7 +13,8 @@ namespace BNZApp
     /// </summary>
     public partial class ListWindow : Page
     {
-        public event EventHandler<bool> GoBack;
+        public event Action<bool> GoBack;
+        public event Action<ListItem> OpenEditItemWindow;
         private bool edited;
         private List<ListItem> list;
         private List<ListItem> listOfType;
@@ -55,6 +56,11 @@ namespace BNZApp
             ListGrid.ItemsSource = listOfType;
         }
 
+        private void BackgroundClick(object sender, MouseButtonEventArgs e)
+        {
+            GoBack?.Invoke(false);
+        }
+
         private void DoneButtonClick(object sender, RoutedEventArgs e)
         {
             if (listType is ListType.Expenses)
@@ -74,7 +80,7 @@ namespace BNZApp
                 FileManagement.WriteList(list);
             }
 
-            GoBack?.Invoke(sender, edited);
+            GoBack?.Invoke(edited);
         }
 
         private void AddButtonClick(object sender, RoutedEventArgs e)
@@ -106,8 +112,20 @@ namespace BNZApp
 
         private void NameInputGotFocus(object sender, RoutedEventArgs e)
         {
-            NameInput.Text = "";
-            NameInput.Foreground = Brushes.Black;
+            if(NameInput.Foreground == Brushes.Gray)
+            {
+                NameInput.Text = "";
+                NameInput.Foreground = Brushes.Black;
+            }
+        }
+
+        private void NameInputKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                AddButtonClick(sender, e);
+                Keyboard.ClearFocus();
+            }
         }
 
         private void DropdownBoxGotFocus(object sender, SelectionChangedEventArgs e)
@@ -136,14 +154,11 @@ namespace BNZApp
                 throw new NullReferenceException("Old item cannot be null");
             }
 
-            EditItemWindow editItemWindow = new EditItemWindow(oldItem);
-            Popup.Content = editItemWindow;
-            editItemWindow.GoBack += CloseEditItemWindow;
+            OpenEditItemWindow?.Invoke(oldItem);
         }
 
         private void DeleteButtonClick(object sender, RoutedEventArgs e)
         {
-
             ListItem item = (sender as Button)?.DataContext as ListItem;
             if (item is null)
             {
@@ -157,17 +172,11 @@ namespace BNZApp
             ListGrid.ItemsSource = listOfType;
         }
 
-        private void CloseEditItemWindow(object sender, ListItem oldItem, ListItem newItem)
+        public void CloseEditItemWindow(ListItem oldItem, ListItem newItem)
         {
-            Popup.Content = null;
-
-            if (newItem is null)
+            if(newItem is null)
             {
                 return;
-            }
-            if (oldItem is null)
-            {
-                throw new ArgumentNullException(nameof(oldItem), "old item cannot be null");
             }
             list.Remove(oldItem);
             listOfType.Remove(oldItem);
@@ -177,15 +186,23 @@ namespace BNZApp
             ListGrid.ItemsSource = listOfType;
             edited = true;
         }
-        private void TaxInputGotFocus(object sender, RoutedEventArgs e)
+        private void TaxInputMouseDown(object sender, MouseButtonEventArgs e)
         {
-            TaxInput.Text = TaxInput.Text.Substring(0, TaxInput.Text.Length - 1);
+            if (TaxInput.Text.Contains("%"))
+            {
+                TaxInput.Text = TaxInput.Text.TrimEnd('%');
+            }
         }
 
-        private void TaxInputLostFocus(object sender, RoutedEventArgs e)
-        {
-            TaxInput.Text += "%";
-            edited = true;
+        private void TaxInputKeyDown(object sender, KeyEventArgs e)
+        {           
+            if (e.Key == Key.Enter)
+            {
+                TaxInput.Text += "%";
+                edited = true;
+                e.Handled = true;
+                Keyboard.ClearFocus();
+            }
         }
     }
 }
